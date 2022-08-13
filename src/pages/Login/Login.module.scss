@@ -1,0 +1,87 @@
+$border-radius-8px: 8px;
+$theme-main-color: #7b68ee;
+@mixin bg-gradient {
+  // Taken from: https://cssgradient.io/gradient-backgrounds/
+  background-color: #ffdee9;
+  background-image: linear-gradient(30deg, #ffdee9 0%, #b5fffc 100%);
+
+  // background-color: #ffdee95c;
+  // background-image: linear-gradient(30deg, #ffdee95c 0%, #b5fffc7a 100%);
+}
+
+.input {
+  border-radius: $border-radius-8px;
+}
+
+.button {
+  border-radius: $border-radius-8px;
+}
+
+.inputIcon {
+  color: #d9d9d9;
+}
+
+.formContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.formCard {
+  width: 480px;
+  background: #fff;
+  box-shadow: 0 24px 64px #26214a1a;
+  border-radius: 12px;
+  padding: 30px 60px;
+  position: relative;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+
+  width: 100vw;
+  height: 100vh;
+
+  @include bg-gradient;
+}
+.main {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  height: 100%;
+}
+
+.welcomeBack {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.dontHaveAnAccount {
+  // margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// LAYOUT:
+$layout-header-height: 52px;
+
+.header {
+  height: $layout-header-height;
+}
+.footer {
+  height: $layout-header-height;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

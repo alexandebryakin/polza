@@ -1,0 +1,20 @@
+{
+  "generic": {
+    "polza": "Polza"
+  },
+  "login": {
+    "welcomeBack": "Welcome back!",
+    "login": "Log In",
+    "signup": "Sign Up",
+    "forgot": "Forgot?",
+    "dontHaveAnAccount": "Don't have an account?",
+    "fields": {
+      "email": "Email",
+      "password": "Password"
+    },
+    "rules": {
+      "emailRequired": "Email required!",
+      "passwordRequired": "Password required!"
+    }
+  }
+}
