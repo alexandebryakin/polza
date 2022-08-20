@@ -4,8 +4,9 @@ import 'antd/dist/antd.css';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import Login from './pages/Login/Login.component';
+import Signin from './pages/Signin/Signin.component';
 import Signup from './pages/Signup/Signup.component';
+import { ROUTES } from './navigation/routes';
 
 function App() {
   return (
@@ -16,8 +17,8 @@ function App() {
           // element={<App />}
         >
           {/* <Route index element={<Home />} /> */}
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
+          <Route path={ROUTES.AUTH.SIGNIN} element={<Signin />} />
+          <Route path={ROUTES.AUTH.SIGNUP} element={<Signup />} />
         </Route>
       </Routes>
     </BrowserRouter>

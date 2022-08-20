@@ -2,7 +2,7 @@
   "generic": {
     "polza": "Polza"
   },
-  "login": {
+  "auth": {
     "welcomeBack": "Welcome back!",
     "login": "Log In",
     "signup": "Sign Up",
@@ -15,6 +15,10 @@
     "rules": {
       "emailRequired": "Email required!",
       "passwordRequired": "Password required!"
+    },
+    "errors": {
+      "userNotFound": "User not found",
+      "invalidCredentials": "Credentials are invalid"
     }
   }
 }
