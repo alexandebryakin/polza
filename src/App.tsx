@@ -1,25 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+
+import 'antd/dist/antd.css';
+
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+import Signin from './pages/Signin/Signin.component';
+import Signup from './pages/Signup/Signup.component';
+import { ROUTES } from './navigation/routes';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          // element={<App />}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          {/* <Route index element={<Home />} /> */}
+          <Route path={ROUTES.AUTH.SIGNIN} element={<Signin />} />
+          <Route path={ROUTES.AUTH.SIGNUP} element={<Signup />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
