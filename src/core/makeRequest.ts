@@ -42,3 +42,8 @@ export const makeRequest = async <ReturnType = any, Vars = {}>(
 
   return response.data;
 };
+
+export const buildRequest = <ReturnType, Vars>(query: string) => {
+  return async ({ variables }: { variables: Vars }) =>
+    await makeRequest<ReturnType>(query, variables || {});
+};

@@ -1,0 +1,25 @@
+.inputIcon {
+  color: #d9d9d9;
+}
+
+// copy & paste from Signin.module.scss
+.formCard {
+  width: 480px;
+  background: #fff;
+  box-shadow: 0 24px 64px #26214a1a;
+  border-radius: 12px;
+  padding: 30px 60px;
+  position: relative;
+}
+
+.letsGo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.alreadyHaveAnAccount {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
