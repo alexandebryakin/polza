@@ -4,10 +4,12 @@
   },
   "auth": {
     "welcomeBack": "Welcome back!",
+    "letsGo": "Let's go!",
     "login": "Log In",
     "signup": "Sign Up",
     "forgot": "Forgot?",
     "dontHaveAnAccount": "Don't have an account?",
+    "alreadyHaveAnAccount": "Already have an account?",
     "fields": {
       "email": "Email",
       "password": "Password"
@@ -18,7 +20,9 @@
     },
     "errors": {
       "userNotFound": "User not found",
-      "invalidCredentials": "Credentials are invalid"
+      "invalidCredentials": "Credentials are invalid",
+      "invalidEmail": "Email is invalid",
+      "invalidPassoword": "Password is invalid"
     }
   }
 }

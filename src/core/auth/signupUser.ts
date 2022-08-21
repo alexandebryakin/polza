@@ -1,8 +1,8 @@
 import { buildRequest } from '../makeRequest';
 
-export const SIGNIN_USER = `
-  mutation SigninUser($email: String!, $password: String!){
-    signinUser(email: $email, password: $password) {
+const SIGNUP_USER = `
+  mutation SignupUser($email: String!, $password: String!){
+    signupUser(email: $email, password: $password) {
       user {
         id
         email
@@ -13,27 +13,27 @@ export const SIGNIN_USER = `
   }
 `;
 
-export type SigninCredentialsVariables = {
+export type SignupCredentialsVariables = {
   email: string;
   password: string;
 };
 
 type ErrorMessage = string;
 type Errors = { [field: string]: ErrorMessage[] };
-export type SigninUserResponse = {
+export type SignupUserResponse = {
   data: {
-    signinUser: {
+    signupUser: {
       user?: {
         id: UUID;
         email: string;
       };
-      errors: Errors;
       token: string | null;
+      errors: Errors;
     };
   };
 };
 
-export const signinUser = buildRequest<
-  SigninUserResponse,
-  SigninCredentialsVariables
->(SIGNIN_USER);
+export const signupUser = buildRequest<
+  SignupUserResponse,
+  SignupCredentialsVariables
+>(SIGNUP_USER);

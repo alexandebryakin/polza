@@ -1,3 +1,5 @@
+import jwtDecode from 'jwt-decode';
+
 const LOCALSTORAGE_TOKEN_KEY = '__token';
 
 function set(token: string) {
@@ -5,10 +7,32 @@ function set(token: string) {
 }
 
 function get() {
-  localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+  return localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+}
+
+interface JWTData {
+  data: {
+    user: {
+      id: UUID;
+    };
+  };
+  exp: timestamp;
+}
+
+function _decode(token: string): JWTData {
+  return jwtDecode(token);
+}
+
+function isExpired(): boolean {
+  const token = get();
+  const { exp } = _decode(token || '');
+  return Date.now() > exp * 1000;
 }
 
 export const jwt = {
   set,
   get,
+  isExpired,
 };
+
+Object.assign(window, { jwt });
