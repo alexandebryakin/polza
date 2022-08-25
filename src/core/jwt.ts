@@ -10,6 +10,10 @@ function get() {
   return localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
 }
 
+function forget() {
+  localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, '');
+}
+
 interface JWTData {
   data: {
     user: {
@@ -25,7 +29,9 @@ function _decode(token: string): JWTData {
 
 function isExpired(): boolean {
   const token = get();
-  const { exp } = _decode(token || '');
+  if (!token) return true;
+
+  const { exp } = _decode(token);
   return Date.now() > exp * 1000;
 }
 
@@ -33,6 +39,7 @@ export const jwt = {
   set,
   get,
   isExpired,
+  forget,
 };
 
 Object.assign(window, { jwt });

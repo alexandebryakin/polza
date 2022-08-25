@@ -9,12 +9,14 @@ import css from 'classnames';
 
 import {
   CreditCardOutlined,
+  PoweroffOutlined,
   SettingOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import SiderDesktopItem from './SiderDesktopItem';
 import { useLayout } from '../LayoutProvider';
 import Collapser from './Collapser';
+import { jwt } from '../../../core/jwt';
 
 function SiderDesktop() {
   const [t] = useTranslation('common');
@@ -56,6 +58,14 @@ function SiderDesktop() {
           active={routes.isSettings()}
           icon={<SettingOutlined />}
           label={t('nav.settings')}
+        />
+
+        <SiderDesktopItem
+          to={ROUTES.AUTH.SIGNIN}
+          active={false}
+          icon={<PoweroffOutlined />}
+          label={t('nav.logout')}
+          onClick={jwt.forget}
         />
       </Flex>
     </Flex>

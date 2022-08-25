@@ -28,6 +28,7 @@
   "nav": {
     "profile": "Profile",
     "businessCards": "Business Cards",
-    "settings": "Settings"
+    "settings": "Settings",
+    "logout": "Log Out"
   }
 }
