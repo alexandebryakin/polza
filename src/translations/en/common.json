@@ -24,5 +24,10 @@
       "invalidEmail": "Email is invalid",
       "invalidPassoword": "Password is invalid"
     }
+  },
+  "nav": {
+    "profile": "Profile",
+    "businessCards": "Business Cards",
+    "settings": "Settings"
   }
 }

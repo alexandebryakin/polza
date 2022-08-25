@@ -1,0 +1,17 @@
+// [COLOR]:
+$border-color: #f4f2f2;
+$primary-color: #eb4972;
+$background-color: #f8fafb;
+$text-color: #adafbb;
+
+// [SIZE]:
+$border-size: 1px;
+$top-nav__height: 54px;
+
+$desktop-sider__pointer-width: 3px;
+$desktop-sider__icon-size: 20px;
+$desktop-sider__icon-margin: 12px;
+
+$sider-width--expanded: 270px;
+$sider-width--collapsed: $desktop-sider__pointer-width +
+  ($desktop-sider__icon-margin * 2) + $desktop-sider__icon-size;

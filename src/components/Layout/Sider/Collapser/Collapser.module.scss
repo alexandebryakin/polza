@@ -1,0 +1,69 @@
+// ============================ Collpaser ============================
+@import 'src/styles/_variables.scss';
+
+$collapser__top: 75px;
+
+@mixin siderLeftOffset($sider-width) {
+  $calculated: $sider-width - ($desktop-sider__icon-size / 2) -
+    ($border-size / 2);
+
+  left: $calculated;
+}
+
+.collapser {
+  cursor: pointer;
+  position: absolute;
+
+  top: $collapser__top;
+  @include siderLeftOffset($sider-width--expanded);
+
+  background: #fff;
+
+  border: $border-size solid $border-color;
+  border-radius: 50%;
+  width: $desktop-sider__icon-size;
+  height: $desktop-sider__icon-size;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-color: $text-color;
+  transition: border-color 150ms;
+  &:hover {
+    border-color: $primary-color;
+  }
+}
+.collapserCollapsed {
+  @include siderLeftOffset($sider-width--collapsed);
+}
+
+// ====== Arrow ======
+.arrow {
+  border: solid $text-color;
+  border-width: 0 $border-size $border-size 0;
+  display: inline-block;
+  padding: 3px;
+}
+.right {
+  margin-left: -3px;
+
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.left {
+  margin-right: -2px;
+
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
