@@ -13,11 +13,10 @@ import Layout from './components/Layout';
 import LayoutProvider from './components/Layout/LayoutProvider';
 
 function App() {
-  React.useEffect(() => {
-    if (jwt.isExpired() && !isRoutePublic()) {
-      window.location.pathname = ROUTES.AUTH.SIGNIN;
-    }
-  }, []);
+  if (jwt.isExpired() && !isRoutePublic()) {
+    window.location.pathname = ROUTES.AUTH.SIGNIN;
+    return null;
+  }
 
   return (
     <BrowserRouter>
