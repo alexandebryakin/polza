@@ -1,0 +1,14 @@
+@import 'src/styles/_variables.scss';
+
+.toggler {
+  display: flex;
+  align-items: center;
+
+  .email {
+    color: $text-color--primary;
+  }
+
+  .avatar {
+    margin-left: 8px;
+  }
+}
