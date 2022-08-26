@@ -1,0 +1,46 @@
+@import 'src/styles/_variables.scss';
+
+@mixin box-shadow() {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 30px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 0px;
+}
+$border-radius: 8px;
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+
+  cursor: pointer;
+  user-select: none;
+  border-radius: $border-radius;
+  transition: box-shadow 150ms;
+
+  &:hover {
+    @include box-shadow();
+  }
+
+  .toggler {
+    margin: 8px;
+    color: $text-color--secondary;
+  }
+
+  .items {
+    display: none;
+    position: absolute;
+    width: 100%;
+    overflow: auto;
+    z-index: 1;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+
+    @include box-shadow();
+  }
+  .visible {
+    display: block;
+  }
+}
+.dropdownExpanded {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  @include box-shadow();
+}

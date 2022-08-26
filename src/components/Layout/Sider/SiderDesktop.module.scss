@@ -2,6 +2,8 @@
 
 .container {
   max-width: $sider-width--expanded;
+  transition: max-width 150ms;
+  background: $background-color;
   padding: 0 0 20px 0;
   flex-grow: 1;
   border-right: 1px solid $border-color;

@@ -1,4 +1,3 @@
-// ============================ Collpaser ============================
 @import 'src/styles/_variables.scss';
 
 $collapser__top: 75px;
@@ -8,6 +7,7 @@ $collapser__top: 75px;
     ($border-size / 2);
 
   left: $calculated;
+  transition: left 150ms;
 }
 
 .collapser {
@@ -27,7 +27,7 @@ $collapser__top: 75px;
   justify-content: center;
   align-items: center;
 
-  border-color: $text-color;
+  border-color: $text-color--secondary;
   transition: border-color 150ms;
   &:hover {
     border-color: $primary-color;
@@ -39,7 +39,7 @@ $collapser__top: 75px;
 
 // ====== Arrow ======
 .arrow {
-  border: solid $text-color;
+  border: solid $text-color--secondary;
   border-width: 0 $border-size $border-size 0;
   display: inline-block;
   padding: 3px;
