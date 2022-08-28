@@ -11,6 +11,7 @@ import { isRoutePublic, ROUTES } from './navigation/routes';
 import { jwt } from './core/jwt';
 import Layout from './components/Layout';
 import LayoutProvider from './components/Layout/LayoutProvider';
+import Profile from './pages/Profile';
 
 function App() {
   if (jwt.isExpired() && !isRoutePublic()) {
@@ -33,7 +34,7 @@ function App() {
               path={ROUTES.PROFILE}
               element={
                 <Layout>
-                  <div>TODO: PROFILE</div>
+                  <Profile />
                 </Layout>
               }
             />

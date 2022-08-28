@@ -3,8 +3,9 @@
 $collapser__top: 75px;
 
 @mixin siderLeftOffset($sider-width) {
-  $calculated: $sider-width - ($desktop-sider__icon-size / 2) -
-    ($border-size / 2);
+  $calculated: calc(
+    $sider-width - ($desktop-sider__icon-size / 2) - ($border-size / 2)
+  );
 
   left: $calculated;
   transition: left 150ms;

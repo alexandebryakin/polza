@@ -30,5 +30,14 @@
     "businessCards": "Business Cards",
     "settings": "Settings",
     "logout": "Log Out"
+  },
+  "profile": {
+    "profile": "Profile",
+    "passportNotVerified": "Passport is not verified",
+    "tabs": {
+      "generalInfo": "General Info",
+      "passport": "Passport",
+      "password": "Password"
+    }
   }
 }
