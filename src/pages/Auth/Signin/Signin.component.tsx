@@ -7,11 +7,20 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Input } from '../../../antd';
 
+<<<<<<< HEAD
 import * as auth from '../../../api/auth';
 
 import isEmpty from 'lodash/isEmpty';
 import { jwt } from '../../../api/jwt';
 import { ROUTES } from '../../../navigation/routes';
+=======
+import * as auth from '../../../core/auth';
+import { SigninUserResponse, SignupCredentialsVariables } from '../../../core/auth';
+
+import isEmpty from 'lodash/isEmpty';
+import { jwt } from '../../../core/jwt';
+import { routes } from '../../../navigation/routes';
+>>>>>>> 4509724 ([feat] use `dromos` for routes)
 import Layout from '../Layout/Layout.component';
 import {
   SigninUserMutation,
@@ -29,11 +38,16 @@ type FieldData = {
   errors: string[];
 };
 
+<<<<<<< HEAD
 const buildAntFormErrorFieldsData = (
   response: AxiosResponseWrapper<SigninUserMutation>,
   t: TFunction
 ) => {
   const userErrors = response.data.signinUser?.errors.user || [];
+=======
+const buildAntFormErrorFieldsData = (response: SigninUserResponse, t: TFunction) => {
+  const userErrors = response.data.signinUser.errors.user || [];
+>>>>>>> 4509724 ([feat] use `dromos` for routes)
 
   const fieldData: FieldData[] = [];
 
@@ -72,7 +86,7 @@ function Signin() {
     } else {
       jwt.set(response.data.signinUser?.token || '');
 
-      navigate(ROUTES.PROFILE);
+      navigate(routes.profile()._);
     }
 
     setLoading(false);
@@ -84,7 +98,7 @@ function Signin() {
         <Space>
           <span>{t('auth.dontHaveAnAccount')}</span>
 
-          <Link to={ROUTES.AUTH.SIGNUP}>
+          <Link to={routes.signup()._}>
             <Button type="primary">{t('auth.signup')}</Button>
           </Link>
         </Space>
@@ -99,19 +113,14 @@ function Signin() {
           onFinish={onFinish}
           autoComplete="off"
         >
-          <Typography.Title className={styles.welcomeBack}>
-            {t('auth.welcomeBack')}
-          </Typography.Title>
+          <Typography.Title className={styles.welcomeBack}>{t('auth.welcomeBack')}</Typography.Title>
 
           <Form.Item
             label={t('auth.fields.email')}
             name={FIELDS.email}
             rules={[{ required: true, message: t('auth.rules.emailRequired') }]}
           >
-            <Input
-              className={styles.input}
-              prefix={<UserOutlined className={styles.inputIcon} />}
-            />
+            <Input className={styles.input} prefix={<UserOutlined className={styles.inputIcon} />} />
           </Form.Item>
 
           <Form.Item
@@ -142,7 +151,7 @@ function Signin() {
         <div className={styles.dontHaveAnAccount}>
           <span>{t('auth.dontHaveAnAccount')}</span>
 
-          <Link to={ROUTES.AUTH.SIGNUP}>
+          <Link to={routes.signup()._}>
             <Button type="link">{t('auth.signup')}</Button>
           </Link>
         </div>

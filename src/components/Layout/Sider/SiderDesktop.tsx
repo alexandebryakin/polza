@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { routes, ROUTES } from '../../../navigation/routes';
+import { routesHelpers, routes } from '../../../navigation/routes';
 import Flex from '../../Flex';
 import Logo from '../../Logo';
 
@@ -7,12 +7,7 @@ import styles from './SiderDesktop.module.scss';
 
 import css from 'classnames';
 
-import {
-  CreditCardOutlined,
-  PoweroffOutlined,
-  SettingOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { CreditCardOutlined, PoweroffOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import SiderDesktopItem from './SiderDesktopItem';
 import { useLayout } from '../LayoutProvider';
 import Collapser from './Collapser';
@@ -38,14 +33,14 @@ function SiderDesktop() {
 
         <Flex direction="column">
           <SiderDesktopItem
-            to={ROUTES.PROFILE}
-            active={routes.isProfile()}
+            to={routes.profile()._}
+            active={routesHelpers.isProfile()}
             icon={<UserOutlined />}
             label={t('nav.profile')}
           />
           <SiderDesktopItem
-            to={ROUTES.BUSINESS_CARDS}
-            active={routes.isBusinessCards()}
+            to={routes.businessCards()._}
+            active={routesHelpers.isBusinessCards()}
             icon={<CreditCardOutlined />}
             label={t('nav.businessCards')}
           />
@@ -54,14 +49,14 @@ function SiderDesktop() {
 
       <Flex direction="column">
         <SiderDesktopItem
-          to={ROUTES.SETTINGS}
-          active={routes.isSettings()}
+          to={routes.settings()._}
+          active={routesHelpers.isSettings()}
           icon={<SettingOutlined />}
           label={t('nav.settings')}
         />
 
         <SiderDesktopItem
-          to={ROUTES.AUTH.SIGNIN}
+          to={routes.signin()._}
           active={false}
           icon={<PoweroffOutlined />}
           label={t('nav.logout')}

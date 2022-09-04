@@ -4639,6 +4639,7 @@ dotenv@^10.0.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
   integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
+<<<<<<< HEAD
 dotenv@^16.0.0:
   version "16.0.2"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.2.tgz#0b0f8652c016a3858ef795024508cddc4bffc5bf"
@@ -4648,6 +4649,12 @@ dset@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/dset/-/dset-3.1.2.tgz#89c436ca6450398396dc6538ea00abc0c54cd45a"
   integrity sha512-g/M9sqy3oHe477Ar4voQxWtaPIFw1jTdKZuomOjhCcBx9nHUNn0pu6NopuFFrTh/TRZIKEj+76vLWFu9BNKk+Q==
+=======
+dromos@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/dromos/-/dromos-1.0.3.tgz#173c8bb835ce2c22c501c44f092be84a99954f46"
+  integrity sha512-JtrVMfGCgxPy6o6IMdO2Ej/+CLGm1EwUj57vsDXapwovmjaRen0QWfK8x2CV7QVRVYQAK82ThYycWV/C2ztMWw==
+>>>>>>> 4509724 ([feat] use `dromos` for routes)
 
 duplexer@^0.1.2:
   version "0.1.2"
