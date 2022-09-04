@@ -8,13 +8,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button, Input } from '../../../antd';
 
 import * as auth from '../../../core/auth';
-import {
-  SignupCredentialsVariables,
-  SignupUserResponse,
-} from '../../../core/auth';
+import { SignupCredentialsVariables, SignupUserResponse } from '../../../core/auth';
 
 import isEmpty from 'lodash/isEmpty';
-import { ROUTES } from '../../../navigation/routes';
+import { routes } from '../../../navigation/routes';
 import Layout from '../Layout/Layout.component';
 import { jwt } from '../../../core/jwt';
 
@@ -28,10 +25,7 @@ type FieldData = {
   errors: string[];
 };
 
-const buildAntFormErrorFieldsData = (
-  response: SignupUserResponse,
-  t: TFunction
-) => {
+const buildAntFormErrorFieldsData = (response: SignupUserResponse, t: TFunction) => {
   const fieldData: FieldData[] = [];
 
   if (response.data.signupUser.errors.email) {
@@ -66,7 +60,7 @@ function Signup() {
     } else {
       jwt.set(response.data.signupUser.token || '');
 
-      navigate(ROUTES.PROFILE);
+      navigate(routes.profile()._);
     }
 
     setLoading(false);
@@ -78,7 +72,7 @@ function Signup() {
         <Space>
           <span>{t('auth.alreadyHaveAnAccount')}</span>
 
-          <Link to={ROUTES.AUTH.SIGNIN}>
+          <Link to={routes.signin()._}>
             <Button type="primary">{t('auth.login')}</Button>
           </Link>
         </Space>
@@ -93,19 +87,14 @@ function Signup() {
           onFinish={onFinish}
           autoComplete="off"
         >
-          <Typography.Title className={styles.letsGo}>
-            {t('auth.letsGo')}
-          </Typography.Title>
+          <Typography.Title className={styles.letsGo}>{t('auth.letsGo')}</Typography.Title>
 
           <Form.Item
             label={t('auth.fields.email')}
             name={FIELDS.email}
             rules={[{ required: true, message: t('auth.rules.emailRequired') }]}
           >
-            <Input
-              className={styles.input}
-              prefix={<UserOutlined className={styles.inputIcon} />}
-            />
+            <Input className={styles.input} prefix={<UserOutlined className={styles.inputIcon} />} />
           </Form.Item>
 
           <Form.Item
@@ -118,10 +107,7 @@ function Signup() {
               },
             ]}
           >
-            <Input.Password
-              className={styles.input}
-              prefix={<LockOutlined className={styles.inputIcon} />}
-            />
+            <Input.Password className={styles.input} prefix={<LockOutlined className={styles.inputIcon} />} />
           </Form.Item>
 
           <div>TODO: checkbox with terms of service and Privacy</div>
@@ -137,7 +123,7 @@ function Signup() {
         <div className={styles.alreadyHaveAnAccount}>
           <span>{t('auth.alreadyHaveAnAccount')}</span>
 
-          <Link to={ROUTES.AUTH.SIGNIN}>
+          <Link to={routes.signin()._}>
             <Button type="link">{t('auth.login')}</Button>
           </Link>
         </div>
