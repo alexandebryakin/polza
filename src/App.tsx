@@ -55,10 +55,7 @@ function App() {
             }
           />
 
-          <Route
-            path="*"
-            element={<Navigate to={routes.signin()._} replace />}
-          />
+          <Route path="*" element={<Navigate to={routes.signin()._} replace />} />
         </Routes>
       </LayoutProvider>
     </BrowserRouter>

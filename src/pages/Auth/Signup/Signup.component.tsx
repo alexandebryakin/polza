@@ -7,21 +7,13 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Input } from '../../../antd';
 
-<<<<<<< HEAD
 import * as auth from '../../../api/auth';
-=======
-import * as auth from '../../../core/auth';
-import { SignupCredentialsVariables, SignupUserResponse } from '../../../core/auth';
->>>>>>> 4509724 ([feat] use `dromos` for routes)
 
 import isEmpty from 'lodash/isEmpty';
 import { routes } from '../../../navigation/routes';
 import Layout from '../Layout/Layout.component';
 import { jwt } from '../../../api/jwt';
-import {
-  SignupUserMutation,
-  SignupUserMutationVariables,
-} from '../../../api/graphql.types';
+import { SignupUserMutation, SignupUserMutationVariables } from '../../../api/graphql.types';
 import { AxiosResponseWrapper } from '../../../api/makeRequest';
 
 const FIELDS = {
@@ -34,14 +26,7 @@ type FieldData = {
   errors: string[];
 };
 
-<<<<<<< HEAD
-const buildAntFormErrorFieldsData = (
-  response: AxiosResponseWrapper<SignupUserMutation>,
-  t: TFunction
-) => {
-=======
-const buildAntFormErrorFieldsData = (response: SignupUserResponse, t: TFunction) => {
->>>>>>> 4509724 ([feat] use `dromos` for routes)
+const buildAntFormErrorFieldsData = (response: AxiosResponseWrapper<SignupUserMutation>, t: TFunction) => {
   const fieldData: FieldData[] = [];
 
   if (response.data.signupUser?.errors.email) {
