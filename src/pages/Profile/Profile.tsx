@@ -5,6 +5,10 @@ import { Tabs, Tooltip } from '../../antd';
 import css from 'classnames';
 import styles from './Profile.module.scss';
 
+function PassportForm() {
+  return <div>Passport Form</div>;
+}
+
 const TABS = {
   main: 'main',
   passport: 'passport',
@@ -22,7 +26,12 @@ function Profile() {
 
       <Tabs defaultActiveKey="1">
         <Tabs.TabPane tab={t('profile.tabs.generalInfo')} key={TABS.main}>
-          Content of Tab Pane 1
+          <ul>
+            <li>email</li>
+            <li>First Name</li>
+            <li>Last Name</li>
+            <li>Profile Image</li>
+          </ul>
         </Tabs.TabPane>
 
         <Tabs.TabPane
@@ -30,17 +39,17 @@ function Profile() {
             <span>
               {t('profile.tabs.passport')}
 
-              <Tooltip title={t('profile.passportNotVerified')}>
-                <WarningOutlined
-                  className={css(styles.tabIcon, styles.warning)}
-                />
-              </Tooltip>
+              {!verified && (
+                <Tooltip title={t('profile.passportNotVerified')}>
+                  <WarningOutlined className={css(styles.tabIcon, styles.warning)} />
+                </Tooltip>
+              )}
             </span>
           }
           // tab={t('profile.tabs.passport')}
           key={TABS.passport}
         >
-          Content of Tab Pane 2
+          <PassportForm />
         </Tabs.TabPane>
 
         <Tabs.TabPane tab={t('profile.tabs.password')} key={TABS.password}>
