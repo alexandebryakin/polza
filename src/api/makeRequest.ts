@@ -1,15 +1,13 @@
 import axios from 'axios';
-import gql from 'graphql-tag';
+import { DocumentNode } from 'graphql';
 import { jwt } from './jwt';
 
 const API_GRPAHQL_URL = `${process.env.REACT_APP_API_GRPAHQL_URL}/graphql`;
 
-const _getOperationName = (query: string): string => {
+const _getOperationName = (query: DocumentNode): string => {
   try {
-    const queryInfo = gql(query);
-
     // @ts-expect-error
-    return queryInfo.definitions[0].name.value || '';
+    return query.definitions[0].name.value || '';
   } catch (e) {
     if (process.env.NODE_ENV === 'production') return '';
 
@@ -22,14 +20,17 @@ const _getOperationName = (query: string): string => {
   }
 };
 
+export type AxiosResponseWrapper<T> = { data: T };
+
 export const makeRequest = async <ReturnType = any, Vars = {}>(
-  query: string,
+  query: DocumentNode,
   variables: Vars
 ) => {
-  const response = await axios.post<ReturnType>(
+  console.log('query.loc?.source', query.loc?.source.body);
+  const response = await axios.post<AxiosResponseWrapper<ReturnType>>(
     API_GRPAHQL_URL,
     {
-      query,
+      query: query.loc?.source.body,
       operationName: _getOperationName(query),
       variables,
     },
@@ -43,7 +44,7 @@ export const makeRequest = async <ReturnType = any, Vars = {}>(
   return response.data;
 };
 
-export const buildRequest = <ReturnType, Vars>(query: string) => {
+export const buildRequest = <ReturnType, Vars>(query: DocumentNode) => {
   return async ({ variables }: { variables: Vars }) =>
     await makeRequest<ReturnType>(query, variables || {});
 };

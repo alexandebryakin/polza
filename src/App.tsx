@@ -8,7 +8,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Signin from './pages/Auth/Signin/Signin.component';
 import Signup from './pages/Auth/Signup/Signup.component';
 import { isRoutePublic, ROUTES } from './navigation/routes';
-import { jwt } from './core/jwt';
+import { jwt } from './api/jwt';
 import Layout from './components/Layout';
 import LayoutProvider from './components/Layout/LayoutProvider';
 

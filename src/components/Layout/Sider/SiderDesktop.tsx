@@ -16,7 +16,7 @@ import {
 import SiderDesktopItem from './SiderDesktopItem';
 import { useLayout } from '../LayoutProvider';
 import Collapser from './Collapser';
-import { jwt } from '../../../core/jwt';
+import { jwt } from '../../../api/jwt';
 
 function SiderDesktop() {
   const [t] = useTranslation('common');

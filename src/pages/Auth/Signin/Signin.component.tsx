@@ -7,16 +7,17 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Input } from '../../../antd';
 
-import * as auth from '../../../core/auth';
-import {
-  SigninUserResponse,
-  SignupCredentialsVariables,
-} from '../../../core/auth';
+import * as auth from '../../../api/auth';
 
 import isEmpty from 'lodash/isEmpty';
-import { jwt } from '../../../core/jwt';
+import { jwt } from '../../../api/jwt';
 import { ROUTES } from '../../../navigation/routes';
 import Layout from '../Layout/Layout.component';
+import {
+  SigninUserMutation,
+  SigninUserMutationVariables,
+} from '../../../api/graphql.types';
+import { AxiosResponseWrapper } from '../../../api/makeRequest';
 
 const FIELDS = {
   email: 'email',
@@ -29,10 +30,10 @@ type FieldData = {
 };
 
 const buildAntFormErrorFieldsData = (
-  response: SigninUserResponse,
+  response: AxiosResponseWrapper<SigninUserMutation>,
   t: TFunction
 ) => {
-  const userErrors = response.data.signinUser.errors.user || [];
+  const userErrors = response.data.signinUser?.errors.user || [];
 
   const fieldData: FieldData[] = [];
 
@@ -57,19 +58,19 @@ const buildAntFormErrorFieldsData = (
 
 function Signin() {
   const [t] = useTranslation('common');
-  const [form] = Form.useForm<SignupCredentialsVariables>();
+  const [form] = Form.useForm<SigninUserMutationVariables>();
 
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
 
-  const onFinish = async (values: SignupCredentialsVariables) => {
+  const onFinish = async (values: SigninUserMutationVariables) => {
     setLoading(true);
     const response = await auth.signinUser({ variables: values });
 
-    if (!isEmpty(response.data.signinUser.errors)) {
+    if (!isEmpty(response.data.signinUser?.errors)) {
       form.setFields(buildAntFormErrorFieldsData(response, t));
     } else {
-      jwt.set(response.data.signinUser.token || '');
+      jwt.set(response.data.signinUser?.token || '');
 
       navigate(ROUTES.PROFILE);
     }
