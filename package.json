@@ -33,7 +33,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prebuild": "yarn graphql:codegen",
+    "prestart": "yarn graphql:codegen",
+    "graphql:codegen": "graphql-codegen --config codegen.yml"
   },
   "eslintConfig": {
     "extends": [
@@ -54,6 +57,9 @@
     ]
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.12.0",
+    "@graphql-codegen/typescript": "2.7.3",
+    "@graphql-codegen/typescript-operations": "2.5.3",
     "prettier": "2.7.1"
   }
 }

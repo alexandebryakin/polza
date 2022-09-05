@@ -7,16 +7,17 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Input } from '../../../antd';
 
-import * as auth from '../../../core/auth';
-import {
-  SignupCredentialsVariables,
-  SignupUserResponse,
-} from '../../../core/auth';
+import * as auth from '../../../api/auth';
 
 import isEmpty from 'lodash/isEmpty';
 import { ROUTES } from '../../../navigation/routes';
 import Layout from '../Layout/Layout.component';
-import { jwt } from '../../../core/jwt';
+import { jwt } from '../../../api/jwt';
+import {
+  SignupUserMutation,
+  SignupUserMutationVariables,
+} from '../../../api/graphql.types';
+import { AxiosResponseWrapper } from '../../../api/makeRequest';
 
 const FIELDS = {
   email: 'email',
@@ -29,18 +30,18 @@ type FieldData = {
 };
 
 const buildAntFormErrorFieldsData = (
-  response: SignupUserResponse,
+  response: AxiosResponseWrapper<SignupUserMutation>,
   t: TFunction
 ) => {
   const fieldData: FieldData[] = [];
 
-  if (response.data.signupUser.errors.email) {
+  if (response.data.signupUser?.errors.email) {
     fieldData.push({
       name: FIELDS.email,
       errors: [t('auth.errors.invalidEmail')],
     });
   }
-  if (response.data.signupUser.errors.password) {
+  if (response.data.signupUser?.errors.password) {
     fieldData.push({
       name: FIELDS.password,
       errors: [t('auth.errors.invalidPassoword')],
@@ -52,19 +53,19 @@ const buildAntFormErrorFieldsData = (
 
 function Signup() {
   const [t] = useTranslation('common');
-  const [form] = Form.useForm<SignupCredentialsVariables>();
+  const [form] = Form.useForm<SignupUserMutationVariables>();
 
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
 
-  const onFinish = async (values: SignupCredentialsVariables) => {
+  const onFinish = async (values: SignupUserMutationVariables) => {
     setLoading(true);
     const response = await auth.signupUser({ variables: values });
 
-    if (!isEmpty(response.data.signupUser.errors)) {
+    if (!isEmpty(response.data.signupUser?.errors)) {
       form.setFields(buildAntFormErrorFieldsData(response, t));
     } else {
-      jwt.set(response.data.signupUser.token || '');
+      jwt.set(response.data.signupUser?.token || '');
 
       navigate(ROUTES.PROFILE);
     }

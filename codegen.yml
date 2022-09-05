@@ -1,0 +1,24 @@
+overwrite: true
+schema: 'http://localhost:3001/graphql_schema'
+documents: 'src/api/**/*.ts'
+generates:
+  src/api/graphql.types.tsx:
+    config:
+      avoidOptionals:
+        field: true
+        inputValue: false
+        object: false
+        resolvers: true
+        defaultValue: true
+      strictScalars: true
+      scalars:
+        ISO8601Date: string
+        ISO8601DateTime: string
+        JSON: any
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+
+hooks:
+  afterAllFileWrite:
+    - prettier --write

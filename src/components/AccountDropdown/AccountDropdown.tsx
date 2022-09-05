@@ -2,7 +2,7 @@ import { PoweroffOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 import { DropdownProps } from 'antd/lib/dropdown';
 import { useTranslation } from 'react-i18next';
-import { jwt } from '../../core/jwt';
+import { jwt } from '../../api/jwt';
 import Dropdown from '../../lib/Dropdown';
 import { ROUTES } from '../../navigation/routes';
 
