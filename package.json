@@ -34,6 +34,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "prebuild": "yarn graphql:codegen",
+    "prestart": "yarn graphql:codegen",
     "graphql:codegen": "graphql-codegen --config codegen.yml"
   },
   "eslintConfig": {
