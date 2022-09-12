@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestHeaders } from 'axios';
 import { DocumentNode } from 'graphql';
 import { jwt } from './jwt';
 
@@ -11,11 +11,7 @@ const _getOperationName = (query: DocumentNode): string => {
   } catch (e) {
     if (process.env.NODE_ENV === 'production') return '';
 
-    console.warn(
-      "_getOperationName: Couldn't extract operation name from query",
-      query,
-      e
-    );
+    console.warn("_getOperationName: Couldn't extract operation name from query", query, e);
     return '';
   }
 };
@@ -24,27 +20,28 @@ export type AxiosResponseWrapper<T> = { data: T };
 
 export const makeRequest = async <ReturnType = any, Vars = {}>(
   query: DocumentNode,
-  variables: Vars
+  variables: Vars,
+  options: Options = {}
 ) => {
-  console.log('query.loc?.source', query.loc?.source.body);
-  const response = await axios.post<AxiosResponseWrapper<ReturnType>>(
-    API_GRPAHQL_URL,
-    {
-      query: query.loc?.source.body,
-      operationName: _getOperationName(query),
-      variables,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${jwt.get()}`,
-      },
-    }
-  );
+  const data = {
+    query: query.loc?.source.body,
+    operationName: _getOperationName(query),
+    variables,
+  };
+
+  const headers: AxiosRequestHeaders = {
+    Authorization: `Bearer ${jwt.get()}`,
+    ...options.headers,
+  };
+
+  const response = await axios.post<AxiosResponseWrapper<ReturnType>>(API_GRPAHQL_URL, data, { headers });
 
   return response.data;
 };
 
-export const buildRequest = <ReturnType, Vars>(query: DocumentNode) => {
-  return async ({ variables }: { variables: Vars }) =>
-    await makeRequest<ReturnType>(query, variables || {});
+type Options = {
+  headers?: AxiosRequestHeaders;
+};
+export const buildRequest = <ReturnType, Vars>(query: DocumentNode, options: Options = {}) => {
+  return async ({ variables }: { variables: Vars }) => await makeRequest<ReturnType>(query, variables || {}, options);
 };

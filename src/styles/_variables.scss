@@ -1,9 +1,13 @@
 // [COLOR]:
 $border-color: #f4f2f2;
-$primary-color: #eb4972;
+// $primary-color: #eb4972;
+$primary-color: #1890ff;
+
 $background-color: #f8fafb;
 $text-color--secondary: #adafbb;
 $text-color--primary: #273043;
+
+$warning: #ffcc00;
 
 // [SIZE]:
 $border-size: 1px;
@@ -14,5 +18,4 @@ $desktop-sider__icon-size: 20px;
 $desktop-sider__icon-margin: 12px;
 
 $sider-width--expanded: 270px;
-$sider-width--collapsed: $desktop-sider__pointer-width +
-  ($desktop-sider__icon-margin * 2) + $desktop-sider__icon-size;
+$sider-width--collapsed: $desktop-sider__pointer-width + ($desktop-sider__icon-margin * 2) + $desktop-sider__icon-size;

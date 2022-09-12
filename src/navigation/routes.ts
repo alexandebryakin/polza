@@ -1,34 +1,57 @@
-export const ROUTES = {
-  AUTH: {
-    SIGNUP: '/signup',
-    SIGNIN: '/signin',
-  },
+import { builder, Config, Route, Subroute } from 'dromos';
 
-  PROFILE: '/profile',
-  BUSINESS_CARDS: '/business_cards',
-  SETTINGS: '/settings',
+const config: Config = {
+  notation: 'snake_case',
 };
 
-export const PUBLIC_ROUTES = [ROUTES.AUTH.SIGNIN, ROUTES.AUTH.SIGNUP];
+type Routes = {
+  signup: Route;
+  signin: Route;
+
+  profile: Subroute<{
+    general: Route;
+    passport: Route;
+    security: Route;
+  }>;
+  businessCards: Route;
+
+  settings: Route;
+};
+
+export const routes = builder.define<Routes>((root) => {
+  root.define('signup');
+  root.define('signin');
+
+  root.define('profile').subroutes((profile) => {
+    profile.define('general');
+    profile.define('passport');
+    profile.define('security');
+  });
+
+  root.define('businessCards');
+  root.define('settings');
+}, config);
+
+// routes.__is.profile.general
+// routes.__is.profile.general(window.location.pathname)
+
+export const PUBLIC_ROUTES = [routes.signin()._, routes.signup()._];
 
 export const isRoutePublic = (): boolean => {
-  return PUBLIC_ROUTES.some((route) =>
-    window.location.pathname.includes(route)
-  );
+  return PUBLIC_ROUTES.some((route) => window.location.pathname.includes(route));
 };
 
-const isProfile = () => window.location.pathname.includes(ROUTES.PROFILE);
+const isProfile = () => window.location.pathname.includes(routes.profile()._);
 
-const isBusinessCards = () =>
-  window.location.pathname.includes(ROUTES.BUSINESS_CARDS);
+const isBusinessCards = () => window.location.pathname.includes(routes.businessCards()._);
 
-const isSettings = () => window.location.pathname.includes(ROUTES.SETTINGS);
+const isSettings = () => window.location.pathname.includes(routes.settings()._);
 
-export const routes = {
+export const routesHelpers = {
   isProfile,
   isBusinessCards,
 
   isSettings,
 };
 
-Object.assign(window, { routes, ROUTES });
+Object.assign(window, { routesHelpers, routes });

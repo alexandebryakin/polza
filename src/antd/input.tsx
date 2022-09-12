@@ -10,12 +10,8 @@ export function Input(props: InputProps) {
 }
 
 function Password(props: PasswordProps) {
-  return (
-    <AntInput.Password
-      {...props}
-      className={css(props.className, styles.input)}
-    />
-  );
+  return <AntInput.Password {...props} className={css(props.className, styles.input)} />;
 }
 
 Input.Password = Password;
+Input.Group = AntInput.Group;

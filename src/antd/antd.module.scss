@@ -1,4 +1,10 @@
+@import 'src/styles/_variables.scss';
+
 $border-radius-8px: 8px;
+
+.alert {
+  border-radius: $border-radius-8px;
+}
 
 .input {
   border-radius: $border-radius-8px;
@@ -6,4 +12,28 @@ $border-radius-8px: 8px;
 
 .button {
   border-radius: $border-radius-8px;
+}
+
+.tabs {
+  :global(.ant-tabs-ink-bar) {
+    background: $primary-color;
+  }
+
+  :global(.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn) {
+    color: $primary-color !important;
+  }
+
+  :global(.ant-tabs-tab) {
+    &:hover {
+      color: $primary-color !important;
+    }
+  }
+}
+
+.tooltipOverlay {
+  :global(.ant-tooltip-inner) {
+    background: rgba($background-color, 0.95);
+    color: $text-color--primary;
+    border-radius: 4px;
+  }
 }

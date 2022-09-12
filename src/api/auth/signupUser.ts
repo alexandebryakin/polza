@@ -1,8 +1,5 @@
 import gql from 'graphql-tag';
-import {
-  SignupUserMutation,
-  SignupUserMutationVariables,
-} from '../graphql.types';
+import { SignupUserMutation, SignupUserMutationVariables } from '../graphql.types';
 import { buildRequest } from '../makeRequest';
 
 const SIGNUP_USER = gql`
@@ -33,7 +30,5 @@ const SIGNUP_USER = gql`
 //   };
 // };
 
-export const signupUser = buildRequest<
-  SignupUserMutation,
-  SignupUserMutationVariables
->(SIGNUP_USER);
+// TODO: replace with `@apollo/client`
+export const signupUser = buildRequest<SignupUserMutation, SignupUserMutationVariables>(SIGNUP_USER);

@@ -4,7 +4,7 @@ import { DropdownProps } from 'antd/lib/dropdown';
 import { useTranslation } from 'react-i18next';
 import { jwt } from '../../api/jwt';
 import Dropdown from '../../lib/Dropdown';
-import { ROUTES } from '../../navigation/routes';
+import { routes } from '../../navigation/routes';
 
 import styles from './AccountDropdown.module.scss';
 
@@ -33,17 +33,8 @@ function AccountDropdown({ className }: AccountDropdownProps) {
 
   return (
     <Dropdown toggler={<Toggler />} className={className}>
-      <Dropdown.Item
-        icon={<UserOutlined />}
-        to={ROUTES.PROFILE}
-        label={t('nav.profile')}
-      />
-      <Dropdown.Item
-        to={ROUTES.AUTH.SIGNIN}
-        icon={<PoweroffOutlined />}
-        label={t('nav.logout')}
-        onClick={jwt.forget}
-      />
+      <Dropdown.Item icon={<UserOutlined />} to={routes.profile()._} label={t('nav.profile')} />
+      <Dropdown.Item to={routes.signin()._} icon={<PoweroffOutlined />} label={t('nav.logout')} onClick={jwt.forget} />
     </Dropdown>
   );
 }

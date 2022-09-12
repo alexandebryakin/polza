@@ -7,14 +7,17 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import Signin from './pages/Auth/Signin/Signin.component';
 import Signup from './pages/Auth/Signup/Signup.component';
-import { isRoutePublic, ROUTES } from './navigation/routes';
+
+import { isRoutePublic, routes } from './navigation/routes';
 import { jwt } from './api/jwt';
+
 import Layout from './components/Layout';
 import LayoutProvider from './components/Layout/LayoutProvider';
+import Profile from './pages/Profile';
 
 function App() {
   if (jwt.isExpired() && !isRoutePublic()) {
-    window.location.pathname = ROUTES.AUTH.SIGNIN;
+    window.location.pathname = routes.signin()._;
     return null;
   }
 
@@ -22,20 +25,22 @@ function App() {
     <BrowserRouter>
       <LayoutProvider>
         <Routes>
-          <Route path={ROUTES.AUTH.SIGNIN} element={<Signin />} />
-          <Route path={ROUTES.AUTH.SIGNUP} element={<Signup />} />
+          <Route path={routes.signin()._} element={<Signin />} />
+          <Route path={routes.signup()._} element={<Signup />} />
 
           <Route
-            path={ROUTES.PROFILE}
+            path={routes.profile()._}
             element={
               <Layout>
-                <div>TODO: PROFILE</div>
+                <Profile />
               </Layout>
             }
-          />
+          >
+            <Route path={routes.profile(':tab')._} element={null} />
+          </Route>
 
           <Route
-            path={ROUTES.BUSINESS_CARDS}
+            path={routes.businessCards()._}
             element={
               <Layout>
                 <div>TODO: Business Cards</div>
@@ -44,7 +49,7 @@ function App() {
           />
 
           <Route
-            path={ROUTES.SETTINGS}
+            path={routes.settings()._}
             element={
               <Layout>
                 <div>TODO: Settings</div>
@@ -52,10 +57,7 @@ function App() {
             }
           />
 
-          <Route
-            path="*"
-            element={<Navigate to={ROUTES.AUTH.SIGNIN} replace />}
-          />
+          <Route path="*" element={<Navigate to={routes.signin()._} replace />} />
         </Routes>
       </LayoutProvider>
     </BrowserRouter>

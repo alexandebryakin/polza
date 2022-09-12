@@ -1,6 +1,9 @@
 {
   "generic": {
-    "polza": "Polza"
+    "polza": "Polza",
+    "actions": {
+      "save": "Save"
+    }
   },
   "auth": {
     "welcomeBack": "Welcome back!",
@@ -30,5 +33,31 @@
     "businessCards": "Business Cards",
     "settings": "Settings",
     "logout": "Log Out"
+  },
+  "profile": {
+    "profile": "Profile",
+    "passportNotVerified": "Passport is not verified",
+    "tabs": {
+      "generalInfo": "General Info",
+      "passport": "Passport",
+      "security": "Security"
+    },
+    "passport": {
+      "fields": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "middleName": "Middle Name",
+        "code": "Code",
+        "number": "Number",
+        "image": "Passport Image"
+      },
+      "rules": {
+        "fieldRequired": "The field is required"
+      },
+      "errors": {
+        "invalidValue": "The value is invalid"
+      },
+      "clickOrDragFile": "Click or drag file to this area to upload"
+    }
   }
 }
