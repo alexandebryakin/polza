@@ -40,7 +40,7 @@
     "tabs": {
       "generalInfo": "General Info",
       "passport": "Passport",
-      "password": "Password"
+      "security": "Security"
     },
     "passport": {
       "fields": {
@@ -48,11 +48,16 @@
         "lastName": "Last Name",
         "middleName": "Middle Name",
         "code": "Code",
-        "number": "Number"
+        "number": "Number",
+        "image": "Passport Image"
       },
       "rules": {
         "fieldRequired": "The field is required"
-      }
+      },
+      "errors": {
+        "invalidValue": "The value is invalid"
+      },
+      "clickOrDragFile": "Click or drag file to this area to upload"
     }
   }
 }

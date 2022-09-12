@@ -1,8 +1,11 @@
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -10,7 +13,20 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  ISO8601DateTime: string;
   JSON: any;
+  Upload: File;
+};
+
+export type Attachment = {
+  __typename?: 'Attachment';
+  contentType: Maybe<Scalars['String']>;
+  createdAt: Scalars['ISO8601DateTime'];
+  documentableId: Maybe<Scalars['ID']>;
+  documentableType: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  updatedAt: Scalars['ISO8601DateTime'];
+  url: Scalars['String'];
 };
 
 export type Mutation = {
@@ -33,6 +49,7 @@ export type MutationSignupUserArgs = {
 export type MutationUpsertPassportArgs = {
   code: Scalars['String'];
   firstName: Scalars['String'];
+  image: Scalars['Upload'];
   lastName: Scalars['String'];
   middleName: Scalars['String'];
   number: Scalars['String'];
@@ -43,11 +60,12 @@ export type Passport = {
   code: Scalars['String'];
   firstName: Scalars['String'];
   id: Scalars['ID'];
+  image: Maybe<Attachment>;
   lastName: Scalars['String'];
   middleName: Scalars['String'];
   number: Scalars['String'];
   userId: Scalars['ID'];
-  verified: Scalars['Boolean'];
+  verificationStatus: VerificationStatus;
 };
 
 export type Query = {
@@ -92,6 +110,12 @@ export type User = {
   passport: Maybe<Passport>;
 };
 
+export enum VerificationStatus {
+  Failed = 'failed',
+  InProgress = 'in_progress',
+  Succeded = 'succeded',
+}
+
 export type SigninUserMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -121,3 +145,187 @@ export type SignupUserMutation = {
     user: { __typename?: 'User'; id: string; email: string } | null;
   } | null;
 };
+
+export type UpsertPassportMutationVariables = Exact<{
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  middleName: Scalars['String'];
+  code: Scalars['String'];
+  number: Scalars['String'];
+  image: Scalars['Upload'];
+}>;
+
+export type UpsertPassportMutation = {
+  __typename?: 'Mutation';
+  upsertPassport: {
+    __typename?: 'UpsertPassportPayload';
+    status: Status | null;
+    errors: any | null;
+    passport: {
+      __typename?: 'Passport';
+      id: string;
+      userId: string;
+      firstName: string;
+      lastName: string;
+      middleName: string;
+      code: string;
+      number: string;
+      verificationStatus: VerificationStatus;
+      image: { __typename?: 'Attachment'; url: string } | null;
+    } | null;
+  } | null;
+};
+
+export const SigninUserDocument = gql`
+  mutation SigninUser($email: String!, $password: String!) {
+    signinUser(email: $email, password: $password) {
+      user {
+        id
+        email
+      }
+      token
+      errors
+    }
+  }
+`;
+export type SigninUserMutationFn = Apollo.MutationFunction<SigninUserMutation, SigninUserMutationVariables>;
+
+/**
+ * __useSigninUserMutation__
+ *
+ * To run a mutation, you first call `useSigninUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSigninUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signinUserMutation, { data, loading, error }] = useSigninUserMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useSigninUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<SigninUserMutation, SigninUserMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<SigninUserMutation, SigninUserMutationVariables>(SigninUserDocument, options);
+}
+export type SigninUserMutationHookResult = ReturnType<typeof useSigninUserMutation>;
+export type SigninUserMutationResult = Apollo.MutationResult<SigninUserMutation>;
+export type SigninUserMutationOptions = Apollo.BaseMutationOptions<SigninUserMutation, SigninUserMutationVariables>;
+export const SignupUserDocument = gql`
+  mutation SignupUser($email: String!, $password: String!) {
+    signupUser(email: $email, password: $password) {
+      user {
+        id
+        email
+      }
+      token
+      errors
+    }
+  }
+`;
+export type SignupUserMutationFn = Apollo.MutationFunction<SignupUserMutation, SignupUserMutationVariables>;
+
+/**
+ * __useSignupUserMutation__
+ *
+ * To run a mutation, you first call `useSignupUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignupUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signupUserMutation, { data, loading, error }] = useSignupUserMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useSignupUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<SignupUserMutation, SignupUserMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<SignupUserMutation, SignupUserMutationVariables>(SignupUserDocument, options);
+}
+export type SignupUserMutationHookResult = ReturnType<typeof useSignupUserMutation>;
+export type SignupUserMutationResult = Apollo.MutationResult<SignupUserMutation>;
+export type SignupUserMutationOptions = Apollo.BaseMutationOptions<SignupUserMutation, SignupUserMutationVariables>;
+export const UpsertPassportDocument = gql`
+  mutation UpsertPassport(
+    $firstName: String!
+    $lastName: String!
+    $middleName: String!
+    $code: String!
+    $number: String!
+    $image: Upload!
+  ) {
+    upsertPassport(
+      firstName: $firstName
+      lastName: $lastName
+      middleName: $middleName
+      code: $code
+      number: $number
+      image: $image
+    ) {
+      passport {
+        id
+        userId
+        firstName
+        lastName
+        middleName
+        code
+        number
+        verificationStatus
+        image {
+          url
+        }
+      }
+      status
+      errors
+    }
+  }
+`;
+export type UpsertPassportMutationFn = Apollo.MutationFunction<UpsertPassportMutation, UpsertPassportMutationVariables>;
+
+/**
+ * __useUpsertPassportMutation__
+ *
+ * To run a mutation, you first call `useUpsertPassportMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertPassportMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertPassportMutation, { data, loading, error }] = useUpsertPassportMutation({
+ *   variables: {
+ *      firstName: // value for 'firstName'
+ *      lastName: // value for 'lastName'
+ *      middleName: // value for 'middleName'
+ *      code: // value for 'code'
+ *      number: // value for 'number'
+ *      image: // value for 'image'
+ *   },
+ * });
+ */
+export function useUpsertPassportMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpsertPassportMutation, UpsertPassportMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpsertPassportMutation, UpsertPassportMutationVariables>(UpsertPassportDocument, options);
+}
+export type UpsertPassportMutationHookResult = ReturnType<typeof useUpsertPassportMutation>;
+export type UpsertPassportMutationResult = Apollo.MutationResult<UpsertPassportMutation>;
+export type UpsertPassportMutationOptions = Apollo.BaseMutationOptions<
+  UpsertPassportMutation,
+  UpsertPassportMutationVariables
+>;

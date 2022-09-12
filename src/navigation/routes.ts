@@ -11,6 +11,7 @@ type Routes = {
   profile: Subroute<{
     general: Route;
     passport: Route;
+    security: Route;
   }>;
   businessCards: Route;
 
@@ -24,6 +25,7 @@ export const routes = builder.define<Routes>((root) => {
   root.define('profile').subroutes((profile) => {
     profile.define('general');
     profile.define('passport');
+    profile.define('security');
   });
 
   root.define('businessCards');
@@ -52,4 +54,4 @@ export const routesHelpers = {
   isSettings,
 };
 
-Object.assign(window, { routesHelpers });
+Object.assign(window, { routesHelpers, routes });

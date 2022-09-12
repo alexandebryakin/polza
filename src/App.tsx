@@ -35,7 +35,9 @@ function App() {
                 <Profile />
               </Layout>
             }
-          />
+          >
+            <Route path={routes.profile(':tab')._} element={null} />
+          </Route>
 
           <Route
             path={routes.businessCards()._}
