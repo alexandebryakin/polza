@@ -35,11 +35,18 @@ function isExpired(): boolean {
   return Date.now() > exp * 1000;
 }
 
+function decoded() {
+  const token = get();
+
+  return token ? _decode(token) : null;
+}
+
 export const jwt = {
   set,
   get,
   isExpired,
   forget,
+  decoded,
 };
 
 Object.assign(window, { jwt });
