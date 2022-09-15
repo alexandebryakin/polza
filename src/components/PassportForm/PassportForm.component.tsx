@@ -1,5 +1,5 @@
 import { InboxOutlined } from '@ant-design/icons';
-import { Col, Form, Row } from 'antd';
+import { Col, Form, notification, Row } from 'antd';
 import Dragger from 'antd/lib/upload/Dragger';
 import { RcFile } from 'antd/lib/upload';
 import React from 'react';
@@ -36,15 +36,27 @@ function PassportForm() {
 
   const [formDisabled, setFormDisabled] = React.useState(false);
 
-  const { passport } = useUserInfoContext();
+  const { passport, refetchPassport } = useUserInfoContext();
 
   React.useEffect(() => {
     Object.entries(passport || {}).forEach(([key, value]) => form.setFieldValue(key, value));
 
-    setFormDisabled(!passport || passport.verificationStatus !== VerificationStatus.Failed);
+    passport && setFormDisabled(passport.verificationStatus !== VerificationStatus.Failed);
   }, [form, passport]);
 
+  React.useEffect(() => {
+    if (!error) return;
+
+    console.error(error);
+
+    notification.error({
+      message: t('profile.passport.errors.anErrorOccuredWhileSavingPassport'),
+    });
+  }, [error, t]);
+
   const onFinish = async (variables: MutationUpsertPassportArgs) => {
+    if (formDisabled) return;
+
     if (!image) {
       form.setFields([
         {
@@ -74,6 +86,7 @@ function PassportForm() {
 
     if (response.data?.upsertPassport?.status === Status.Success) {
       setFormDisabled(true);
+      refetchPassport();
     }
   };
 

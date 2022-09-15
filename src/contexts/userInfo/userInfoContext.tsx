@@ -5,6 +5,7 @@ import { IUsePassport, usePassport } from '../../api/passports';
 export interface IUserInfoContext {
   loading: boolean;
   passport: IUsePassport['passport'];
+  refetchPassport: IUsePassport['refetch'];
 }
 
 export const UserInfoContext = React.createContext({} as IUserInfoContext);
@@ -30,7 +31,7 @@ export const UserInfoContextProvider = ({ children }: { children: React.ReactNod
 
   const loading = loadingPassoword;
 
-  return <UserInfoContext.Provider value={{ passport, loading }} children={children} />;
+  return <UserInfoContext.Provider value={{ passport, loading, refetchPassport }} children={children} />;
 };
 
 export const useUserInfoContext = () => {

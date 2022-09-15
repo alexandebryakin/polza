@@ -20,17 +20,14 @@ export const GET_PASSPORT = gql`
   }
 `;
 
-export interface IUsePassport {
-  loading: boolean;
+export interface IUsePassport extends Omit<ReturnType<typeof useGetPassportQuery>, 'data'> {
   passport?: GetPassportQuery['passport'];
-  refetch: ObservableQuery['refetch'];
 }
 export const usePassport = (variables: GetPassportQueryVariables): IUsePassport => {
-  const { loading, data, refetch } = useGetPassportQuery({ variables });
+  const { data, ...rest } = useGetPassportQuery({ variables });
 
   return {
-    loading,
     passport: data?.passport,
-    refetch,
+    ...rest,
   };
 };

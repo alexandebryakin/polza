@@ -55,10 +55,30 @@ const TabLabel = ({ className, ...rest }: TabLabelProps) => {
   return <Link {...rest} className={css(styles.tabLabel, className)} />;
 };
 
-function Profile() {
+const WarningVerificationIcon = () => {
   const [t] = useTranslation('common');
 
-  const verified = false; // TODO:
+  const { passport } = useUserInfoContext();
+
+  if (passport?.verificationStatus === VerificationStatus.Succeeded) return null;
+
+  const colors: Record<VerificationStatus, string> = {
+    [VerificationStatus.InProgress]: styles.info,
+    [VerificationStatus.Failed]: styles.error,
+    [VerificationStatus.Succeeded]: '',
+  };
+
+  return (
+    <Tooltip title={t('profile.passport.verification.notVerified')}>
+      <WarningOutlined
+        className={css(styles.tabIcon, passport ? colors[passport.verificationStatus] : styles.warning)}
+      />
+    </Tooltip>
+  );
+};
+
+function Profile() {
+  const [t] = useTranslation('common');
 
   return (
     <div className={styles.page}>
@@ -86,11 +106,7 @@ function Profile() {
                 <span>
                   {t('profile.tabs.passport')}
 
-                  {!verified && (
-                    <Tooltip title={t('profile.passportNotVerified')}>
-                      <WarningOutlined className={css(styles.tabIcon, styles.warning)} />
-                    </Tooltip>
-                  )}
+                  <WarningVerificationIcon />
                 </span>
               </TabLabel>
             ),

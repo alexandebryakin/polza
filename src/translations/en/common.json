@@ -54,7 +54,8 @@
         "fieldRequired": "The field is required"
       },
       "errors": {
-        "invalidValue": "The value is invalid"
+        "invalidValue": "The value is invalid",
+        "anErrorOccuredWhileSavingPassport": "An error occured while saving passport. Please, try again."
       },
       "verification": {
         "notVerified": "Passport is not verified",
