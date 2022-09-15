@@ -1,5 +1,5 @@
 import { InboxOutlined } from '@ant-design/icons';
-import { Col, Form, Row } from 'antd';
+import { Col, Form, notification, Row } from 'antd';
 import Dragger from 'antd/lib/upload/Dragger';
 import { RcFile } from 'antd/lib/upload';
 import React from 'react';
@@ -10,10 +10,12 @@ import {
   Status,
   UpsertPassportMutationVariables,
   useUpsertPassportMutation,
+  VerificationStatus,
 } from '../../api/graphql.types';
 import styles from './PassportForm.module.scss';
 import { buildFields } from '../../utils/buildFields';
 import { onFailure } from '../../utils/onFailure';
+import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
 
 const FIELDS = buildFields<UpsertPassportMutationVariables>([
   'firstName',
@@ -34,12 +36,27 @@ function PassportForm() {
 
   const [formDisabled, setFormDisabled] = React.useState(false);
 
-  // TODO:
-  //   - add fetch passport info
-  //   - display notification if paasport is not verified based on that info
-  //   - disable form based on verificationStatus
+  const { passport, refetchPassport } = useUserInfoContext();
+
+  React.useEffect(() => {
+    Object.entries(passport || {}).forEach(([key, value]) => form.setFieldValue(key, value));
+
+    passport && setFormDisabled(passport.verificationStatus !== VerificationStatus.Failed);
+  }, [form, passport]);
+
+  React.useEffect(() => {
+    if (!error) return;
+
+    console.error(error);
+
+    notification.error({
+      message: t('profile.passport.errors.anErrorOccuredWhileSavingPassport'),
+    });
+  }, [error, t]);
 
   const onFinish = async (variables: MutationUpsertPassportArgs) => {
+    if (formDisabled) return;
+
     if (!image) {
       form.setFields([
         {
@@ -69,11 +86,20 @@ function PassportForm() {
 
     if (response.data?.upsertPassport?.status === Status.Success) {
       setFormDisabled(true);
+      refetchPassport();
     }
   };
 
   return (
-    <Form name="passport" form={form} layout="vertical" onFinish={onFinish} autoComplete="off" disabled={formDisabled}>
+    <Form
+      name="passport"
+      form={form}
+      layout="vertical"
+      onFinish={onFinish}
+      autoComplete="off"
+      disabled={formDisabled}
+      initialValues={{ ...passport }}
+    >
       <Row gutter={16}>
         <Col lg={8} md={12} xs={24}>
           <Form.Item

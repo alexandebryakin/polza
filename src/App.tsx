@@ -14,6 +14,7 @@ import { jwt } from './api/jwt';
 import Layout from './components/Layout';
 import LayoutProvider from './components/Layout/LayoutProvider';
 import Profile from './pages/Profile';
+import { UserInfoContextProvider } from './contexts/userInfo/userInfoContext';
 
 function App() {
   if (jwt.isExpired() && !isRoutePublic()) {
@@ -23,43 +24,45 @@ function App() {
 
   return (
     <BrowserRouter>
-      <LayoutProvider>
-        <Routes>
-          <Route path={routes.signin()._} element={<Signin />} />
-          <Route path={routes.signup()._} element={<Signup />} />
+      <UserInfoContextProvider>
+        <LayoutProvider>
+          <Routes>
+            <Route path={routes.signin()._} element={<Signin />} />
+            <Route path={routes.signup()._} element={<Signup />} />
 
-          <Route
-            path={routes.profile()._}
-            element={
-              <Layout>
-                <Profile />
-              </Layout>
-            }
-          >
-            <Route path={routes.profile(':tab')._} element={null} />
-          </Route>
+            <Route
+              path={routes.profile()._}
+              element={
+                <Layout>
+                  <Profile />
+                </Layout>
+              }
+            >
+              <Route path={routes.profile(':tab')._} element={null} />
+            </Route>
 
-          <Route
-            path={routes.businessCards()._}
-            element={
-              <Layout>
-                <div>TODO: Business Cards</div>
-              </Layout>
-            }
-          />
+            <Route
+              path={routes.businessCards()._}
+              element={
+                <Layout>
+                  <div>TODO: Business Cards</div>
+                </Layout>
+              }
+            />
 
-          <Route
-            path={routes.settings()._}
-            element={
-              <Layout>
-                <div>TODO: Settings</div>
-              </Layout>
-            }
-          />
+            <Route
+              path={routes.settings()._}
+              element={
+                <Layout>
+                  <div>TODO: Settings</div>
+                </Layout>
+              }
+            />
 
-          <Route path="*" element={<Navigate to={routes.signin()._} replace />} />
-        </Routes>
-      </LayoutProvider>
+            <Route path="*" element={<Navigate to={routes.signin()._} replace />} />
+          </Routes>
+        </LayoutProvider>
+      </UserInfoContextProvider>
     </BrowserRouter>
   );
 }

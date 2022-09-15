@@ -2,6 +2,7 @@
 
 .container {
   max-width: $sider-width--expanded;
+  min-width: $sider-width--expanded;
   transition: max-width 150ms;
   background: $background-color;
   padding: 0 0 20px 0;
@@ -10,13 +11,12 @@
 }
 .collapsed {
   max-width: $sider-width--collapsed;
+  min-width: $sider-width--collapsed;
 }
 
 .logo {
   height: $top-nav__height;
   display: flex;
   align-items: center;
-  margin-left: calc(
-    #{$desktop-sider__pointer-width} + #{$desktop-sider__icon-margin}
-  );
+  margin-left: calc(#{$desktop-sider__pointer-width} + #{$desktop-sider__icon-margin});
 }

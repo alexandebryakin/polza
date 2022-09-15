@@ -36,7 +36,6 @@
   },
   "profile": {
     "profile": "Profile",
-    "passportNotVerified": "Passport is not verified",
     "tabs": {
       "generalInfo": "General Info",
       "passport": "Passport",
@@ -55,7 +54,14 @@
         "fieldRequired": "The field is required"
       },
       "errors": {
-        "invalidValue": "The value is invalid"
+        "invalidValue": "The value is invalid",
+        "anErrorOccuredWhileSavingPassport": "An error occured while saving passport. Please, try again."
+      },
+      "verification": {
+        "notVerified": "Passport is not verified",
+        "failed": "Passport verification failed. Please, try submitting your passport data again or contact support",
+        "inProgress": "Passport verification is in progress",
+        "succeeded": "Passport verification succeeded"
       },
       "clickOrDragFile": "Click or drag file to this area to upload"
     }

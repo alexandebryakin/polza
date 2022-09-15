@@ -1,5 +1,5 @@
 import { WarningOutlined } from '@ant-design/icons';
-import { Typography } from 'antd';
+import { AlertProps, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { Tabs, Tooltip, Alert } from '../../antd';
 import css from 'classnames';
@@ -8,23 +8,40 @@ import FormCard from '../../lib/FormCard';
 import PassportForm from '../../components/PassportForm';
 import { Link, LinkProps } from 'react-router-dom';
 import { routes } from '../../navigation/routes';
+import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
+import { VerificationStatus } from '../../api/graphql.types';
 
-function PassportTab() {
+const VerificationAlert = () => {
   const [t] = useTranslation('common');
+  const { passport } = useUserInfoContext();
 
-  const verified = false;
+  const messages: Record<VerificationStatus, string> = {
+    [VerificationStatus.Failed]: t('profile.passport.verification.failed'),
+    [VerificationStatus.InProgress]: t('profile.passport.verification.inProgress'),
+    [VerificationStatus.Succeeded]: t('profile.passport.verification.succeeded'),
+  };
+
+  const types: Record<VerificationStatus, AlertProps['type']> = {
+    [VerificationStatus.Failed]: 'error',
+    [VerificationStatus.InProgress]: 'info',
+    [VerificationStatus.Succeeded]: 'success',
+  };
 
   return (
+    <Alert
+      message={passport ? messages[passport.verificationStatus] : t('profile.passport.verification.notVerified')}
+      type={passport ? types[passport.verificationStatus] : 'warning'}
+      showIcon
+      closable
+      className={css(styles.maxWidth624, styles.alert)}
+    />
+  );
+};
+
+function PassportTab() {
+  return (
     <div>
-      {!verified && (
-        <Alert
-          message={t('profile.passportNotVerified')}
-          type="warning"
-          showIcon
-          closable
-          className={css(styles.maxWidth624, styles.alert)}
-        />
-      )}
+      <VerificationAlert />
 
       <FormCard className={styles.maxWidth624}>
         <PassportForm />
@@ -38,10 +55,30 @@ const TabLabel = ({ className, ...rest }: TabLabelProps) => {
   return <Link {...rest} className={css(styles.tabLabel, className)} />;
 };
 
-function Profile() {
+const WarningVerificationIcon = () => {
   const [t] = useTranslation('common');
 
-  const verified = false; // TODO:
+  const { passport } = useUserInfoContext();
+
+  if (passport?.verificationStatus === VerificationStatus.Succeeded) return null;
+
+  const colors: Record<VerificationStatus, string> = {
+    [VerificationStatus.InProgress]: styles.info,
+    [VerificationStatus.Failed]: styles.error,
+    [VerificationStatus.Succeeded]: '',
+  };
+
+  return (
+    <Tooltip title={t('profile.passport.verification.notVerified')}>
+      <WarningOutlined
+        className={css(styles.tabIcon, passport ? colors[passport.verificationStatus] : styles.warning)}
+      />
+    </Tooltip>
+  );
+};
+
+function Profile() {
+  const [t] = useTranslation('common');
 
   return (
     <div className={styles.page}>
@@ -69,11 +106,7 @@ function Profile() {
                 <span>
                   {t('profile.tabs.passport')}
 
-                  {!verified && (
-                    <Tooltip title={t('profile.passportNotVerified')}>
-                      <WarningOutlined className={css(styles.tabIcon, styles.warning)} />
-                    </Tooltip>
-                  )}
+                  <WarningVerificationIcon />
                 </span>
               </TabLabel>
             ),
