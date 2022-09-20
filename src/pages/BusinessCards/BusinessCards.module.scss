@@ -1,0 +1,89 @@
+@import 'src/styles/_variables.scss';
+
+.page {
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+}
+
+$gap: 20px;
+.businessCardsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $gap;
+}
+
+// [BUSINESS CARD]:
+.businessCardWrapper {
+  aspect-ratio: 2/1;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
+
+  @media (min-width: 768px) and (max-width: 1200px) {
+    max-width: calc(100% / 2 - #{$gap - $gap / 2});
+  }
+
+  @media (min-width: 1200px) {
+    max-width: calc(100% / 3 - #{$gap - $gap / 3});
+  }
+
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 8px;
+}
+
+.addBusinessCard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+
+  cursor: pointer;
+
+  .plusIconSize {
+    font-size: 48px;
+  }
+}
+
+// [FLIP CARD]:
+// https://freefrontend.com/css-flip-cards/
+
+// https://codepen.io/hkmDesigner/pen/zdPrVp?editors=1100
+.flipCard {
+  $duration: 0.5s;
+  $bg-color: #fff;
+
+  width: 100%;
+  height: 100%;
+  position: relative;
+  perspective: 1200px;
+  transition: $duration ease-in-out;
+  transform-style: preserve-3d;
+
+  &__flipped {
+    transform: rotateY(180deg);
+  }
+
+  &__side {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    background: $bg-color;
+    // border-radius: 8px;
+  }
+  &__content {
+    // transform: translatez(60px) scale(0.92); // it adds an effect that looks like text is detached from a card when flipping
+  }
+
+  &__back {
+    // background: bg-color;
+    transform: rotateY(180deg);
+    // z-index: 0;
+    // padding-top: 10px;
+    // background-image: url(https://userscontent2.emaze.com/images/f9538183-0ff9-478f-b964-c8ab90421e3b/3d28e192fda5c17250f96a2779c84475.jpg);
+  }
+}

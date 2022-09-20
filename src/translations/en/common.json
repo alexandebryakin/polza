@@ -65,5 +65,8 @@
       },
       "clickOrDragFile": "Click or drag file to this area to upload"
     }
+  },
+  "businessCards": {
+    "businessCards": "Business Cards"
   }
 }
