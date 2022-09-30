@@ -6,31 +6,66 @@
   height: 100%;
 }
 
-$gap: 20px;
-.businessCardsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $gap;
-}
-
 // [BUSINESS CARD]:
 .businessCardWrapper {
   aspect-ratio: 2/1;
 
-  @media (max-width: 768px) {
-    max-width: 100%;
-  }
+  // @media (max-width: 768px) {
+  //   max-width: 100%;
+  // }
 
-  @media (min-width: 768px) and (max-width: 1200px) {
-    max-width: calc(100% / 2 - #{$gap - $gap / 2});
-  }
+  // @media (min-width: 768px) and (max-width: 1200px) {
+  //   max-width: calc(100% / 2 - #{$gap - $gap / 2});
+  // }
 
-  @media (min-width: 1200px) {
-    max-width: calc(100% / 3 - #{$gap - $gap / 3});
-  }
+  // @media (min-width: 1200px) {
+  //   max-width: calc(100% / 3 - #{$gap - $gap / 3});
+  // }
 
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   border-radius: 8px;
+}
+.businessCardFront {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+
+  .logo {
+    height: 30px;
+  }
+}
+.businessCardBack {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  height: 100%;
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .phoneContainer {
+    display: flex;
+    align-items: center;
+
+    .phone {
+      margin-left: 4px;
+      cursor: pointer;
+    }
+  }
+  .emailContainer {
+    display: flex;
+    align-items: center;
+
+    .email {
+      margin-left: 4px;
+      cursor: pointer;
+    }
+  }
 }
 
 .addBusinessCard {
@@ -58,7 +93,7 @@ $gap: 20px;
   width: 100%;
   height: 100%;
   position: relative;
-  perspective: 1200px;
+  transform: perspective(400px);
   transition: $duration ease-in-out;
   transform-style: preserve-3d;
 
@@ -77,6 +112,8 @@ $gap: 20px;
   }
   &__content {
     // transform: translatez(60px) scale(0.92); // it adds an effect that looks like text is detached from a card when flipping
+    width: 100%;
+    height: 100%;
   }
 
   &__back {
@@ -85,5 +122,43 @@ $gap: 20px;
     // z-index: 0;
     // padding-top: 10px;
     // background-image: url(https://userscontent2.emaze.com/images/f9538183-0ff9-478f-b964-c8ab90421e3b/3d28e192fda5c17250f96a2779c84475.jpg);
+  }
+}
+
+$gap: 20px;
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $gap;
+}
+.column {
+  aspect-ratio: 1/2;
+  height: 300px;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
+
+  @media (min-width: 768px) and (max-width: 1200px) {
+    max-width: calc(100% / 2 - #{$gap - $gap / 2});
+  }
+
+  @media (min-width: 1200px) {
+    max-width: calc(100% / 3 - #{$gap - $gap / 3});
+  }
+}
+
+.flipCard3 {
+  $bg-color: #fff;
+
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: perspective(400px);
+  transition-timing-function: ease-in-out;
+  transform-style: preserve-3d;
+
+  &__flipped {
+    transform: rotateY(180deg);
   }
 }
