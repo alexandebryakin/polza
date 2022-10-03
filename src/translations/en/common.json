@@ -1,6 +1,9 @@
 {
   "generic": {
     "polza": "Polza",
+    "copiedToClipBoard": "Copied to Clipboard",
+    "copied": "Copied",
+    "clickToCopy": "Click to Copy",
     "actions": {
       "save": "Save"
     }
@@ -67,6 +70,8 @@
     }
   },
   "businessCards": {
-    "businessCards": "Business Cards"
+    "businessCards": "Business Cards",
+    "copyLink": "Copy Link",
+    "openProfile": "Open Profile"
   }
 }

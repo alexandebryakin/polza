@@ -1,7 +1,9 @@
 import React from 'react';
 import {
+  CheckCircleOutlined,
   CopyOutlined,
   EnvironmentOutlined,
+  LogoutOutlined,
   MailOutlined,
   MobileOutlined,
   PhoneOutlined,
@@ -14,6 +16,10 @@ import { useTranslation } from 'react-i18next';
 import css from 'classnames';
 import styles from './BusinessCards.module.scss';
 import Flex from '../../components/Flex';
+import CopyToClipboard from '../../components/CopyToClipboard';
+import { Button, Tooltip } from '../../antd';
+import { QRCodeSVG } from 'qrcode.react';
+import { t } from 'i18next';
 
 function BusinessCardWrapper({
   className,
@@ -50,6 +56,8 @@ function FlipCard({ front, back }: FlipCardProps) {
 }
 
 function BusinessCard() {
+  const [t] = useTranslation('common');
+
   interface BusinessCard {
     logo_url?: string;
     title: string;
@@ -68,8 +76,36 @@ function BusinessCard() {
     address: 'Moscow, Putanova Street, 29',
   };
 
-  // TODO:
-  //   - Copy data
+  const dontFlipCard = (e: React.MouseEvent<HTMLElement, MouseEvent>) => e.stopPropagation();
+
+  interface ContactListProps {
+    items: string[];
+    icon: React.ReactNode;
+  }
+  const ContactList = ({ items, icon }: ContactListProps) => {
+    const [t] = useTranslation('common');
+
+    if (!items.length) return null;
+    return (
+      <div>
+        {items.map((item) => {
+          return (
+            <div key={item} className={styles.contactList}>
+              {icon}
+
+              <Tooltip placement="right" title={t('generic.clickToCopy')}>
+                <CopyToClipboard text={item} onClick={dontFlipCard} className={styles.item}>
+                  <Typography.Text ellipsis>{item}</Typography.Text>
+                </CopyToClipboard>
+              </Tooltip>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const businessCardPublicLink = 'TODO: GENERATE PROFILE LINK';
 
   return (
     <FlipCard3
@@ -101,50 +137,77 @@ function BusinessCard() {
               </div>
 
               <div className={styles.contacts}>
-                {businessCard.phones.length && (
-                  <div className={styles.phones}>
-                    {businessCard.phones.map((phone) => {
-                      return (
-                        <div key={phone} className={styles.phoneContainer}>
-                          {/* <MobileOutlined /> */}
-                          <PhoneOutlined />
+                <ContactList
+                  items={businessCard.phones}
+                  icon={
+                    // <MobileOutlined />
+                    <PhoneOutlined />
+                  }
+                />
 
-                          <div className={styles.phone}>{phone}</div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                <ContactList items={businessCard.emails} icon={<MailOutlined />} />
 
-                <div className={styles.emails}>
-                  {businessCard.emails.length && (
-                    <div className={styles.emails}>
-                      {businessCard.emails.map((email) => (
-                        <div key={email} className={styles.emailContainer}>
-                          <MailOutlined />
-
-                          <div className={styles.email}>{email}</div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div
-                  // className={styles.location}
-                  className={styles.emailContainer}
-                >
-                  <EnvironmentOutlined />
-
-                  <div className={styles.email}>{businessCard.address}</div>
-                </div>
+                <ContactList
+                  items={businessCard.address ? [businessCard.address] : []}
+                  icon={<EnvironmentOutlined />}
+                />
               </div>
             </div>
 
             <div className={styles.actions}>
-              <div>QR code</div>
+              <div>
+                <QRCodeSVG
+                  value="https://todo.to-profile.com/"
+                  // size={64}
+                  imageSettings={{
+                    src: 'https://cdn-icons-png.flaticon.com/24/717/717392.png',
+                    height: 18,
+                    width: 18,
+                    excavate: true,
+                  }}
+                />
+              </div>
 
-              <button>Open Profile</button>
+              {/* <Flex
+                justify="center"
+                align="center"
+                style={{ gap: 12 }}
+              >
+                <Button
+                  size="small"
+                  icon={<CopyOutlined />}
+                  style={{ flexGrow: 1 }}
+                >
+                </Button>
+                <Button
+                  size="small"
+                  icon={<LogoutOutlined />}
+                  style={{ flexGrow: 1 }}
+                >
+                </Button>
+              </Flex> */}
+
+              <Button
+                size="small"
+                icon={<CopyOutlined />}
+                onClick={dontFlipCard}
+                style={{ display: 'flex', alignItems: 'center' }}
+              >
+                <CopyToClipboard text={businessCardPublicLink} className={styles.item}>
+                  {t('businessCards.copyLink')}
+                </CopyToClipboard>
+              </Button>
+
+              <Button
+                style={{ display: 'flex', alignItems: 'center' }}
+                size="small"
+                icon={<LogoutOutlined />}
+                onClick={dontFlipCard}
+                target="_blank"
+                href={businessCardPublicLink}
+              >
+                {t('businessCards.openProfile')}
+              </Button>
             </div>
           </div>
         </BusinessCardWrapper>
@@ -270,8 +333,6 @@ const FlipCard3 = ({ front, back, duration = 500 }: FlipCardProps) => {
 
   const prev = usePrevious(next);
 
-  const content = animation.playing ? prev : next;
-
   return (
     <div
       style={{ transitionDuration: `${duration}ms` }}
@@ -283,7 +344,7 @@ const FlipCard3 = ({ front, back, duration = 500 }: FlipCardProps) => {
         toggle();
       }}
     >
-      <div>{content}</div>
+      {animation.playing ? prev : next}
     </div>
   );
 };
