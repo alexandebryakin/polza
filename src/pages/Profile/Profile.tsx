@@ -10,6 +10,7 @@ import { Link, LinkProps } from 'react-router-dom';
 import { routes } from '../../navigation/routes';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
 import { VerificationStatus } from '../../api/graphql.types';
+import Page from '../../components/Page';
 
 const VerificationAlert = () => {
   const [t] = useTranslation('common');
@@ -81,7 +82,7 @@ function Profile() {
   const [t] = useTranslation('common');
 
   return (
-    <div className={styles.page}>
+    <Page>
       <Typography.Title level={2}>{t('profile.profile')}</Typography.Title>
 
       <Tabs
@@ -121,7 +122,7 @@ function Profile() {
           },
         ]}
       />
-    </div>
+    </Page>
   );
 }
 

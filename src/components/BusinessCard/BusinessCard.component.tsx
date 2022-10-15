@@ -45,9 +45,9 @@ export default function BusinessCard({ businessCard }: BusinessCardProps) {
     if (!items.length) return null;
     return (
       <div>
-        {items.map((item) => {
+        {items.map((item, index) => {
           return (
-            <div key={item} className={styles.contactList}>
+            <div key={index} className={styles.contactList}>
               {icon}
 
               <Tooltip placement="right" title={t('generic.clickToCopy')}>
@@ -102,9 +102,11 @@ export default function BusinessCard({ businessCard }: BusinessCardProps) {
           <div className={styles.businessCardFront}>
             {businessCard.logo_url && <img src={businessCard.logo_url} className={styles.logo} alt="" />}
 
-            <Typography.Title level={3}>{businessCard.title}</Typography.Title>
+            <Typography.Title level={3} className={styles.textCentered}>
+              {businessCard.title}
+            </Typography.Title>
 
-            <div className={styles.subtitle}>{businessCard.subtitle}</div>
+            <div className={styles.textCentered}>{businessCard.subtitle}</div>
           </div>
         </BusinessCardWrapper>
       }

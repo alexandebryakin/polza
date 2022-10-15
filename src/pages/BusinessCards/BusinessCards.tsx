@@ -1,17 +1,25 @@
 import React from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Col, Row, Typography } from 'antd';
+import { Col, Modal, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import css from 'classnames';
 import styles from './BusinessCards.module.scss';
 import Flex from '../../components/Flex';
 import BusinessCard, { BusinessCardWrapper, TBusinessCard } from '../../components/BusinessCard';
+import useToggler from '../../hooks/useToggler';
+import { Link } from 'react-router-dom';
+import { routes } from '../../navigation/routes';
+import Page from '../../components/Page';
 
 const AddBusinessCard = () => {
+  const modal = useToggler();
+
   return (
-    <BusinessCardWrapper className={styles.addBusinessCard}>
-      <PlusOutlined className={styles.plusIconSize} />
-    </BusinessCardWrapper>
+    <Link to={routes.businessCards().edit('new')._}>
+      <BusinessCardWrapper className={styles.addBusinessCard} onClick={modal.on}>
+        <PlusOutlined className={styles.plusIconSize} />
+      </BusinessCardWrapper>
+    </Link>
   );
 };
 
@@ -30,9 +38,7 @@ function BusinessCards() {
   };
 
   return (
-    <div className={styles.page}>
-      {/* TODO: move page to a separate component */}
-
+    <Page>
       <Typography.Title level={2}>{t('businessCards.businessCards')}</Typography.Title>
 
       <Row gutter={[20, 20]}>
@@ -48,7 +54,7 @@ function BusinessCards() {
           );
         })}
       </Row>
-    </div>
+    </Page>
   );
 }
 

@@ -6,6 +6,12 @@
     "clickToCopy": "Click to Copy",
     "actions": {
       "save": "Save"
+    },
+    "form": {
+      "rules": {
+        "fieldRequired": "The field is required",
+        "notValidEmail": "The email is not valid"
+      }
     }
   },
   "auth": {
@@ -72,6 +78,29 @@
   "businessCards": {
     "businessCards": "Business Cards",
     "copyLink": "Copy Link",
-    "openProfile": "Open Profile"
+    "openProfile": "Open Profile",
+    "createBusinessCard": "Create Business Card",
+    "editBusinessCard": "Create Business Card",
+    "preview": "Preview",
+    "form": {
+      "fields": {
+        "title": "Title",
+        "subtitle": "Subtitle",
+        "phones": "Phones",
+        "emails": "Emails",
+        "address": "Address"
+      },
+      "placeholders": {
+        "title": "Trofimova Elena Nikolaevna",
+        "subtitle": "UX/UI Designer",
+        "phones": "7(909)123 45 67",
+        "emails": "account@company.com",
+        "address": "Moscow, Labovetskaya street, build. 24"
+      },
+      "actions": {
+        "addPhone": "Add Phone",
+        "addEmail": "Add Email"
+      }
+    }
   }
 }
