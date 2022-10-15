@@ -1,5 +1,5 @@
-import { DeleteOutlined, MailOutlined, PhoneOutlined, PlusOutlined } from '@ant-design/icons';
-import { Form, FormProps, Col, Divider } from 'antd';
+import { DeleteOutlined, MailOutlined, PhoneOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
+import { Form, FormProps, Col, Divider, Row } from 'antd';
 import { MaskedInputProps } from 'antd-mask-input/build/main/lib/MaskedInput';
 import { FormItemProps, FormListProps, Rule } from 'antd/lib/form';
 import React from 'react';
@@ -190,6 +190,25 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
           >
             <Input placeholder={t('businessCards.form.placeholders.address')} />
           </Form.Item>
+
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={12}>
+              <Button type="primary" htmlType="submit" block icon={<SaveOutlined />}>
+                {t('generic.actions.save')}
+              </Button>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <Button
+                danger
+                block
+                icon={<DeleteOutlined />}
+                onClick={() => console.log('TODO: add handler + confirmation')}
+              >
+                {t('generic.actions.remove')}
+              </Button>
+            </Col>
+          </Row>
         </Col>
         {/* </Row> */}
       </Form>

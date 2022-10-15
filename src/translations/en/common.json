@@ -5,7 +5,8 @@
     "copied": "Copied",
     "clickToCopy": "Click to Copy",
     "actions": {
-      "save": "Save"
+      "save": "Save",
+      "remove": "Remove"
     },
     "form": {
       "rules": {
