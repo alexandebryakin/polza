@@ -71,7 +71,7 @@ const FormListLayout = ({
             </Form.Item>
           ))}
 
-          <Col xs={24} md={12} lg={8}>
+          <Col xs={24} md={12}>
             <Form.Item>
               <Button
                 type="dashed"
@@ -130,86 +130,86 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
         // initialValues={{ ...passport }}
       >
         {/* <Row gutter={16}> */}
-        <Col lg={12} md={24} xs={24}>
-          <Form.Item
-            label={t('businessCards.form.fields.title')}
-            name={FIELDS.title}
-            rules={[{ required: true, message: t('generic.form.rules.fieldRequired') }]}
-          >
-            <Input placeholder={t('businessCards.form.placeholders.title')} />
-          </Form.Item>
+        {/* <Col lg={12} md={24} xs={24}> */}
+        <Form.Item
+          label={t('businessCards.form.fields.title')}
+          name={FIELDS.title}
+          rules={[{ required: true, message: t('generic.form.rules.fieldRequired') }]}
+        >
+          <Input placeholder={t('businessCards.form.placeholders.title')} />
+        </Form.Item>
 
-          <Form.Item
-            label={t('businessCards.form.fields.subtitle')}
-            name={FIELDS.subtitle}
-            rules={[{ required: true, message: t('generic.form.rules.fieldRequired') }]}
-          >
-            <Input placeholder={t('businessCards.form.placeholders.subtitle')} />
-          </Form.Item>
+        <Form.Item
+          label={t('businessCards.form.fields.subtitle')}
+          name={FIELDS.subtitle}
+          rules={[{ required: true, message: t('generic.form.rules.fieldRequired') }]}
+        >
+          <Input placeholder={t('businessCards.form.placeholders.subtitle')} />
+        </Form.Item>
 
-          <Divider />
+        <Divider />
 
-          <FormListLayout
-            mask={MASKS.PHONE}
-            name={FIELDS.phones}
-            label={t('businessCards.form.fields.phones')}
-            prefix={<PhoneOutlined />}
-            placeholder={t('businessCards.form.placeholders.phones')}
-            maxCount={MAX_PHONES_COUNT}
-            addButtonText={t('businessCards.form.actions.addPhone')}
-            messages={{
-              fieldRequired: t('generic.form.rules.fieldRequired'),
-            }}
-          />
+        <FormListLayout
+          mask={MASKS.PHONE}
+          name={FIELDS.phones}
+          label={t('businessCards.form.fields.phones')}
+          prefix={<PhoneOutlined />}
+          placeholder={t('businessCards.form.placeholders.phones')}
+          maxCount={MAX_PHONES_COUNT}
+          addButtonText={t('businessCards.form.actions.addPhone')}
+          messages={{
+            fieldRequired: t('generic.form.rules.fieldRequired'),
+          }}
+        />
 
-          <Divider />
+        <Divider />
 
-          <FormListLayout
-            mask={'none'}
-            name={FIELDS.emails}
-            label={t('businessCards.form.fields.emails')}
-            rules={[
-              {
-                type: 'email',
-                message: t('generic.form.rules.notValidEmail'),
-              },
-            ]}
-            prefix={<MailOutlined />}
-            placeholder={t('businessCards.form.placeholders.emails')}
-            maxCount={MAX_EMAILS_COUNT}
-            addButtonText={t('businessCards.form.actions.addEmail')}
-            messages={{
-              fieldRequired: t('generic.form.rules.fieldRequired'),
-            }}
-          />
+        <FormListLayout
+          mask={'none'}
+          name={FIELDS.emails}
+          label={t('businessCards.form.fields.emails')}
+          rules={[
+            {
+              type: 'email',
+              message: t('generic.form.rules.notValidEmail'),
+            },
+          ]}
+          prefix={<MailOutlined />}
+          placeholder={t('businessCards.form.placeholders.emails')}
+          maxCount={MAX_EMAILS_COUNT}
+          addButtonText={t('businessCards.form.actions.addEmail')}
+          messages={{
+            fieldRequired: t('generic.form.rules.fieldRequired'),
+          }}
+        />
 
-          <Form.Item
-            label={t('businessCards.form.fields.address')}
-            name={FIELDS.address}
-            // rules={[{ required: false, message: t('generic.form.rules.fieldRequired') }]}
-          >
-            <Input placeholder={t('businessCards.form.placeholders.address')} />
-          </Form.Item>
+        <Form.Item
+          label={t('businessCards.form.fields.address')}
+          name={FIELDS.address}
+          // rules={[{ required: false, message: t('generic.form.rules.fieldRequired') }]}
+        >
+          <Input placeholder={t('businessCards.form.placeholders.address')} />
+        </Form.Item>
 
-          <Row gutter={[16, 16]}>
-            <Col xs={24} md={12}>
-              <Button type="primary" htmlType="submit" block icon={<SaveOutlined />}>
-                {t('generic.actions.save')}
-              </Button>
-            </Col>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} lg={12}>
+            <Button type="primary" htmlType="submit" block icon={<SaveOutlined />}>
+              {t('generic.actions.save')}
+            </Button>
+          </Col>
 
-            <Col xs={24} md={12}>
-              <Button
-                danger
-                block
-                icon={<DeleteOutlined />}
-                onClick={() => console.log('TODO: add handler + confirmation')}
-              >
-                {t('generic.actions.remove')}
-              </Button>
-            </Col>
-          </Row>
-        </Col>
+          <Col xs={24} lg={12}>
+            <Button
+              danger
+              block
+              icon={<DeleteOutlined />}
+              onClick={() => console.log('TODO: add handler + confirmation')}
+            >
+              {t('generic.actions.remove')}
+            </Button>
+          </Col>
+        </Row>
+        {/* </Col> */}
         {/* </Row> */}
       </Form>
     </WrapperComponent>

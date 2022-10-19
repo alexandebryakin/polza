@@ -22,7 +22,7 @@ const BusinessCardPreview = ({ businessCard }: BusinessCardPreviewProps) => {
   return (
     <div className={styles.businessCardPreview}>
       <Typography.Title level={3}>{t('businessCards.preview')}</Typography.Title>
-      <Col xs={24} lg={12}>
+      <Col xs={24} lg={18} xl={12}>
         <BusinessCard businessCard={businessCard} />
       </Col>
     </div>
@@ -55,12 +55,14 @@ export default function ModifyBusinessCard() {
         }}
       />
 
-      <BusinessCardForm
-        onChange={setValues}
-        components={{
-          Wrapper: FormCard,
-        }}
-      />
+      <Col xs={24} lg={18} xl={12}>
+        <BusinessCardForm
+          onChange={setValues}
+          components={{
+            Wrapper: FormCard,
+          }}
+        />
+      </Col>
     </Page>
   );
 }
