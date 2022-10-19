@@ -10,6 +10,7 @@ import styles from './BusinessCard.module.scss';
 import Flex from '../Flex';
 import { CopyOutlined, EnvironmentOutlined, LogoutOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import { QRCodeSVG } from 'qrcode.react';
+import { TitleProps } from 'antd/lib/typography/Title';
 
 export const BusinessCardWrapper = ({
   className,

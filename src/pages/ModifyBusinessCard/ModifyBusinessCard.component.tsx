@@ -47,11 +47,11 @@ export default function ModifyBusinessCard() {
 
       <BusinessCardPreview
         businessCard={{
-          title: values.title || '',
-          subtitle: values.subtitle || '',
+          title: values.title || t('businessCards.form.placeholders.title'),
+          subtitle: values.subtitle || t('businessCards.form.placeholders.subtitle'),
           phones: values.phones || [],
           emails: values.emails || [],
-          address: values.address || '',
+          address: values.address || t('businessCards.form.placeholders.address'),
         }}
       />
 
