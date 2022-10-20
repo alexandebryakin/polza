@@ -32,11 +32,11 @@ function PassportForm() {
   const [t] = useTranslation('common');
   const [form] = Form.useForm<UpsertPassportMutationVariables>();
   const [image, setImage] = React.useState<RcFile>();
-  const [upsertPassport, { data, loading, error }] = useUpsertPassportMutation();
+  const [upsertPassport, { loading, error }] = useUpsertPassportMutation();
 
   const [formDisabled, setFormDisabled] = React.useState(false);
 
-  const { passport, refetchPassport } = useUserInfoContext();
+  const { passport, refetchUser } = useUserInfoContext();
 
   React.useEffect(() => {
     Object.entries(passport || {}).forEach(([key, value]) => form.setFieldValue(key, value));
@@ -86,7 +86,7 @@ function PassportForm() {
 
     if (response.data?.upsertPassport?.status === Status.Success) {
       setFormDisabled(true);
-      refetchPassport();
+      refetchUser();
     }
   };
 

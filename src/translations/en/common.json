@@ -5,7 +5,9 @@
     "copied": "Copied",
     "clickToCopy": "Click to Copy",
     "actions": {
+      "add": "Add",
       "save": "Save",
+      "cancel": "Cancel",
       "remove": "Remove"
     },
     "form": {
@@ -101,6 +103,20 @@
       "actions": {
         "addPhone": "Add Phone",
         "addEmail": "Add Email"
+      }
+    }
+  },
+  "modals": {
+    "addPhone": {
+      "form": {
+        "phoneAddedSuccessfully": "The phone number is added successfully",
+        "fields": {
+          "phone": "Phone"
+        },
+        "errors": {
+          "incorrectPhone": "The phone number is incorrect",
+          "phoneAlreadyTaken": "The phone number has been already taken"
+        }
       }
     }
   }
