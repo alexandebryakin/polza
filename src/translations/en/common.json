@@ -25,13 +25,17 @@
     "forgot": "Forgot?",
     "dontHaveAnAccount": "Don't have an account?",
     "alreadyHaveAnAccount": "Already have an account?",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "agreeToTermsOfService": "By checking this box, you agree to our ${termsOfService} and ${privacyPolicy}, and consent to data transfer, hosting, and processing",
     "fields": {
       "email": "Email",
       "password": "Password"
     },
     "rules": {
       "emailRequired": "Email required!",
-      "passwordRequired": "Password required!"
+      "passwordRequired": "Password required!",
+      "termsOfServiceRequired": "You must accept the policies in order to use the app"
     },
     "errors": {
       "userNotFound": "User not found",

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Space, Typography } from 'antd';
+import { Checkbox, Form, Space, Typography } from 'antd';
 
 import styles from './Signup.module.scss';
 import { TFunction, useTranslation } from 'react-i18next';
@@ -15,10 +15,14 @@ import Layout from '../Layout/Layout.component';
 import { jwt } from '../../../api/jwt';
 import { SignupUserMutation, SignupUserMutationVariables } from '../../../api/graphql.types';
 import { AxiosResponseWrapper } from '../../../api/makeRequest';
+import { validate } from '@graphql-codegen/typescript-react-apollo';
+import { isEqual } from 'lodash';
+import Format from '../../../lib/Format';
 
 const FIELDS = {
   email: 'email',
   password: 'password',
+  agreed: 'agreed',
 };
 
 type FieldData = {
@@ -50,6 +54,7 @@ function Signup() {
   const [form] = Form.useForm<SignupUserMutationVariables>();
 
   const [loading, setLoading] = React.useState(false);
+  const [agreed, setAgreed] = React.useState(false);
   const navigate = useNavigate();
 
   const onFinish = async (values: SignupUserMutationVariables) => {
@@ -111,10 +116,44 @@ function Signup() {
             <Input.Password className={styles.input} prefix={<LockOutlined className={styles.inputIcon} />} />
           </Form.Item>
 
-          <div>TODO: checkbox with terms of service and Privacy</div>
+          <Form.Item
+            name={FIELDS.agreed}
+            rules={[
+              {
+                message: t('auth.rules.termsOfServiceRequired'),
+                validator: (rule) => {
+                  return agreed ? Promise.resolve() : Promise.reject(new Error(rule.message?.toString()));
+                },
+              },
+            ]}
+          >
+            <Checkbox onChange={(e) => setAgreed(e.target.checked)}>
+              <Format
+                pattern={t('auth.agreeToTermsOfService')}
+                interpolations={{
+                  termsOfService: (
+                    <a href={'http://TODO-terms-of-service.com'} target="_blank" rel="noreferrer">
+                      {t('auth.termsOfService')}
+                    </a>
+                  ),
+                  privacyPolicy: (
+                    <a href={'http://TODO-privacy-policy.com'} target="_blank" rel="noreferrer">
+                      {t('auth.privacyPolicy')}
+                    </a>
+                  ),
+                }}
+              />
+            </Checkbox>
+          </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block loading={loading}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              loading={loading}
+              // disabled={!agreed}
+            >
               {t('auth.signup')}
             </Button>
           </Form.Item>

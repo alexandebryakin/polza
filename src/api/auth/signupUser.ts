@@ -7,7 +7,10 @@ const SIGNUP_USER = gql`
     signupUser(email: $email, password: $password) {
       user {
         id
-        email
+        emails {
+          id
+          email
+        }
       }
       token
       errors

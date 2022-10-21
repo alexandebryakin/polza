@@ -7,7 +7,10 @@ export const SIGNIN_USER = gql`
     signinUser(email: $email, password: $password) {
       user {
         id
-        email
+        emails {
+          id
+          email
+        }
       }
       token
       errors

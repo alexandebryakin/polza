@@ -10,7 +10,7 @@ import {
   Status,
   UpsertPassportMutationVariables,
   useUpsertPassportMutation,
-  VerificationStatus,
+  VerificationStatusEnum,
 } from '../../api/graphql.types';
 import styles from './PassportForm.module.scss';
 import { buildFields } from '../../utils/buildFields';
@@ -41,7 +41,7 @@ function PassportForm() {
   React.useEffect(() => {
     Object.entries(passport || {}).forEach(([key, value]) => form.setFieldValue(key, value));
 
-    passport && setFormDisabled(passport.verificationStatus !== VerificationStatus.Failed);
+    passport && setFormDisabled(passport.verificationStatus !== VerificationStatusEnum.Failed);
   }, [form, passport]);
 
   React.useEffect(() => {
