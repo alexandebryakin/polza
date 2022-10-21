@@ -1,13 +1,10 @@
 import { DeleteOutlined, MailOutlined, PhoneOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import { Form, FormProps, Col, Divider, Row, Space } from 'antd';
-import { MaskedInputProps } from 'antd-mask-input/build/main/lib/MaskedInput';
-import { FormItemProps, FormListProps, Rule } from 'antd/lib/form';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Select } from '../../antd';
 import { buildFields } from '../../utils/buildFields';
 import { TBusinessCard } from '../BusinessCard/BusinessCard.component';
-import Flex from '../Flex';
 
 import IMask from 'imask';
 
@@ -16,8 +13,7 @@ import useToggler from '../../hooks/useToggler';
 import AddPhoneModal from '../modals/AddPhoneModal';
 import { MASKS } from '../modals/AddPhoneModal/AddPhoneModal.component';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
-
-Object.assign(window, { IMask });
+import AddEmailModal from '../modals/AddEmailModal';
 
 const mask = IMask.createMask({
   mask: MASKS.PHONE,
@@ -55,17 +51,19 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
   const { user } = useUserInfoContext();
 
   const phones = (user?.phones || []).map((p) => p.number);
-  const emails: string[] = ['a@b.com', 'f@org.com'];
+  const emails = (user?.emails || []).map((e) => e.email);
 
   const onFieldsChange = () => {
     onChange?.(form.getFieldsValue());
   };
 
   const phoneModal = useToggler();
+  const emailModal = useToggler();
 
   return (
     <WrapperComponent>
       <AddPhoneModal toggler={phoneModal} />
+      <AddEmailModal toggler={emailModal} />
 
       <Form<TBusinessCard>
         name="businessCard"
@@ -96,13 +94,13 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
         <Divider />
 
         <Form.Item
-          style={{ width: '100%', border: '0 8px 8px 0' }}
           label={t('businessCards.form.fields.phones')}
           name={FIELDS.phones}
-          rules={[{ required: true, message: t('generic.form.rules.fieldRequired') }]}
+          // rules={[{ required: true, message: t('generic.form.rules.fieldRequired') }]}
         >
           <Select<string[]>
             mode="multiple"
+            defaultValue={[]}
             onChange={(phones) => {
               form.setFieldValue('phones', phones);
               onFieldsChange();
@@ -134,25 +132,45 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
 
         <Divider />
 
-        {/* <FormListLayout
-          mask={'none'}
-          name={FIELDS.emails}
-          items={emails}
+        <Form.Item
           label={t('businessCards.form.fields.emails')}
-          rules={[
-            {
-              type: 'email',
-              message: t('generic.form.rules.notValidEmail'),
-            },
-          ]}
-          prefix={<MailOutlined />}
-          placeholder={t('businessCards.form.placeholders.emails')}
-          maxCount={MAX_EMAILS_COUNT}
-          addButtonText={t('businessCards.form.actions.addEmail')}
-          messages={{
-            fieldRequired: t('generic.form.rules.fieldRequired'),
-          }}
-        /> */}
+          name={FIELDS.emails}
+          // rules={[{ required: true, message: t('generic.form.rules.fieldRequired') }]}
+        >
+          <Select<string[]>
+            mode="multiple"
+            defaultValue={[]}
+            onChange={(emails) => {
+              form.setFieldValue('emails', emails);
+              onFieldsChange();
+            }}
+          >
+            {emails.map((item) => {
+              const selectedItems = form.getFieldValue('emails') || [];
+              return (
+                <Select.Option
+                  key={item}
+                  value={item}
+                  disabled={selectedItems.length >= MAX_EMAILS_COUNT && !selectedItems.includes(item)}
+                >
+                  <Space align="center">
+                    <MailOutlined />
+
+                    {item}
+                  </Space>
+                </Select.Option>
+              );
+            })}
+          </Select>
+        </Form.Item>
+
+        <Col xs={24} md={12}>
+          <Button type="dashed" block onClick={emailModal.on} icon={<PlusOutlined />}>
+            {t('businessCards.form.actions.addEmail')}
+          </Button>
+        </Col>
+
+        <Divider />
 
         <Form.Item label={t('businessCards.form.fields.address')} name={FIELDS.address}>
           <Input placeholder={t('businessCards.form.placeholders.address')} />

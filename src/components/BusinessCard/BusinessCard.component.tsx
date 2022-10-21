@@ -19,49 +19,57 @@ export const BusinessCardWrapper = ({
   return <div {...rest} className={css(styles.businessCardWrapper, className)} />;
 };
 
+type TBusinessCardContact = {
+  kind: 'email' | 'phone' | 'website';
+  icon?: 'email' | 'phone' | 'website'; // or any other custom icon
+  label: string;
+  value: string;
+  visible: boolean;
+};
 export interface TBusinessCard {
   logo_url?: string;
   title: string;
   subtitle: string;
+  contacts?: TBusinessCardContact[];
   phones: string[];
   emails: string[];
   address?: string;
 }
+
+const dontFlipCard = (e: React.MouseEvent<HTMLElement, MouseEvent>) => e.stopPropagation();
+
+interface ContactListProps {
+  items: string[];
+  icon: React.ReactNode;
+}
+const ContactList = ({ items, icon }: ContactListProps) => {
+  const [t] = useTranslation('common');
+
+  if (!items.length) return null;
+  return (
+    <div>
+      {items.map((item, index) => {
+        return (
+          <div key={index} className={styles.contactList}>
+            {icon}
+
+            <Tooltip placement="right" title={t('generic.clickToCopy')}>
+              <CopyToClipboard text={item} onClick={dontFlipCard} className={styles.item}>
+                <Typography.Text ellipsis>{item}</Typography.Text>
+              </CopyToClipboard>
+            </Tooltip>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 interface BusinessCardProps {
   businessCard: TBusinessCard;
 }
 export default function BusinessCard({ businessCard }: BusinessCardProps) {
   const [t] = useTranslation('common');
-
-  const dontFlipCard = (e: React.MouseEvent<HTMLElement, MouseEvent>) => e.stopPropagation();
-
-  interface ContactListProps {
-    items: string[];
-    icon: React.ReactNode;
-  }
-  const ContactList = ({ items, icon }: ContactListProps) => {
-    const [t] = useTranslation('common');
-
-    if (!items.length) return null;
-    return (
-      <div>
-        {items.map((item, index) => {
-          return (
-            <div key={index} className={styles.contactList}>
-              {icon}
-
-              <Tooltip placement="right" title={t('generic.clickToCopy')}>
-                <CopyToClipboard text={item} onClick={dontFlipCard} className={styles.item}>
-                  <Typography.Text ellipsis>{item}</Typography.Text>
-                </CopyToClipboard>
-              </Tooltip>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
 
   const businessCardPublicLink = 'TODO: GENERATE PROFILE LINK';
 

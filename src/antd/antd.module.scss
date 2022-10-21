@@ -18,6 +18,12 @@ $border-radius-8px: 8px;
   border-radius: $border-radius-8px;
 }
 
+.select {
+  :global(.ant-select-selector) {
+    border-radius: $border-radius-8px !important;
+  }
+}
+
 .tabs {
   :global(.ant-tabs-ink-bar) {
     background: $primary-color;

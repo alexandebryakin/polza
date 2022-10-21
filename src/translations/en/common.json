@@ -113,13 +113,28 @@
   "modals": {
     "addPhone": {
       "form": {
-        "phoneAddedSuccessfully": "The phone number is added successfully",
+        "phoneAddedSuccessfully": "The phone number was added successfully",
         "fields": {
           "phone": "Phone"
         },
         "errors": {
           "incorrectPhone": "The phone number is incorrect",
           "phoneAlreadyTaken": "The phone number has been already taken"
+        }
+      }
+    },
+    "addEmail": {
+      "form": {
+        "placeholders": {
+          "email": "user@company.com"
+        },
+        "emailAddedSuccessfully": "The email was added successfully",
+        "fields": {
+          "email": "Email"
+        },
+        "errors": {
+          "incorrectEmail": "The email is incorrect",
+          "emailAlreadyTaken": "The email has been already taken"
         }
       }
     }
