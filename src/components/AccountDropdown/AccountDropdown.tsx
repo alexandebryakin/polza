@@ -3,13 +3,16 @@ import { Avatar } from 'antd';
 import { DropdownProps } from 'antd/lib/dropdown';
 import { useTranslation } from 'react-i18next';
 import { jwt } from '../../api/jwt';
+import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
 import Dropdown from '../../lib/Dropdown';
 import { routes } from '../../navigation/routes';
 
 import styles from './AccountDropdown.module.scss';
 
 const Toggler = () => {
-  const email = 'TODO-EMAIL@mail.com';
+  const { user } = useUserInfoContext();
+
+  const email = user?.emails.find((e) => e.isPrimary)?.email;
 
   return (
     <div className={styles.toggler}>
