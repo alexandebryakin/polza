@@ -3,6 +3,13 @@ import { Space } from 'antd';
 
 import styles from './Layout.module.scss';
 
+const appHeight = () => {
+  // https://stackoverflow.com/a/50683190
+  const doc = document.documentElement;
+  doc.style.setProperty('--app-width', `${window.innerWidth}px`);
+  doc.style.setProperty('--app-height', `${window.innerHeight}px`);
+};
+
 interface LayoutProps {
   topRightCTA: React.ReactNode;
   form: React.ReactNode;
@@ -11,6 +18,13 @@ interface LayoutProps {
 
 function Layout(props: LayoutProps) {
   const { topRightCTA, form, formBottom } = props;
+
+  React.useEffect(() => {
+    window.addEventListener('resize', appHeight);
+    appHeight();
+
+    return () => window.removeEventListener('resize', appHeight);
+  }, []);
 
   return (
     <div className={styles.page}>
@@ -30,9 +44,7 @@ function Layout(props: LayoutProps) {
         </Space>
       </main>
 
-      <footer
-        className={styles.footer}
-      >{`TODO: terms of service, copyrihgt, year`}</footer>
+      <footer className={styles.footer}>{`TODO: terms of service, copyrihgt, year`}</footer>
     </div>
   );
 }
