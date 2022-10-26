@@ -12,6 +12,8 @@ import { CopyOutlined, EnvironmentOutlined, LogoutOutlined, MailOutlined, PhoneO
 import { QRCodeSVG } from 'qrcode.react';
 import { TitleProps } from 'antd/lib/typography/Title';
 
+import { BusinessCard as TBusinessCard } from '../../api/graphql.types';
+
 export const BusinessCardWrapper = ({
   className,
   ...rest
@@ -26,15 +28,17 @@ type TBusinessCardContact = {
   value: string;
   visible: boolean;
 };
-export interface TBusinessCard {
-  logo_url?: string;
-  title: string;
-  subtitle: string;
-  contacts?: TBusinessCardContact[];
-  phones: string[];
-  emails: string[];
-  address?: string;
-}
+// export interface TBusinessCard {
+//   logo_url?: string;
+//   title: string;
+//   subtitle: string;
+//   description?: string;
+//   // status: 'pubished' | 'unpublished';
+//   contacts?: TBusinessCardContact[];
+//   phones: string[];
+//   emails: string[];
+//   address?: string;
+// }
 
 const dontFlipCard = (e: React.MouseEvent<HTMLElement, MouseEvent>) => e.stopPropagation();
 
@@ -109,7 +113,7 @@ export default function BusinessCard({ businessCard }: BusinessCardProps) {
       front={
         <BusinessCardWrapper>
           <div className={styles.businessCardFront}>
-            {businessCard.logo_url && <img src={businessCard.logo_url} className={styles.logo} alt="" />}
+            {/* {businessCard.logo_url && <img src={businessCard.logo_url} className={styles.logo} alt="" />} */}
 
             <Typography.Title level={3} className={styles.textCentered}>
               {businessCard.title}
@@ -130,14 +134,14 @@ export default function BusinessCard({ businessCard }: BusinessCardProps) {
 
               <div className={styles.contacts}>
                 <ContactList
-                  items={businessCard.phones}
+                  items={businessCard.phones.map((p) => p.number)}
                   icon={
                     // <MobileOutlined />
                     <PhoneOutlined />
                   }
                 />
 
-                <ContactList items={businessCard.emails} icon={<MailOutlined />} />
+                <ContactList items={businessCard.emails.map((e) => e.email)} icon={<MailOutlined />} />
 
                 <ContactList
                   items={businessCard.address ? [businessCard.address] : []}

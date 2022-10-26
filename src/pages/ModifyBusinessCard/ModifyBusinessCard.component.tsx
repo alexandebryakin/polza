@@ -8,8 +8,15 @@ import FormCard from '../../lib/FormCard';
 import { routes } from '../../navigation/routes';
 
 import styles from './ModifyBusinessCard.module.scss';
-import BusinessCard, { TBusinessCard } from '../../components/BusinessCard';
+import BusinessCard from '../../components/BusinessCard';
 import React from 'react';
+
+import {
+  BusinessCard as TBusinessCard,
+  MutationUpsertBusinessCardArgs,
+  PublicationStatusEnum,
+  VerificationStatusEnum,
+} from '../../api/graphql.types';
 
 const NEW_BUSINESS_CARD = 'new';
 
@@ -37,7 +44,7 @@ export default function ModifyBusinessCard() {
 
   const isNew = data?.params.id === NEW_BUSINESS_CARD;
 
-  const [values, setValues] = React.useState<Partial<TBusinessCard>>({});
+  const [values, setValues] = React.useState<Partial<MutationUpsertBusinessCardArgs>>({});
 
   return (
     <Page>
@@ -49,8 +56,22 @@ export default function ModifyBusinessCard() {
         businessCard={{
           title: values.title || t('businessCards.form.placeholders.title'),
           subtitle: values.subtitle || t('businessCards.form.placeholders.subtitle'),
-          phones: values.phones || [],
-          emails: values.emails || [],
+          id: '',
+          userId: '',
+          description: values.description || '',
+          status: values.status || PublicationStatusEnum.Draft,
+          phones: (values.phones || []).map((p) => ({
+            id: '',
+            number: p,
+            isPrimary: false,
+            verificationStatus: VerificationStatusEnum.InProgress,
+          })),
+          emails: (values.emails || []).map((e) => ({
+            id: '',
+            email: e,
+            isPrimary: false,
+            verificationStatus: VerificationStatusEnum.InProgress,
+          })),
           address: values.address || t('businessCards.form.placeholders.address'),
         }}
       />

@@ -16,6 +16,7 @@ import styles from './PassportForm.module.scss';
 import { buildFields } from '../../utils/buildFields';
 import { onFailure } from '../../utils/onFailure';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
+import { useMutationError } from '../../hooks/useMutationError';
 
 const FIELDS = buildFields<UpsertPassportMutationVariables>([
   'firstName',
@@ -44,15 +45,7 @@ function PassportForm() {
     passport && setFormDisabled(passport.verificationStatus !== VerificationStatusEnum.Failed);
   }, [form, passport]);
 
-  React.useEffect(() => {
-    if (!error) return;
-
-    console.error(error);
-
-    notification.error({
-      message: t('profile.passport.errors.anErrorOccuredWhileSavingPassport'),
-    });
-  }, [error, t]);
+  useMutationError(error, t('profile.passport.errors.anErrorOccuredWhileSavingPassport'));
 
   const onFinish = async (variables: MutationUpsertPassportArgs) => {
     if (formDisabled) return;

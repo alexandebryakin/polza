@@ -1,10 +1,9 @@
 import { DeleteOutlined, MailOutlined, PhoneOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import { Form, FormProps, Col, Divider, Row, Space } from 'antd';
+import { Form, FormProps, Col, Divider, Row, Space, notification } from 'antd';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Select } from '../../antd';
 import { buildFields } from '../../utils/buildFields';
-import { TBusinessCard } from '../BusinessCard/BusinessCard.component';
 
 import IMask from 'imask';
 
@@ -14,6 +13,9 @@ import AddPhoneModal from '../modals/AddPhoneModal';
 import { MASKS } from '../modals/AddPhoneModal/AddPhoneModal.component';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
 import AddEmailModal from '../modals/AddEmailModal';
+import { MutationUpsertBusinessCardArgs, Status, useUpsertBusinessCardMutation } from '../../api/graphql.types';
+import { onFailure } from '../../utils/onFailure';
+import { useMutationError } from '../../hooks/useMutationError';
 
 const mask = IMask.createMask({
   mask: MASKS.PHONE,
@@ -22,17 +24,19 @@ const mask = IMask.createMask({
 const MAX_PHONES_COUNT = 2;
 const MAX_EMAILS_COUNT = 2;
 
-const FIELDS = buildFields<TBusinessCard>([
+const FIELDS = buildFields<MutationUpsertBusinessCardArgs>([
   // 'logo_url',
   'title',
   'subtitle',
+  'description',
+  'status',
   'phones',
   'emails',
   'address',
 ]);
 
 export interface BusinessCardFormProps {
-  onChange?: (values: Partial<TBusinessCard>) => void;
+  onChange?: (values: Partial<MutationUpsertBusinessCardArgs>) => void;
   components?: {
     Wrapper?: React.FC;
   };
@@ -40,10 +44,42 @@ export interface BusinessCardFormProps {
 
 export default function BusinessCardForm({ onChange, components }: BusinessCardFormProps) {
   const [t] = useTranslation('common');
-  const [form] = Form.useForm<TBusinessCard>();
+  const [form] = Form.useForm<MutationUpsertBusinessCardArgs>();
+  const [upsertBusinessCard, { loading, error }] = useUpsertBusinessCardMutation();
 
-  const onFinish: FormProps<TBusinessCard>['onFinish'] = (values) => {
-    console.log('BusinessCardForm.onFinish>>>', values);
+  useMutationError(error);
+
+  const onFinish: FormProps<MutationUpsertBusinessCardArgs>['onFinish'] = async (
+    variables: MutationUpsertBusinessCardArgs
+  ) => {
+    console.log('BusinessCardForm.onFinish>>>', variables);
+    const response = await upsertBusinessCard({ variables });
+
+    type Keys = keyof MutationUpsertBusinessCardArgs;
+
+    onFailure<Keys>(response.data?.upsertBusinessCard, (errorsFor, errors) => {
+      const fieldData: FieldData<Keys>[] = Object.entries(errors).map(([field, fieldErrors]) => {
+        return {
+          name: field as Keys,
+          errors: [t('generic.form.errors.invalidValue')],
+        };
+      });
+
+      form.setFields(fieldData);
+    });
+
+    if (response.data?.upsertBusinessCard?.status === Status.Success) {
+      notification.success({
+        message: t('businessCards.businessCardCreatedSuccessfully'),
+      });
+    }
+  };
+
+  const [saveMessage, setSaveMessage] = React.useState('');
+  const onFinishFailed = () => {
+    setSaveMessage(t('generic.error'));
+
+    setTimeout(() => setSaveMessage(''), 3000);
   };
 
   const WrapperComponent = components?.Wrapper || React.Fragment;
@@ -60,20 +96,28 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
   const phoneModal = useToggler();
   const emailModal = useToggler();
 
+  // TODO: fetch business card by ID
+  const businessCardDefaultArgs: MutationUpsertBusinessCardArgs = {
+    title: '',
+    subtitle: '',
+    phones: [],
+    emails: [],
+  };
+
   return (
     <WrapperComponent>
       <AddPhoneModal toggler={phoneModal} />
       <AddEmailModal toggler={emailModal} />
 
-      <Form<TBusinessCard>
+      <Form<MutationUpsertBusinessCardArgs>
         name="businessCard"
         form={form}
         layout="vertical"
         onFinish={onFinish}
         onFieldsChange={onFieldsChange}
+        onFinishFailed={onFinishFailed}
         autoComplete="off"
-        // TODO: change initialValues
-        // initialValues={{ ...passport }}
+        initialValues={businessCardDefaultArgs}
       >
         <Form.Item
           label={t('businessCards.form.fields.title')}
@@ -91,16 +135,15 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
           <Input placeholder={t('businessCards.form.placeholders.subtitle')} />
         </Form.Item>
 
+        <Form.Item label={t('businessCards.form.fields.description')} name={FIELDS.description}>
+          <Input.TextArea rows={4} />
+        </Form.Item>
+
         <Divider />
 
-        <Form.Item
-          label={t('businessCards.form.fields.phones')}
-          name={FIELDS.phones}
-          // rules={[{ required: true, message: t('generic.form.rules.fieldRequired') }]}
-        >
+        <Form.Item label={t('businessCards.form.fields.phones')} name={FIELDS.phones}>
           <Select<string[]>
             mode="multiple"
-            defaultValue={[]}
             onChange={(phones) => {
               form.setFieldValue('phones', phones);
               onFieldsChange();
@@ -132,14 +175,9 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
 
         <Divider />
 
-        <Form.Item
-          label={t('businessCards.form.fields.emails')}
-          name={FIELDS.emails}
-          // rules={[{ required: true, message: t('generic.form.rules.fieldRequired') }]}
-        >
+        <Form.Item label={t('businessCards.form.fields.emails')} name={FIELDS.emails}>
           <Select<string[]>
             mode="multiple"
-            defaultValue={[]}
             onChange={(emails) => {
               form.setFieldValue('emails', emails);
               onFieldsChange();
@@ -178,8 +216,15 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
 
         <Row gutter={[16, 16]}>
           <Col xs={24} lg={12}>
-            <Button type="primary" htmlType="submit" block icon={<SaveOutlined />}>
-              {t('generic.actions.save')}
+            <Button
+              type="primary"
+              danger={!!saveMessage}
+              onClick={form.submit}
+              block
+              icon={<SaveOutlined />}
+              loading={loading}
+            >
+              {saveMessage || t('generic.actions.save')}
             </Button>
           </Col>
 

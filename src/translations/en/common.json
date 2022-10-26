@@ -4,6 +4,7 @@
     "copiedToClipBoard": "Copied to Clipboard",
     "copied": "Copied",
     "clickToCopy": "Click to Copy",
+    "error": "Error",
     "actions": {
       "add": "Add",
       "save": "Save",
@@ -14,6 +15,10 @@
       "rules": {
         "fieldRequired": "The field is required",
         "notValidEmail": "The email is not valid"
+      },
+      "errors": {
+        "invalidValue": "The value is invalid",
+        "unknownErrorAccured": "An unknown error occurred"
       }
     }
   },
@@ -89,10 +94,12 @@
     "createBusinessCard": "Create Business Card",
     "editBusinessCard": "Create Business Card",
     "preview": "Preview",
+    "businessCardCreatedSuccessfully": "The Business Card was created successfully",
     "form": {
       "fields": {
         "title": "Title",
         "subtitle": "Subtitle",
+        "description": "Description",
         "phones": "Phones",
         "emails": "Emails",
         "address": "Address"

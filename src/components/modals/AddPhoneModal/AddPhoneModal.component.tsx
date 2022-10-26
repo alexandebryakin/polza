@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Input } from '../../../antd';
 import { CreatePhoneMutationVariables, Phone, Status, useCreatePhoneMutation } from '../../../api/graphql.types';
 import { useUserInfoContext } from '../../../contexts/userInfo/userInfoContext';
+import { useMutationError } from '../../../hooks/useMutationError';
 import { Toggler } from '../../../hooks/useToggler';
 import { onFailure } from '../../../utils/onFailure';
 
@@ -28,6 +29,8 @@ const AddPhoneModal = ({ toggler }: AddPhoneModalProps) => {
   const [t] = useTranslation('common');
   const [form] = Form.useForm<Phone>();
   const [createPhone, { loading, error }] = useCreatePhoneMutation();
+
+  useMutationError(error);
 
   const { refetchUser } = useUserInfoContext();
 

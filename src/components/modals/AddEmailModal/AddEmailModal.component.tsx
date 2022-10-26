@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Input } from '../../../antd';
 import { CreateEmailMutationVariables, Status, useCreateEmailMutation } from '../../../api/graphql.types';
 import { useUserInfoContext } from '../../../contexts/userInfo/userInfoContext';
+import { useMutationError } from '../../../hooks/useMutationError';
 import { Toggler } from '../../../hooks/useToggler';
 import { onFailure } from '../../../utils/onFailure';
 
@@ -20,6 +21,8 @@ const AddEmailModal = ({ toggler }: AddEmailModalProps) => {
   const [t] = useTranslation('common');
   const [form] = Form.useForm<CreateEmailMutationVariables>();
   const [createEmail, { loading, error }] = useCreateEmailMutation();
+
+  useMutationError(error);
 
   const { refetchUser } = useUserInfoContext();
 
