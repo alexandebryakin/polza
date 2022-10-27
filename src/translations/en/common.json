@@ -100,6 +100,7 @@
         "title": "Title",
         "subtitle": "Subtitle",
         "description": "Description",
+        "status": "Publication Status",
         "phones": "Phones",
         "emails": "Emails",
         "address": "Address"
@@ -114,6 +115,10 @@
       "actions": {
         "addPhone": "Add Phone",
         "addEmail": "Add Email"
+      },
+      "statuses": {
+        "draft": "Draft",
+        "published": "Published"
       }
     }
   },

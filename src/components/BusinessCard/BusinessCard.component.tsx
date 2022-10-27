@@ -13,6 +13,12 @@ import { QRCodeSVG } from 'qrcode.react';
 import { TitleProps } from 'antd/lib/typography/Title';
 
 import { BusinessCard as TBusinessCard } from '../../api/graphql.types';
+import { MASKS } from '../modals/AddPhoneModal/AddPhoneModal.component';
+import IMask from 'imask';
+
+const mask = IMask.createMask({
+  mask: MASKS.PHONE,
+});
 
 export const BusinessCardWrapper = ({
   className,
@@ -134,7 +140,7 @@ export default function BusinessCard({ businessCard }: BusinessCardProps) {
 
               <div className={styles.contacts}>
                 <ContactList
-                  items={businessCard.phones.map((p) => p.number)}
+                  items={businessCard.phones.map((p) => mask.resolve(p.number.toString()))}
                   icon={
                     // <MobileOutlined />
                     <PhoneOutlined />

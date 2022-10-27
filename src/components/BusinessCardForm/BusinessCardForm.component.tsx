@@ -13,7 +13,12 @@ import AddPhoneModal from '../modals/AddPhoneModal';
 import { MASKS } from '../modals/AddPhoneModal/AddPhoneModal.component';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
 import AddEmailModal from '../modals/AddEmailModal';
-import { MutationUpsertBusinessCardArgs, Status, useUpsertBusinessCardMutation } from '../../api/graphql.types';
+import {
+  MutationUpsertBusinessCardArgs,
+  PublicationStatusEnum,
+  Status,
+  useUpsertBusinessCardMutation,
+} from '../../api/graphql.types';
 import { onFailure } from '../../utils/onFailure';
 import { useMutationError } from '../../hooks/useMutationError';
 
@@ -52,7 +57,6 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
   const onFinish: FormProps<MutationUpsertBusinessCardArgs>['onFinish'] = async (
     variables: MutationUpsertBusinessCardArgs
   ) => {
-    console.log('BusinessCardForm.onFinish>>>', variables);
     const response = await upsertBusinessCard({ variables });
 
     type Keys = keyof MutationUpsertBusinessCardArgs;
@@ -100,6 +104,7 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
   const businessCardDefaultArgs: MutationUpsertBusinessCardArgs = {
     title: '',
     subtitle: '',
+    status: PublicationStatusEnum.Draft,
     phones: [],
     emails: [],
   };
@@ -212,6 +217,21 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
 
         <Form.Item label={t('businessCards.form.fields.address')} name={FIELDS.address}>
           <Input placeholder={t('businessCards.form.placeholders.address')} />
+        </Form.Item>
+
+        <Form.Item label={t('businessCards.form.fields.status')} name={FIELDS.status}>
+          <Select
+            options={[
+              {
+                label: t('businessCards.form.statuses.draft'),
+                value: PublicationStatusEnum.Draft,
+              },
+              {
+                label: t('businessCards.form.statuses.published'),
+                value: PublicationStatusEnum.Published,
+              },
+            ]}
+          />
         </Form.Item>
 
         <Row gutter={[16, 16]}>
