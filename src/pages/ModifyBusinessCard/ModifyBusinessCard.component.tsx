@@ -1,4 +1,4 @@
-import { Col, Typography } from 'antd';
+import { Col, Spin, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { matchPath, useLocation } from 'react-router-dom';
 
@@ -8,7 +8,7 @@ import FormCard from '../../lib/FormCard';
 import { routes } from '../../navigation/routes';
 
 import styles from './ModifyBusinessCard.module.scss';
-import BusinessCard from '../../components/BusinessCard';
+import BusinessCard, { BusinessCardAttrs } from '../../components/BusinessCard';
 import React from 'react';
 
 import {
@@ -17,11 +17,12 @@ import {
   PublicationStatusEnum,
   VerificationStatusEnum,
 } from '../../api/graphql.types';
+import { useBusinessCard } from '../../api/businessCards';
 
-const NEW_BUSINESS_CARD = 'new';
+export const NEW_BUSINESS_CARD = 'new';
 
 interface BusinessCardPreviewProps {
-  businessCard: TBusinessCard;
+  businessCard: BusinessCardAttrs;
 }
 const BusinessCardPreview = ({ businessCard }: BusinessCardPreviewProps) => {
   const [t] = useTranslation('common');
@@ -46,43 +47,40 @@ export default function ModifyBusinessCard() {
 
   const [values, setValues] = React.useState<Partial<MutationUpsertBusinessCardArgs>>({});
 
+  const { businessCard, loading } = useBusinessCard({ id: data?.params.id || '' });
+
   return (
     <Page>
       <Typography.Title>
         {t(isNew ? 'businessCards.createBusinessCard' : 'businessCards.editBusinessCard')}
       </Typography.Title>
 
-      <BusinessCardPreview
-        businessCard={{
-          title: values.title || t('businessCards.form.placeholders.title'),
-          subtitle: values.subtitle || t('businessCards.form.placeholders.subtitle'),
-          id: '',
-          userId: '',
-          description: values.description || '',
-          status: values.status || PublicationStatusEnum.Draft,
-          phones: (values.phones || []).map((p) => ({
-            id: '',
-            number: p,
-            isPrimary: false,
-            verificationStatus: VerificationStatusEnum.InProgress,
-          })),
-          emails: (values.emails || []).map((e) => ({
-            id: '',
-            email: e,
-            isPrimary: false,
-            verificationStatus: VerificationStatusEnum.InProgress,
-          })),
-          address: values.address || t('businessCards.form.placeholders.address'),
-        }}
-      />
-
-      <Col xs={24} lg={18} xl={12}>
-        <BusinessCardForm
-          onChange={setValues}
-          components={{
-            Wrapper: FormCard,
+      {!loading && (
+        <BusinessCardPreview
+          businessCard={{
+            title: values.title || t('businessCards.form.placeholders.title'),
+            subtitle: values.subtitle || t('businessCards.form.placeholders.subtitle'),
+            id: businessCard?.id,
+            userId: businessCard?.id,
+            description: values.description || '',
+            status: values.status || PublicationStatusEnum.Draft,
+            phones: (values.phones || []).map((number) => ({ number })),
+            emails: (values.emails || []).map((email) => ({ email })),
+            address: values.address || t('businessCards.form.placeholders.address'),
           }}
         />
+      )}
+
+      <Col xs={24} lg={18} xl={12}>
+        <Spin spinning={loading}>
+          <BusinessCardForm
+            businessCard={businessCard}
+            onChange={setValues}
+            components={{
+              Wrapper: FormCard,
+            }}
+          />
+        </Spin>
       </Col>
     </Page>
   );

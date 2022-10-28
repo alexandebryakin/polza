@@ -41,7 +41,9 @@ function BusinessCards() {
 
   const { user } = useUserInfoContext();
 
-  const [getBusinessCards, { data, loading }] = useGetBusinessCardsLazyQuery();
+  const [getBusinessCards, { data, loading }] = useGetBusinessCardsLazyQuery({
+    fetchPolicy: 'cache-and-network',
+  });
 
   React.useEffect(() => {
     if (!user?.id) return;

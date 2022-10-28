@@ -15,6 +15,8 @@ import { TitleProps } from 'antd/lib/typography/Title';
 import { BusinessCard as TBusinessCard } from '../../api/graphql.types';
 import { MASKS } from '../modals/AddPhoneModal/AddPhoneModal.component';
 import IMask from 'imask';
+import { Link } from 'react-router-dom';
+import { routes } from '../../navigation/routes';
 
 const mask = IMask.createMask({
   mask: MASKS.PHONE,
@@ -75,8 +77,13 @@ const ContactList = ({ items, icon }: ContactListProps) => {
   );
 };
 
+export type BusinessCardAttrs = Partial<Omit<TBusinessCard, 'phones' | 'emails'>> & {
+  emails: Pick<TBusinessCard['emails'][0], 'email'>[];
+  phones: Pick<TBusinessCard['phones'][0], 'number'>[];
+};
+
 interface BusinessCardProps {
-  businessCard: TBusinessCard;
+  businessCard: BusinessCardAttrs;
 }
 export default function BusinessCard({ businessCard }: BusinessCardProps) {
   const [t] = useTranslation('common');
@@ -115,6 +122,7 @@ export default function BusinessCard({ businessCard }: BusinessCardProps) {
 
   return (
     <FlipCard
+      data-id={businessCard.id}
       ref={cardRef}
       front={
         <BusinessCardWrapper>
@@ -126,6 +134,10 @@ export default function BusinessCard({ businessCard }: BusinessCardProps) {
             </Typography.Title>
 
             <div className={styles.textCentered}>{businessCard.subtitle}</div>
+
+            {/* <Link to={routes.businessCards().edit(businessCard.id)._}>
+              <Button>TODO: Edit</Button>
+            </Link> */}
           </div>
         </BusinessCardWrapper>
       }

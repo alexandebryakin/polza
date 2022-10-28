@@ -24,6 +24,7 @@ const useAnimation = (duration: number): UseAnimationReturnType => {
 };
 
 interface FlipCardProps {
+  'data-id'?: string;
   front: React.ReactNode;
   back: React.ReactNode;
   duration?: number;
@@ -43,6 +44,7 @@ const FlipCard = React.forwardRef<HTMLDivElement, FlipCardProps>((props, ref) =>
 
   return (
     <div
+      data-id={props['data-id']}
       ref={ref}
       style={{ transitionDuration: `${duration}ms` }}
       className={css(styles.flipCard, {

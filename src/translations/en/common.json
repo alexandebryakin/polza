@@ -92,9 +92,14 @@
     "copyLink": "Copy Link",
     "openProfile": "Open Profile",
     "createBusinessCard": "Create Business Card",
-    "editBusinessCard": "Create Business Card",
+    "editBusinessCard": "Edit Business Card",
     "preview": "Preview",
     "businessCardCreatedSuccessfully": "The Business Card was created successfully",
+    "businessCardUpdatedSuccessfully": "The Business Card was updated successfully",
+    "failedToDeleteBusinessCard": "Failed to delete the Business Card",
+    "succededToDeleteBusinessCard": "Your Business Card was successfully removed",
+    "doYouReallyWantToRemoveBusinessCard": " Do you really want to remove this Business Card?",
+    "thisOperationWillPermanentlyRemoveYourBusinessCard": "This operation will permanently remove your Business Card",
     "form": {
       "fields": {
         "title": "Title",

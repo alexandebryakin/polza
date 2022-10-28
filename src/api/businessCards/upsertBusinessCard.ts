@@ -22,18 +22,7 @@ export const UPSERT_BUSINESS_CARD = gql`
       emails: $emails
     ) {
       businessCard {
-        id
-        title
-        subtitle
-        description
-        address
-        status
-        phones {
-          ...PhoneFields
-        }
-        emails {
-          ...EmailFields
-        }
+        ...BusinessCardFields
       }
       status
       errors

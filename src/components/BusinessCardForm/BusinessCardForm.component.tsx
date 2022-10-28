@@ -1,5 +1,12 @@
-import { DeleteOutlined, MailOutlined, PhoneOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import { Form, FormProps, Col, Divider, Row, Space, notification } from 'antd';
+import {
+  DeleteOutlined,
+  ExclamationCircleOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  PlusOutlined,
+  SaveOutlined,
+} from '@ant-design/icons';
+import { Form, FormProps, Col, Divider, Row, Space, notification, Modal } from 'antd';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Select } from '../../antd';
@@ -16,11 +23,15 @@ import AddEmailModal from '../modals/AddEmailModal';
 import {
   MutationUpsertBusinessCardArgs,
   PublicationStatusEnum,
+  ShowBusinessCardQuery,
   Status,
+  useDeleteBusinessCardMutation,
   useUpsertBusinessCardMutation,
+  VerificationStatusEnum,
 } from '../../api/graphql.types';
 import { onFailure } from '../../utils/onFailure';
 import { useMutationError } from '../../hooks/useMutationError';
+import { useNavigate } from 'react-router-dom';
 
 const mask = IMask.createMask({
   mask: MASKS.PHONE,
@@ -41,23 +52,53 @@ const FIELDS = buildFields<MutationUpsertBusinessCardArgs>([
 ]);
 
 export interface BusinessCardFormProps {
+  businessCard: ShowBusinessCardQuery['businessCard'] | undefined;
   onChange?: (values: Partial<MutationUpsertBusinessCardArgs>) => void;
   components?: {
     Wrapper?: React.FC;
   };
 }
 
-export default function BusinessCardForm({ onChange, components }: BusinessCardFormProps) {
+export default function BusinessCardForm({ businessCard, onChange, components }: BusinessCardFormProps) {
   const [t] = useTranslation('common');
   const [form] = Form.useForm<MutationUpsertBusinessCardArgs>();
   const [upsertBusinessCard, { loading, error }] = useUpsertBusinessCardMutation();
-
   useMutationError(error);
+
+  const navigate = useNavigate();
+
+  const goBack = () => navigate(-1);
+
+  const isNew = !businessCard?.id;
+
+  const businessCardDefaultArgs: MutationUpsertBusinessCardArgs = React.useMemo(
+    () => ({
+      id: businessCard?.id,
+      title: businessCard?.title || '',
+      subtitle: businessCard?.subtitle || '',
+      description: businessCard?.description,
+      address: businessCard?.address,
+      status: businessCard?.status || PublicationStatusEnum.Draft,
+      phones: (businessCard?.phones || []).map((p) => p.number),
+      emails: (businessCard?.emails || []).map((p) => p.email),
+    }),
+    [businessCard]
+  );
+
+  React.useEffect(() => {
+    form.setFieldsValue(businessCardDefaultArgs);
+    onChange?.(businessCardDefaultArgs);
+  }, [businessCardDefaultArgs, form, onChange]);
 
   const onFinish: FormProps<MutationUpsertBusinessCardArgs>['onFinish'] = async (
     variables: MutationUpsertBusinessCardArgs
   ) => {
-    const response = await upsertBusinessCard({ variables });
+    const response = await upsertBusinessCard({
+      variables: {
+        ...variables,
+        id: businessCard?.id,
+      },
+    });
 
     type Keys = keyof MutationUpsertBusinessCardArgs;
 
@@ -74,9 +115,42 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
 
     if (response.data?.upsertBusinessCard?.status === Status.Success) {
       notification.success({
-        message: t('businessCards.businessCardCreatedSuccessfully'),
+        message: t(
+          isNew ? 'businessCards.businessCardCreatedSuccessfully' : 'businessCards.businessCardUpdatedSuccessfully'
+        ),
       });
+      goBack();
     }
+  };
+
+  const [deleteBusinessCard, { loading: deleting, error: delitingError }] = useDeleteBusinessCardMutation();
+
+  useMutationError(delitingError);
+
+  const handleDeleteBusinessCard = async () => {
+    if (isNew) return;
+
+    Modal.confirm({
+      title: t('businessCards.doYouReallyWantToRemoveBusinessCard'),
+      icon: <ExclamationCircleOutlined />,
+      content: t('businessCards.thisOperationWillPermanentlyRemoveYourBusinessCard'),
+      async onOk() {
+        const response = await deleteBusinessCard({ variables: { id: businessCard.id } });
+
+        onFailure(response.data?.deleteBusinessCard, () => {
+          notification.error({
+            message: t('businessCards.failedToDeleteBusinessCard'),
+          });
+        });
+
+        if (response.data?.deleteBusinessCard?.status === Status.Success) {
+          notification.success({
+            message: t('businessCards.succededToDeleteBusinessCard'),
+          });
+          goBack();
+        }
+      },
+    });
   };
 
   const [saveMessage, setSaveMessage] = React.useState('');
@@ -99,15 +173,6 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
 
   const phoneModal = useToggler();
   const emailModal = useToggler();
-
-  // TODO: fetch business card by ID
-  const businessCardDefaultArgs: MutationUpsertBusinessCardArgs = {
-    title: '',
-    subtitle: '',
-    status: PublicationStatusEnum.Draft,
-    phones: [],
-    emails: [],
-  };
 
   return (
     <WrapperComponent>
@@ -249,14 +314,11 @@ export default function BusinessCardForm({ onChange, components }: BusinessCardF
           </Col>
 
           <Col xs={24} lg={12}>
-            <Button
-              danger
-              block
-              icon={<DeleteOutlined />}
-              onClick={() => console.log('TODO: add handler + confirmation')}
-            >
-              {t('generic.actions.remove')}
-            </Button>
+            {!isNew && (
+              <Button danger block icon={<DeleteOutlined />} onClick={handleDeleteBusinessCard} loading={deleting}>
+                {t('generic.actions.remove')}
+              </Button>
+            )}
           </Col>
         </Row>
       </Form>

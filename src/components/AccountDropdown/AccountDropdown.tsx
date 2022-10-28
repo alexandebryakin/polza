@@ -12,7 +12,7 @@ import styles from './AccountDropdown.module.scss';
 const Toggler = () => {
   const { user } = useUserInfoContext();
 
-  const email = user?.emails.find((e) => e.isPrimary)?.email;
+  const email = user?.emails.find((e) => e.isPrimary)?.email || user?.emails[0]?.email;
 
   return (
     <div className={styles.toggler}>
