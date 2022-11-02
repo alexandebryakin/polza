@@ -7,17 +7,16 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Input } from '../../../antd';
 
-import * as auth from '../../../api/auth';
-
 import isEmpty from 'lodash/isEmpty';
 import { routes } from '../../../navigation/routes';
 import Layout from '../Layout/Layout.component';
 import { jwt } from '../../../api/jwt';
-import { SignupUserMutation, SignupUserMutationVariables } from '../../../api/graphql.types';
-import { AxiosResponseWrapper } from '../../../api/makeRequest';
-import { validate } from '@graphql-codegen/typescript-react-apollo';
-import { isEqual } from 'lodash';
+import { SignupUserMutation, SignupUserMutationVariables, useSignupUserMutation } from '../../../api/graphql.types';
+
 import Format from '../../../lib/Format';
+import { useMutationError } from '../../../hooks/useMutationError';
+import { FetchResult } from '@apollo/client';
+import { useUserInfoContext } from '../../../contexts/userInfo/userInfoContext';
 
 const FIELDS = {
   email: 'email',
@@ -30,16 +29,17 @@ type FieldData = {
   errors: string[];
 };
 
-const buildAntFormErrorFieldsData = (response: AxiosResponseWrapper<SignupUserMutation>, t: TFunction) => {
+type TResponse = FetchResult<SignupUserMutation, Record<string, any>, Record<string, any>>;
+const buildAntFormErrorFieldsData = (response: TResponse, t: TFunction) => {
   const fieldData: FieldData[] = [];
 
-  if (response.data.signupUser?.errors.email) {
+  if (response.data?.signupUser?.errors.email) {
     fieldData.push({
       name: FIELDS.email,
       errors: [t('auth.errors.invalidEmail')],
     });
   }
-  if (response.data.signupUser?.errors.password) {
+  if (response.data?.signupUser?.errors.password) {
     fieldData.push({
       name: FIELDS.password,
       errors: [t('auth.errors.invalidPassoword')],
@@ -53,23 +53,25 @@ function Signup() {
   const [t] = useTranslation('common');
   const [form] = Form.useForm<SignupUserMutationVariables>();
 
-  const [loading, setLoading] = React.useState(false);
+  // const [loading, setLoading] = React.useState(false);
   const [agreed, setAgreed] = React.useState(false);
   const navigate = useNavigate();
+  const [signupUser, { loading, error }] = useSignupUserMutation();
+  useMutationError(error);
 
-  const onFinish = async (values: SignupUserMutationVariables) => {
-    setLoading(true);
-    const response = await auth.signupUser({ variables: values });
+  const { refetchUser } = useUserInfoContext();
 
-    if (!isEmpty(response.data.signupUser?.errors)) {
+  const onFinish = async (variables: SignupUserMutationVariables) => {
+    const response = await signupUser({ variables });
+
+    if (!isEmpty(response.data?.signupUser?.errors)) {
       form.setFields(buildAntFormErrorFieldsData(response, t));
     } else {
-      jwt.set(response.data.signupUser?.token || '');
+      jwt.set(response.data?.signupUser?.token || '');
+      refetchUser();
 
       navigate(routes.profile()._);
     }
-
-    setLoading(false);
   };
 
   return (

@@ -22,7 +22,7 @@ export interface IUseUser extends ReturnType<typeof useGetUserQuery> {
   user?: GetUserQuery['user'];
 }
 export const useUser = (variables: GetUserQueryVariables): IUseUser => {
-  const response = useGetUserQuery({ variables });
+  const response = useGetUserQuery({ variables, fetchPolicy: 'cache-and-network' });
 
   return {
     ...response,
