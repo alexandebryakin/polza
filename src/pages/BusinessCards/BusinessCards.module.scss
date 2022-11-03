@@ -1,0 +1,29 @@
+@import 'src/styles/_variables.scss';
+
+.addBusinessCard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+
+  cursor: pointer;
+
+  background: $background-color;
+
+  transition: transform 150ms;
+  &:hover {
+    transform: scale(1.03);
+  }
+
+  .plusIconSize {
+    font-size: 48px;
+  }
+}
+
+.businessCardSkeleton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

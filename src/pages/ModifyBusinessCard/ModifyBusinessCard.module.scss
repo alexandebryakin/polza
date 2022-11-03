@@ -1,0 +1,8 @@
+@import 'src/styles/_variables.scss';
+
+.businessCardPreview {
+  margin-bottom: 24px;
+  position: sticky;
+  top: $top-nav__height;
+  z-index: 1;
+}

@@ -7,14 +7,14 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Input } from '../../../antd';
 
-import * as auth from '../../../api/auth';
-
 import isEmpty from 'lodash/isEmpty';
 import { jwt } from '../../../api/jwt';
 import { routes } from '../../../navigation/routes';
 import Layout from '../Layout/Layout.component';
-import { SigninUserMutation, SigninUserMutationVariables } from '../../../api/graphql.types';
-import { AxiosResponseWrapper } from '../../../api/makeRequest';
+import { SigninUserMutation, SigninUserMutationVariables, useSigninUserMutation } from '../../../api/graphql.types';
+import { FetchResult } from '@apollo/client';
+import { useMutationError } from '../../../hooks/useMutationError';
+import { useUserInfoContext } from '../../../contexts/userInfo/userInfoContext';
 
 const FIELDS = {
   email: 'email',
@@ -26,8 +26,9 @@ type FieldData = {
   errors: string[];
 };
 
-const buildAntFormErrorFieldsData = (response: AxiosResponseWrapper<SigninUserMutation>, t: TFunction) => {
-  const userErrors = response.data.signinUser?.errors.user || [];
+type TResponse = FetchResult<SigninUserMutation, Record<string, any>, Record<string, any>>;
+const buildAntFormErrorFieldsData = (response: TResponse, t: TFunction) => {
+  const userErrors = response.data?.signinUser?.errors.user || [];
 
   const fieldData: FieldData[] = [];
 
@@ -54,22 +55,24 @@ function Signin() {
   const [t] = useTranslation('common');
   const [form] = Form.useForm<SigninUserMutationVariables>();
 
-  const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
 
-  const onFinish = async (values: SigninUserMutationVariables) => {
-    setLoading(true);
-    const response = await auth.signinUser({ variables: values });
+  const [signinUser, { loading, error }] = useSigninUserMutation();
+  useMutationError(error);
 
-    if (!isEmpty(response.data.signinUser?.errors)) {
+  const { refetchUser } = useUserInfoContext();
+
+  const onFinish = async (variables: SigninUserMutationVariables) => {
+    const response = await signinUser({ variables });
+
+    if (!isEmpty(response.data?.signinUser?.errors)) {
       form.setFields(buildAntFormErrorFieldsData(response, t));
     } else {
-      jwt.set(response.data.signinUser?.token || '');
+      jwt.set(response.data?.signinUser?.token || '');
+      refetchUser();
 
       navigate(routes.profile()._);
     }
-
-    setLoading(false);
   };
 
   return (

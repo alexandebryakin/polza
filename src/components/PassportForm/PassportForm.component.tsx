@@ -10,12 +10,13 @@ import {
   Status,
   UpsertPassportMutationVariables,
   useUpsertPassportMutation,
-  VerificationStatus,
+  VerificationStatusEnum,
 } from '../../api/graphql.types';
 import styles from './PassportForm.module.scss';
 import { buildFields } from '../../utils/buildFields';
 import { onFailure } from '../../utils/onFailure';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
+import { useMutationError } from '../../hooks/useMutationError';
 
 const FIELDS = buildFields<UpsertPassportMutationVariables>([
   'firstName',
@@ -32,27 +33,19 @@ function PassportForm() {
   const [t] = useTranslation('common');
   const [form] = Form.useForm<UpsertPassportMutationVariables>();
   const [image, setImage] = React.useState<RcFile>();
-  const [upsertPassport, { data, loading, error }] = useUpsertPassportMutation();
+  const [upsertPassport, { loading, error }] = useUpsertPassportMutation();
 
   const [formDisabled, setFormDisabled] = React.useState(false);
 
-  const { passport, refetchPassport } = useUserInfoContext();
+  const { passport, refetchUser } = useUserInfoContext();
 
   React.useEffect(() => {
     Object.entries(passport || {}).forEach(([key, value]) => form.setFieldValue(key, value));
 
-    passport && setFormDisabled(passport.verificationStatus !== VerificationStatus.Failed);
+    passport && setFormDisabled(passport.verificationStatus !== VerificationStatusEnum.Failed);
   }, [form, passport]);
 
-  React.useEffect(() => {
-    if (!error) return;
-
-    console.error(error);
-
-    notification.error({
-      message: t('profile.passport.errors.anErrorOccuredWhileSavingPassport'),
-    });
-  }, [error, t]);
+  useMutationError(error, t('profile.passport.errors.anErrorOccuredWhileSavingPassport'));
 
   const onFinish = async (variables: MutationUpsertPassportArgs) => {
     if (formDisabled) return;
@@ -86,7 +79,7 @@ function PassportForm() {
 
     if (response.data?.upsertPassport?.status === Status.Success) {
       setFormDisabled(true);
-      refetchPassport();
+      refetchUser();
     }
   };
 

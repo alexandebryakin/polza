@@ -8,6 +8,10 @@
   padding: 0 0 20px 0;
   flex-grow: 1;
   border-right: 1px solid $border-color;
+
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
 .collapsed {
   max-width: $sider-width--collapsed;

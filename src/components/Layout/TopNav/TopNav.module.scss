@@ -4,8 +4,13 @@
   height: $top-nav__height;
   background: $background-color;
   border-bottom: 1px solid $border-color;
+
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .accountDropdown {
+  min-width: 200px;
   margin-right: 20px;
 }

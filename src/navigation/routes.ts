@@ -13,7 +13,9 @@ type Routes = {
     passport: Route;
     security: Route;
   }>;
-  businessCards: Route;
+  businessCards: Subroute<{
+    edit: Route;
+  }>;
 
   settings: Route;
 };
@@ -28,7 +30,9 @@ export const routes = builder.define<Routes>((root) => {
     profile.define('security');
   });
 
-  root.define('businessCards');
+  root.define('businessCards').subroutes((businessCards) => {
+    businessCards.define('edit');
+  });
   root.define('settings');
 }, config);
 

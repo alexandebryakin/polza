@@ -1,11 +1,13 @@
 import React from 'react';
+import { PassportFieldsFragment } from '../../api/graphql.types';
 import { jwt } from '../../api/jwt';
-import { IUsePassport, usePassport } from '../../api/passports';
+import { IUseUser, useUser } from '../../api/users';
 
 export interface IUserInfoContext {
   loading: boolean;
-  passport: IUsePassport['passport'];
-  refetchPassport: IUsePassport['refetch'];
+  user: IUseUser['user'];
+  passport?: PassportFieldsFragment | null;
+  refetchUser: IUseUser['refetch'];
 }
 
 export const UserInfoContext = React.createContext({} as IUserInfoContext);
@@ -16,22 +18,22 @@ const userIdFromJwt = (): string => {
 
 export const UserInfoContextProvider = ({ children }: { children: React.ReactNode }) => {
   const {
-    loading: loadingPassoword,
-    passport,
-    refetch: refetchPassport,
-  } = usePassport({
+    loading,
+    user,
+    refetch: refetchUser,
+  } = useUser({
     userId: userIdFromJwt(),
   });
+
+  const { passport } = user || {};
 
   const token = jwt.get();
 
   React.useEffect(() => {
-    refetchPassport({ userId: userIdFromJwt() });
-  }, [refetchPassport, token]);
+    refetchUser({ userId: userIdFromJwt() });
+  }, [refetchUser, token]);
 
-  const loading = loadingPassoword;
-
-  return <UserInfoContext.Provider value={{ passport, loading, refetchPassport }} children={children} />;
+  return <UserInfoContext.Provider value={{ user, passport, loading, refetchUser }} children={children} />;
 };
 
 export const useUserInfoContext = () => {

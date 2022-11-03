@@ -2,6 +2,10 @@
 
 $border-radius-8px: 8px;
 
+.bordered {
+  border-radius: $border-radius-8px;
+}
+
 .alert {
   border-radius: $border-radius-8px;
 }
@@ -12,6 +16,12 @@ $border-radius-8px: 8px;
 
 .button {
   border-radius: $border-radius-8px;
+}
+
+.select {
+  :global(.ant-select-selector) {
+    border-radius: $border-radius-8px !important;
+  }
 }
 
 .tabs {

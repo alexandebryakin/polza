@@ -9,22 +9,23 @@ import PassportForm from '../../components/PassportForm';
 import { Link, LinkProps } from 'react-router-dom';
 import { routes } from '../../navigation/routes';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
-import { VerificationStatus } from '../../api/graphql.types';
+import { VerificationStatusEnum } from '../../api/graphql.types';
+import Page from '../../components/Page';
 
 const VerificationAlert = () => {
   const [t] = useTranslation('common');
   const { passport } = useUserInfoContext();
 
-  const messages: Record<VerificationStatus, string> = {
-    [VerificationStatus.Failed]: t('profile.passport.verification.failed'),
-    [VerificationStatus.InProgress]: t('profile.passport.verification.inProgress'),
-    [VerificationStatus.Succeeded]: t('profile.passport.verification.succeeded'),
+  const messages: Record<VerificationStatusEnum, string> = {
+    [VerificationStatusEnum.Failed]: t('profile.passport.verification.failed'),
+    [VerificationStatusEnum.InProgress]: t('profile.passport.verification.inProgress'),
+    [VerificationStatusEnum.Succeeded]: t('profile.passport.verification.succeeded'),
   };
 
-  const types: Record<VerificationStatus, AlertProps['type']> = {
-    [VerificationStatus.Failed]: 'error',
-    [VerificationStatus.InProgress]: 'info',
-    [VerificationStatus.Succeeded]: 'success',
+  const types: Record<VerificationStatusEnum, AlertProps['type']> = {
+    [VerificationStatusEnum.Failed]: 'error',
+    [VerificationStatusEnum.InProgress]: 'info',
+    [VerificationStatusEnum.Succeeded]: 'success',
   };
 
   return (
@@ -60,12 +61,12 @@ const WarningVerificationIcon = () => {
 
   const { passport } = useUserInfoContext();
 
-  if (passport?.verificationStatus === VerificationStatus.Succeeded) return null;
+  if (passport?.verificationStatus === VerificationStatusEnum.Succeeded) return null;
 
-  const colors: Record<VerificationStatus, string> = {
-    [VerificationStatus.InProgress]: styles.info,
-    [VerificationStatus.Failed]: styles.error,
-    [VerificationStatus.Succeeded]: '',
+  const colors: Record<VerificationStatusEnum, string> = {
+    [VerificationStatusEnum.InProgress]: styles.info,
+    [VerificationStatusEnum.Failed]: styles.error,
+    [VerificationStatusEnum.Succeeded]: '',
   };
 
   return (
@@ -81,7 +82,7 @@ function Profile() {
   const [t] = useTranslation('common');
 
   return (
-    <div className={styles.page}>
+    <Page>
       <Typography.Title level={2}>{t('profile.profile')}</Typography.Title>
 
       <Tabs
@@ -121,7 +122,7 @@ function Profile() {
           },
         ]}
       />
-    </div>
+    </Page>
   );
 }
 

@@ -3,17 +3,23 @@
 }
 
 .formCard {
-  width: 480px;
+  min-width: 370px;
+  margin: 0 20px;
   background: #fff;
   box-shadow: 0 24px 64px #26214a1a;
   border-radius: 12px;
   padding: 30px 60px;
   position: relative;
+
+  @media all and (max-width: 768px) {
+    padding: 15px 30px;
+  }
 }
 
 .welcomeBack {
   display: flex;
   justify-content: center;
+  text-align: center;
   margin-bottom: 20px;
 }
 

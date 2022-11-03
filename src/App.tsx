@@ -15,6 +15,8 @@ import Layout from './components/Layout';
 import LayoutProvider from './components/Layout/LayoutProvider';
 import Profile from './pages/Profile';
 import { UserInfoContextProvider } from './contexts/userInfo/userInfoContext';
+import BusinessCards from './pages/BusinessCards';
+import ModifyBusinessCard from './pages/ModifyBusinessCard';
 
 function App() {
   if (jwt.isExpired() && !isRoutePublic()) {
@@ -45,7 +47,16 @@ function App() {
               path={routes.businessCards()._}
               element={
                 <Layout>
-                  <div>TODO: Business Cards</div>
+                  <BusinessCards />
+                </Layout>
+              }
+            />
+
+            <Route
+              path={routes.businessCards().edit(':id')._}
+              element={
+                <Layout>
+                  <ModifyBusinessCard />
                 </Layout>
               }
             />
