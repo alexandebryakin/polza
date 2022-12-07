@@ -50,7 +50,7 @@ export default function ModifyBusinessCard() {
   const { businessCard, loading } = useBusinessCard({ id: data?.params.id || '' });
 
   return (
-    <Page>
+    <Page withBackButton>
       <Typography.Title>
         {t(isNew ? 'businessCards.createBusinessCard' : 'businessCards.editBusinessCard')}
       </Typography.Title>

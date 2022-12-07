@@ -59,6 +59,46 @@ export interface BusinessCardFormProps {
   };
 }
 
+export const useRemoveBusinessCardConfirmationModal = () => {
+  const [t] = useTranslation('common');
+  const [deleteBusinessCard, { loading, error }] = useDeleteBusinessCardMutation();
+
+  const navigate = useNavigate();
+  const goBack = () => navigate(-1);
+
+  const remove = (id: UUID | undefined) => {
+    if (!id) return;
+
+    Modal.confirm({
+      title: t('businessCards.doYouReallyWantToRemoveBusinessCard'),
+      icon: <ExclamationCircleOutlined />,
+      content: t('businessCards.thisOperationWillPermanentlyRemoveYourBusinessCard'),
+      async onOk() {
+        const response = await deleteBusinessCard({ variables: { id } });
+
+        onFailure(response.data?.deleteBusinessCard, () => {
+          notification.error({
+            message: t('businessCards.failedToDeleteBusinessCard'),
+          });
+        });
+
+        if (response.data?.deleteBusinessCard?.status === Status.Success) {
+          notification.success({
+            message: t('businessCards.succededToDeleteBusinessCard'),
+          });
+          goBack();
+        }
+      },
+    });
+  };
+
+  return {
+    remove,
+    loading,
+    error,
+  };
+};
+
 export default function BusinessCardForm({ businessCard, onChange, components }: BusinessCardFormProps) {
   const [t] = useTranslation('common');
   const [form] = Form.useForm<MutationUpsertBusinessCardArgs>();
@@ -66,7 +106,6 @@ export default function BusinessCardForm({ businessCard, onChange, components }:
   useMutationError(error);
 
   const navigate = useNavigate();
-
   const goBack = () => navigate(-1);
 
   const isNew = !businessCard?.id;
@@ -123,34 +162,13 @@ export default function BusinessCardForm({ businessCard, onChange, components }:
     }
   };
 
-  const [deleteBusinessCard, { loading: deleting, error: delitingError }] = useDeleteBusinessCardMutation();
-
-  useMutationError(delitingError);
+  const removeBusinessCardConfirmationModal = useRemoveBusinessCardConfirmationModal();
+  useMutationError(removeBusinessCardConfirmationModal.error);
 
   const handleDeleteBusinessCard = async () => {
     if (isNew) return;
 
-    Modal.confirm({
-      title: t('businessCards.doYouReallyWantToRemoveBusinessCard'),
-      icon: <ExclamationCircleOutlined />,
-      content: t('businessCards.thisOperationWillPermanentlyRemoveYourBusinessCard'),
-      async onOk() {
-        const response = await deleteBusinessCard({ variables: { id: businessCard.id } });
-
-        onFailure(response.data?.deleteBusinessCard, () => {
-          notification.error({
-            message: t('businessCards.failedToDeleteBusinessCard'),
-          });
-        });
-
-        if (response.data?.deleteBusinessCard?.status === Status.Success) {
-          notification.success({
-            message: t('businessCards.succededToDeleteBusinessCard'),
-          });
-          goBack();
-        }
-      },
-    });
+    removeBusinessCardConfirmationModal.remove(businessCard.id);
   };
 
   const [saveMessage, setSaveMessage] = React.useState('');
@@ -315,7 +333,13 @@ export default function BusinessCardForm({ businessCard, onChange, components }:
 
           <Col xs={24} lg={12}>
             {!isNew && (
-              <Button danger block icon={<DeleteOutlined />} onClick={handleDeleteBusinessCard} loading={deleting}>
+              <Button
+                danger
+                block
+                icon={<DeleteOutlined />}
+                onClick={handleDeleteBusinessCard}
+                loading={removeBusinessCardConfirmationModal.loading}
+              >
                 {t('generic.actions.remove')}
               </Button>
             )}
