@@ -18,6 +18,15 @@ $border-radius-8px: 8px;
   border-radius: $border-radius-8px;
 }
 
+.dropdownButton {
+  border-radius: $border-radius-8px;
+}
+.dropdownOverlay {
+  ul {
+    border-radius: $border-radius-8px;
+  }
+}
+
 .select {
   :global(.ant-select-selector) {
     border-radius: $border-radius-8px !important;

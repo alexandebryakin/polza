@@ -8,6 +8,9 @@
     "actions": {
       "add": "Add",
       "save": "Save",
+      "edit": "Edit",
+      "more": "More",
+      "back": "Back",
       "cancel": "Cancel",
       "remove": "Remove"
     },
@@ -89,6 +92,9 @@
   },
   "businessCards": {
     "businessCards": "Business Cards",
+    "description": "Description",
+    "contacts": "Contacts",
+    "addToPersonalList": "Add to Personal List",
     "copyLink": "Copy Link",
     "openProfile": "Open Profile",
     "createBusinessCard": "Create Business Card",
@@ -127,6 +133,7 @@
       }
     }
   },
+  "businessCardsPublicPage": {},
   "modals": {
     "addPhone": {
       "form": {

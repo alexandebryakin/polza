@@ -75,24 +75,13 @@ $card-color-bg: #fff;
     justify-content: space-between;
   }
 
-  .contactList {
-    display: flex;
-    align-items: center;
-
-    .item {
-      margin-left: 4px;
-      cursor: pointer;
-      max-width: 400px;
-    }
-  }
-
   .actions {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
 
-    .rqCodeControlButton {
+    .qrCodeControlButton {
       display: flex;
       align-items: center;
     }

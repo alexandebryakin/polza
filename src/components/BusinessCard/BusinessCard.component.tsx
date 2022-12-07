@@ -17,8 +17,10 @@ import { MASKS } from '../modals/AddPhoneModal/AddPhoneModal.component';
 import IMask from 'imask';
 import { Link } from 'react-router-dom';
 import { routes } from '../../navigation/routes';
+import CopyableContactList from '../CopyableContactList';
+import { buildBusinessCardPublicLink } from '../../utils/buildBusinessCardPublicLink';
 
-const mask = IMask.createMask({
+export const mask = IMask.createMask({
   mask: MASKS.PHONE,
 });
 
@@ -50,33 +52,6 @@ type TBusinessCardContact = {
 
 const dontFlipCard = (e: React.MouseEvent<HTMLElement, MouseEvent>) => e.stopPropagation();
 
-interface ContactListProps {
-  items: string[];
-  icon: React.ReactNode;
-}
-const ContactList = ({ items, icon }: ContactListProps) => {
-  const [t] = useTranslation('common');
-
-  if (!items.length) return null;
-  return (
-    <div>
-      {items.map((item, index) => {
-        return (
-          <div key={index} className={styles.contactList}>
-            {icon}
-
-            <Tooltip placement="right" title={t('generic.clickToCopy')}>
-              <CopyToClipboard text={item} onClick={dontFlipCard} className={styles.item}>
-                <Typography.Text ellipsis>{item}</Typography.Text>
-              </CopyToClipboard>
-            </Tooltip>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
 export type BusinessCardAttrs = Partial<Omit<TBusinessCard, 'phones' | 'emails'>> & {
   emails: Pick<TBusinessCard['emails'][0], 'email'>[];
   phones: Pick<TBusinessCard['phones'][0], 'number'>[];
@@ -88,7 +63,7 @@ interface BusinessCardProps {
 export default function BusinessCard({ businessCard }: BusinessCardProps) {
   const [t] = useTranslation('common');
 
-  const businessCardPublicLink = 'TODO: GENERATE PROFILE LINK';
+  const businessCardPublicLink = buildBusinessCardPublicLink(businessCard.id);
 
   const defaultQrCodeSize = 128;
   const [qrCodeSize, setQrCodeSize] = React.useState(defaultQrCodeSize);
@@ -151,19 +126,25 @@ export default function BusinessCard({ businessCard }: BusinessCardProps) {
               </div>
 
               <div className={styles.contacts}>
-                <ContactList
+                <CopyableContactList
                   items={businessCard.phones.map((p) => mask.resolve(p.number.toString()))}
                   icon={
                     // <MobileOutlined />
                     <PhoneOutlined />
                   }
+                  onClick={dontFlipCard}
                 />
 
-                <ContactList items={businessCard.emails.map((e) => e.email)} icon={<MailOutlined />} />
+                <CopyableContactList
+                  items={businessCard.emails.map((e) => e.email)}
+                  icon={<MailOutlined />}
+                  onClick={dontFlipCard}
+                />
 
-                <ContactList
+                <CopyableContactList
                   items={businessCard.address ? [businessCard.address] : []}
                   icon={<EnvironmentOutlined />}
+                  onClick={dontFlipCard}
                 />
               </div>
             </div>
@@ -198,12 +179,13 @@ export default function BusinessCard({ businessCard }: BusinessCardProps) {
 
                 <Col xs={size === 'middle' ? 24 : 12}>
                   <Button
-                    className={css(styles[size], styles.rqCodeControlButton)}
+                    className={css(styles[size], styles.qrCodeControlButton)}
                     icon={<LogoutOutlined />}
                     onClick={(e) => {
                       dontFlipCard(e);
-                      window.open(businessCardPublicLink, '_blank')?.focus();
+                      // window.open(businessCardPublicLink, '_blank')?.focus();
                     }}
+                    href={businessCardPublicLink}
                     block
                   >
                     {size === 'middle' ? t('businessCards.openProfile') : <span />}

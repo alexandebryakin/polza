@@ -1,9 +1,6 @@
-type DivElement = React.DetailedHTMLProps<
-  React.HTMLAttributes<HTMLDivElement>,
-  HTMLDivElement
->;
+type DivElement = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-interface FlexProps extends DivElement {
+export interface FlexProps extends DivElement {
   direction?: React.CSSProperties['flexDirection'];
   justify?: React.CSSProperties['justifyContent'];
   grow?: React.CSSProperties['flexGrow'];

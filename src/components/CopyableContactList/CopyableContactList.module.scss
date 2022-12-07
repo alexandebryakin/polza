@@ -1,0 +1,11 @@
+@import 'src/styles/_variables.scss';
+
+.contactList {
+  display: flex;
+  align-items: center;
+}
+.item {
+  margin-left: 4px;
+  cursor: pointer;
+  max-width: 180px;
+}

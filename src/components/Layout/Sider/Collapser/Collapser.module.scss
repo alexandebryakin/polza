@@ -1,11 +1,9 @@
 @import 'src/styles/_variables.scss';
 
-$collapser__top: 75px;
+$collapser__bottom: 75px;
 
 @mixin siderLeftOffset($sider-width) {
-  $calculated: calc(
-    $sider-width - ($desktop-sider__icon-size / 2) - ($border-size / 2)
-  );
+  $calculated: calc($sider-width - ($desktop-sider__icon-size / 2) - ($border-size / 2));
 
   left: $calculated;
   transition: left 150ms;
@@ -15,7 +13,7 @@ $collapser__top: 75px;
   cursor: pointer;
   position: absolute;
 
-  top: $collapser__top;
+  bottom: $collapser__bottom;
   @include siderLeftOffset($sider-width--expanded);
 
   background: #fff;

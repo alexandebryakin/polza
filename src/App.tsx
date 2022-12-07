@@ -17,6 +17,7 @@ import Profile from './pages/Profile';
 import { UserInfoContextProvider } from './contexts/userInfo/userInfoContext';
 import BusinessCards from './pages/BusinessCards';
 import ModifyBusinessCard from './pages/ModifyBusinessCard';
+import BusinessCardPublicPage from './pages/BusinessCardPublicPage';
 
 function App() {
   if (jwt.isExpired() && !isRoutePublic()) {
@@ -48,6 +49,15 @@ function App() {
               element={
                 <Layout>
                   <BusinessCards />
+                </Layout>
+              }
+            />
+
+            <Route
+              path={routes.businessCards(':id')._}
+              element={
+                <Layout>
+                  <BusinessCardPublicPage />
                 </Layout>
               }
             />
