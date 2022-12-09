@@ -20,9 +20,17 @@ const Copied = () => {
 interface CopyToClipboardProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   text: string;
   duration?: number;
+  CopiedComponent?: React.ReactNode;
 }
 const threeSeconds = 3000;
-function CopyToClipboard({ text, duration = threeSeconds, onClick, children, ...rest }: CopyToClipboardProps) {
+function CopyToClipboard({
+  text,
+  duration = threeSeconds,
+  onClick,
+  CopiedComponent,
+  children,
+  ...rest
+}: CopyToClipboardProps) {
   const [copied, setCopied] = React.useState(false);
 
   const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
@@ -33,9 +41,11 @@ function CopyToClipboard({ text, duration = threeSeconds, onClick, children, ...
     setTimeout(() => setCopied(false), duration);
   };
 
+  const CopyComponent = CopiedComponent ? () => <>{CopiedComponent}</> : Copied;
+
   return (
     <span {...rest} onClick={handleClick}>
-      {copied ? <Copied /> : children}
+      {copied ? <CopyComponent /> : children}
     </span>
   );
 }
