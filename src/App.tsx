@@ -61,7 +61,7 @@ function App() {
             <Route
               path={routes.businessCards(':id')._}
               element={
-                <Layout isPublic={jwt.isExpired()}>
+                <Layout>
                   <BusinessCardPublicPage />
                 </Layout>
               }
