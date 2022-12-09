@@ -1,24 +1,40 @@
-import { Col, Row, Typography } from 'antd';
+import { Typography } from 'antd';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Tooltip } from '../../antd';
+import { Button, Dropdown } from '../../antd';
 import CopyToClipboard from '../CopyToClipboard';
 import FlipCard from '../FlipCard';
 
 import css from 'classnames';
 import styles from './BusinessCard.module.scss';
 import Flex from '../Flex';
-import { CopyOutlined, EnvironmentOutlined, LogoutOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+import {
+  CheckOutlined,
+  CopyOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  EnvironmentOutlined,
+  MailOutlined,
+  MoreOutlined,
+  PhoneOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
 import { QRCodeSVG } from 'qrcode.react';
-import { TitleProps } from 'antd/lib/typography/Title';
 
-import { BusinessCard as TBusinessCard } from '../../api/graphql.types';
+import { BusinessCard as TBusinessCard, PublicationStatusEnum } from '../../api/graphql.types';
 import { MASKS } from '../modals/AddPhoneModal/AddPhoneModal.component';
 import IMask from 'imask';
 import { Link } from 'react-router-dom';
 import { routes } from '../../navigation/routes';
 import CopyableContactList from '../CopyableContactList';
 import { buildBusinessCardPublicLink } from '../../utils/buildBusinessCardPublicLink';
+import {
+  buildBusinessCardPermissions,
+  DropdownOption,
+} from '../../pages/BusinessCardPublicPage/BusinessCardPublicPage.component';
+import { useRemoveBusinessCardConfirmationModal } from '../BusinessCardForm/BusinessCardForm.component';
+import { useMutationError } from '../../hooks/useMutationError';
+import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
 
 export const mask = IMask.createMask({
   mask: MASKS.PHONE,
@@ -31,30 +47,40 @@ export const BusinessCardWrapper = ({
   return <div {...rest} className={css(styles.businessCardWrapper, className)} />;
 };
 
-type TBusinessCardContact = {
-  kind: 'email' | 'phone' | 'website';
-  icon?: 'email' | 'phone' | 'website'; // or any other custom icon
-  label: string;
-  value: string;
-  visible: boolean;
-};
-// export interface TBusinessCard {
-//   logo_url?: string;
-//   title: string;
-//   subtitle: string;
-//   description?: string;
-//   // status: 'pubished' | 'unpublished';
-//   contacts?: TBusinessCardContact[];
-//   phones: string[];
-//   emails: string[];
-//   address?: string;
-// }
-
-const dontFlipCard = (e: React.MouseEvent<HTMLElement, MouseEvent>) => e.stopPropagation();
-
 export type BusinessCardAttrs = Partial<Omit<TBusinessCard, 'phones' | 'emails'>> & {
   emails: Pick<TBusinessCard['emails'][0], 'email'>[];
   phones: Pick<TBusinessCard['phones'][0], 'number'>[];
+};
+
+export interface DivProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
+
+const Divider = () => <div className={styles.divider} />;
+
+const Section = (props: DivProps) => <div {...props} className={css(styles.businessCardSection, props.className)} />;
+
+interface StatusLabelProps extends DivProps {
+  status: PublicationStatusEnum;
+}
+const StatusLabel = ({ status, ...props }: StatusLabelProps) => {
+  const [t] = useTranslation('common');
+
+  return (
+    <div
+      className={css(
+        styles.status,
+        status === PublicationStatusEnum.Draft && styles.statusDraft,
+        status === PublicationStatusEnum.Published && styles.statusPublished,
+        props.className
+      )}
+    >
+      {
+        {
+          [PublicationStatusEnum.Draft]: t('businessCards.form.statuses.draft'),
+          [PublicationStatusEnum.Published]: t('businessCards.form.statuses.published'),
+        }[status]
+      }
+    </div>
+  );
 };
 
 interface BusinessCardProps {
@@ -65,137 +91,134 @@ export default function BusinessCard({ businessCard }: BusinessCardProps) {
 
   const businessCardPublicLink = buildBusinessCardPublicLink(businessCard.id);
 
-  const defaultQrCodeSize = 128;
-  const [qrCodeSize, setQrCodeSize] = React.useState(defaultQrCodeSize);
-  const cardRef = React.useRef<HTMLDivElement>(null);
+  const hasAnyContactInfo = businessCard.phones.length > 0 || businessCard.emails.length > 0 || !!businessCard.address;
 
-  type Size = 'tiny' | 'small' | 'middle';
-  const [size, setSize] = React.useState<Size>('middle');
+  const { user } = useUserInfoContext();
 
-  const onCardResized = () => {
-    const card = cardRef.current;
-    if (!card) return;
+  const permissions = buildBusinessCardPermissions(businessCard, user?.id);
 
-    const defaultHeight = 240;
-    setQrCodeSize(defaultQrCodeSize * (card.offsetHeight / defaultHeight));
-
-    const threshholds = {
-      tiny: 450,
-      small: 480,
-    };
-
-    if (card.offsetWidth <= threshholds.tiny) return setSize('tiny');
-    if (card.offsetWidth > threshholds.tiny && card.offsetWidth <= threshholds.small) return setSize('small');
-    setSize('middle');
-  };
-
-  React.useEffect(() => {
-    if (!cardRef.current) return;
-
-    new ResizeObserver(onCardResized).observe(cardRef.current);
-  }, []);
+  const removeBusinessCardConfirmationModal = useRemoveBusinessCardConfirmationModal();
+  useMutationError(removeBusinessCardConfirmationModal.error);
 
   return (
-    <FlipCard
-      data-id={businessCard.id}
-      ref={cardRef}
-      front={
-        <BusinessCardWrapper>
-          <div className={styles.businessCardFront}>
-            {/* {businessCard.logo_url && <img src={businessCard.logo_url} className={styles.logo} alt="" />} */}
+    <div className={styles.businessCard}>
+      <div className={styles.businessCardHeader}>
+        <div className={styles.actionsContainer}>
+          <div className={styles.actions}>
+            {permissions.canRemove && (
+              <DeleteOutlined
+                className={css(styles.actionIcon, styles.iconDelete)}
+                onClick={() => removeBusinessCardConfirmationModal.remove(businessCard.id)}
+              />
+            )}
 
-            <Typography.Title level={3} className={styles.textCentered}>
-              {businessCard.title}
-            </Typography.Title>
+            {permissions.canEdit && (
+              <Link to={routes.businessCards().edit(businessCard.id)._}>
+                <EditOutlined className={css(styles.actionIcon)} />
+              </Link>
+            )}
 
-            <div className={styles.textCentered}>{businessCard.subtitle}</div>
+            <CopyToClipboard
+              text={businessCardPublicLink}
+              CopiedComponent={<CheckOutlined className={css(styles.actionIcon)} />}
+            >
+              <CopyOutlined className={css(styles.actionIcon)} />
+            </CopyToClipboard>
 
-            {/* <Link to={routes.businessCards().edit(businessCard.id)._}>
-              <Button>TODO: Edit</Button>
-            </Link> */}
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    // TODO: change
+                    key: 'add-to-personal-list',
+                    label: (
+                      <DropdownOption
+                        icon={<PlusOutlined />}
+                        onClick={() => {
+                          alert('TODO: Add to Personal List');
+                        }}
+                      >
+                        TODO: {t('businessCards.addToPersonalList')}
+                      </DropdownOption>
+                    ),
+                  },
+                ],
+              }}
+              placement="bottomRight"
+            >
+              <MoreOutlined className={styles.actionIcon} />
+            </Dropdown>
           </div>
-        </BusinessCardWrapper>
-      }
-      back={
-        <BusinessCardWrapper>
-          <div className={css(styles.businessCardBack, styles[size])}>
-            <div className={styles.info}>
-              <div className={styles.header}>
-                <div>{businessCard.title}</div>
-                <div>{businessCard.subtitle}</div>
-              </div>
 
-              <div className={styles.contacts}>
-                <CopyableContactList
-                  items={businessCard.phones.map((p) => mask.resolve(p.number.toString()))}
-                  icon={
-                    // <MobileOutlined />
-                    <PhoneOutlined />
-                  }
-                  onClick={dontFlipCard}
-                />
+          {/* <StatusLabel status={businessCard.status || PublicationStatusEnum.Draft} /> */}
+        </div>
 
-                <CopyableContactList
-                  items={businessCard.emails.map((e) => e.email)}
-                  icon={<MailOutlined />}
-                  onClick={dontFlipCard}
-                />
+        <StatusLabel status={businessCard.status || PublicationStatusEnum.Draft} className={styles.statusLabel} />
 
-                <CopyableContactList
-                  items={businessCard.address ? [businessCard.address] : []}
-                  icon={<EnvironmentOutlined />}
-                  onClick={dontFlipCard}
-                />
-              </div>
-            </div>
+        <div
+          className={css(
+            styles.cover,
+            businessCard.status === PublicationStatusEnum.Draft && styles.coverDraft,
+            businessCard.status === PublicationStatusEnum.Published && styles.coverPublished
+          )}
+        />
 
-            <div className={styles.actions}>
-              <div className={styles.qrCodeContainer}>
-                <QRCodeSVG
-                  value={businessCardPublicLink}
-                  size={qrCodeSize}
-                  imageSettings={{
-                    src: 'https://cdn-icons-png.flaticon.com/24/717/717392.png',
-                    height: 18,
-                    width: 18,
-                    excavate: true,
-                  }}
-                />
-              </div>
-
-              <Row gutter={[8, 8]} style={{ maxWidth: qrCodeSize }}>
-                <Col xs={size === 'middle' ? 24 : 12}>
-                  <Button
-                    className={css(styles[size], styles.rqCodeControlButton)}
-                    icon={<CopyOutlined />}
-                    onClick={dontFlipCard}
-                    block
-                  >
-                    <CopyToClipboard text={businessCardPublicLink} className={styles.item}>
-                      {size === 'middle' ? t('businessCards.copyLink') : ''}
-                    </CopyToClipboard>
-                  </Button>
-                </Col>
-
-                <Col xs={size === 'middle' ? 24 : 12}>
-                  <Button
-                    className={css(styles[size], styles.qrCodeControlButton)}
-                    icon={<LogoutOutlined />}
-                    onClick={(e) => {
-                      dontFlipCard(e);
-                      // window.open(businessCardPublicLink, '_blank')?.focus();
-                    }}
-                    href={businessCardPublicLink}
-                    block
-                  >
-                    {size === 'middle' ? t('businessCards.openProfile') : <span />}
-                  </Button>
-                </Col>
-              </Row>
-            </div>
+        <div className={styles.qrCode}>
+          <div className={styles.qrCodePanel}>
+            <QRCodeSVG
+              value={businessCardPublicLink}
+              size={92}
+              imageSettings={{
+                src: 'https://cdn-icons-png.flaticon.com/24/717/717392.png',
+                height: 18,
+                width: 18,
+                excavate: true,
+              }}
+            />
           </div>
-        </BusinessCardWrapper>
-      }
-    />
+        </div>
+      </div>
+
+      <Section>
+        <Typography.Title level={3}>{businessCard.title}</Typography.Title>
+
+        <div className={styles.businessCardSubtitle}>{businessCard.subtitle}</div>
+      </Section>
+
+      {hasAnyContactInfo && (
+        <>
+          <Divider />
+
+          <Section>
+            <CopyableContactList
+              items={businessCard.phones.map((p) => mask.resolve(p.number.toString()))}
+              icon={
+                // <MobileOutlined />
+                <PhoneOutlined />
+              }
+            />
+
+            <CopyableContactList items={businessCard.emails.map((e) => e.email)} icon={<MailOutlined />} />
+
+            <CopyableContactList
+              items={businessCard.address ? [businessCard.address] : []}
+              icon={<EnvironmentOutlined />}
+            />
+          </Section>
+        </>
+      )}
+
+      <div className={styles.remainingSpaceFiller} />
+
+      <Divider />
+
+      <Section className={styles.actionButtonsSection}>
+        <Link to={routes.businessCards(businessCard.id)._}>
+          <Button block type="primary">
+            {t('businessCards.openProfile')}
+          </Button>
+        </Link>
+      </Section>
+    </div>
   );
 }

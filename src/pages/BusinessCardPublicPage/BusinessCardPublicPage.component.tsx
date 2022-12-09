@@ -22,10 +22,11 @@ import { useRemoveBusinessCardConfirmationModal } from '../../components/Busines
 import { useMutationError } from '../../hooks/useMutationError';
 import { useBusinessCard } from '../../api/businessCards';
 import { QRCodeSVG } from 'qrcode.react';
-import { mask } from '../../components/BusinessCard';
+import { BusinessCardAttrs, mask } from '../../components/BusinessCard';
 import CopyableContactList from '../../components/CopyableContactList';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
 import { buildBusinessCardPublicLink } from '../../utils/buildBusinessCardPublicLink';
+import { BusinessCard } from '../../api/graphql.types';
 
 export interface BlockProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
 
@@ -49,7 +50,7 @@ const Spacing = (props: BlockProps & { size?: number }) => {
 interface DropdownOptionProps extends FlexProps {
   icon?: React.ReactNode;
 }
-const DropdownOption = ({ icon, children, ...props }: DropdownOptionProps) => {
+export const DropdownOption = ({ icon, children, ...props }: DropdownOptionProps) => {
   const prefixIcon = icon;
 
   return (
@@ -117,35 +118,30 @@ const ImageGrid = () => {
   );
 };
 
-export default function BusinessCardPublicPage() {
+interface IUseBusinessCardDropdownOptionsHookParams {
+  businessCardId?: UUID;
+  canAddToPersonalList: boolean;
+  canRemove: boolean;
+  removeBusinessCardConfirmationModal: ReturnType<typeof useRemoveBusinessCardConfirmationModal>;
+}
+
+export const useBusinessCardDropdownOptions = ({
+  businessCardId,
+  canAddToPersonalList,
+  canRemove,
+  removeBusinessCardConfirmationModal,
+}: IUseBusinessCardDropdownOptionsHookParams): MenuProps['items'] => {
   const [t] = useTranslation('common');
-  const location = useLocation();
 
-  const data = matchPath(routes.businessCards(':id')._, location.pathname);
-  const id = data?.params.id;
-
-  const { businessCard, loading, error } = useBusinessCard({ id: id || '' });
-  useMutationError(error);
-
-  const { user } = useUserInfoContext();
-
-  const canRemove = businessCard?.userId === user?.id;
-  const canEdit = businessCard?.userId === user?.id;
-  const canAddToPersonalList = businessCard?.userId !== user?.id;
-
-  const removeBusinessCardConfirmationModal = useRemoveBusinessCardConfirmationModal();
-  useMutationError(removeBusinessCardConfirmationModal.error);
-
-  const dropdownOptions = React.useMemo(() => {
+  return React.useMemo(() => {
     const items: MenuProps['items'] = [];
 
-    if (canAddToPersonalList || true) {
+    if (canAddToPersonalList) {
       items.push({
         key: 'add-to-personal-list',
         label: (
           <DropdownOption
             icon={<PlusOutlined />}
-            // className={styles.dropdownOptionRemove}
             onClick={() => {
               alert('TODO: Add to Personal List');
             }}
@@ -164,7 +160,7 @@ export default function BusinessCardPublicPage() {
             icon={<DeleteOutlined />}
             className={styles.dropdownOptionRemove}
             onClick={() => {
-              removeBusinessCardConfirmationModal.remove(id);
+              removeBusinessCardConfirmationModal.remove(businessCardId);
             }}
           >
             {t('generic.actions.remove')}
@@ -174,7 +170,44 @@ export default function BusinessCardPublicPage() {
     }
 
     return items;
-  }, [canRemove, id, removeBusinessCardConfirmationModal, t]);
+  }, [canRemove, businessCardId, removeBusinessCardConfirmationModal, t]);
+};
+
+export const buildBusinessCardPermissions = (businessCard?: BusinessCardAttrs | null, userId?: UUID) => {
+  return {
+    canRemove: businessCard?.userId === userId,
+    canEdit: businessCard?.userId === userId,
+    canAddToPersonalList: !!userId && businessCard?.userId !== userId,
+  };
+};
+
+export default function BusinessCardPublicPage() {
+  const [t] = useTranslation('common');
+  const location = useLocation();
+
+  const data = matchPath(routes.businessCards(':id')._, location.pathname);
+  const id = data?.params.id;
+
+  const { businessCard, loading, error } = useBusinessCard({ id: id || '' });
+  useMutationError(error);
+
+  const { user } = useUserInfoContext();
+
+  // const canRemove = businessCard?.userId === user?.id;
+  // const canEdit = businessCard?.userId === user?.id;
+  // const canAddToPersonalList = businessCard?.userId !== user?.id;
+
+  const permissions = buildBusinessCardPermissions(businessCard, user?.id);
+
+  const removeBusinessCardConfirmationModal = useRemoveBusinessCardConfirmationModal();
+  useMutationError(removeBusinessCardConfirmationModal.error);
+
+  const dropdownOptions = useBusinessCardDropdownOptions({
+    businessCardId: id,
+    canAddToPersonalList: permissions.canAddToPersonalList,
+    canRemove: permissions.canRemove,
+    removeBusinessCardConfirmationModal,
+  });
 
   return (
     <Container className={styles.container}>
@@ -185,7 +218,7 @@ export default function BusinessCardPublicPage() {
 
         <div className={styles.profileWrapper}>
           <div className={styles.profileInfoWrapper}>
-            <div className={styles.qrCodeContainer}>
+            <div className={styles.qrCodePanel}>
               <QRCodeSVG
                 value={buildBusinessCardPublicLink(id)}
                 size={150}
@@ -205,26 +238,28 @@ export default function BusinessCardPublicPage() {
             </div>
 
             <div className={styles.profileInfoActions}>
-              {canEdit && (
+              {permissions.canEdit && (
                 <Link to={routes.businessCards().edit(id)._}>
                   <Button>{t('generic.actions.edit')}</Button>
                 </Link>
               )}
 
-              <Dropdown
-                menu={{
-                  items: dropdownOptions,
-                }}
-                // trigger={['click']}
-                placement="bottomRight"
-                className={styles.moreDropdown}
-              >
-                <Button>
-                  {t('generic.actions.more')}
+              {!!dropdownOptions?.length && (
+                <Dropdown
+                  menu={{
+                    items: dropdownOptions,
+                  }}
+                  // trigger={['click']}
+                  placement="bottomRight"
+                  className={styles.moreDropdown}
+                >
+                  <Button>
+                    {t('generic.actions.more')}
 
-                  <MoreOutlined className={styles.moreDropdownIcon} />
-                </Button>
-              </Dropdown>
+                    <MoreOutlined className={styles.moreDropdownIcon} />
+                  </Button>
+                </Dropdown>
+              )}
             </div>
           </div>
         </div>

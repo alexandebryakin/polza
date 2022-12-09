@@ -3,12 +3,12 @@ import React from 'react';
 import 'antd/dist/antd.css';
 import './App.scss';
 
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 
 import Signin from './pages/Auth/Signin/Signin.component';
 import Signup from './pages/Auth/Signup/Signup.component';
 
-import { isRoutePublic, routes } from './navigation/routes';
+import { isRouteAuth, isRoutePublic, routes } from './navigation/routes';
 import { jwt } from './api/jwt';
 
 import Layout from './components/Layout';
@@ -22,6 +22,11 @@ import BusinessCardPublicPage from './pages/BusinessCardPublicPage';
 function App() {
   if (jwt.isExpired() && !isRoutePublic()) {
     window.location.pathname = routes.signin()._;
+    return null;
+  }
+
+  if (isRouteAuth() && !jwt.isExpired()) {
+    window.location.pathname = routes.businessCards()._;
     return null;
   }
 
@@ -56,7 +61,7 @@ function App() {
             <Route
               path={routes.businessCards(':id')._}
               element={
-                <Layout>
+                <Layout isPublic={jwt.isExpired()}>
                   <BusinessCardPublicPage />
                 </Layout>
               }
@@ -80,7 +85,10 @@ function App() {
               }
             />
 
-            <Route path="*" element={<Navigate to={routes.signin()._} replace />} />
+            <Route
+              path="*"
+              element={<Navigate to={jwt.isExpired() ? routes.signin()._ : routes.businessCards()._} replace />}
+            />
           </Routes>
         </LayoutProvider>
       </UserInfoContextProvider>

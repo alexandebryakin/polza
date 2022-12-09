@@ -10,6 +10,21 @@ const appHeight = () => {
   doc.style.setProperty('--app-height', `${window.innerHeight}px`);
 };
 
+interface HeaderProps {
+  children: React.ReactNode;
+}
+const Header = ({ children }: HeaderProps) => {
+  return (
+    <header className={styles.header}>
+      <nav className={styles.headerContainer}>
+        <b>Polza Logo</b>
+
+        {children}
+      </nav>
+    </header>
+  );
+};
+
 interface LayoutProps {
   topRightCTA: React.ReactNode;
   form: React.ReactNode;
@@ -28,13 +43,7 @@ function Layout(props: LayoutProps) {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <nav className={styles.headerContainer}>
-          <b>Polza Logo</b>
-
-          {topRightCTA}
-        </nav>
-      </header>
+      <Header>{topRightCTA}</Header>
 
       <main className={styles.main}>
         <Space direction="vertical">
@@ -48,5 +57,7 @@ function Layout(props: LayoutProps) {
     </div>
   );
 }
+
+Layout.Header = Header;
 
 export default Layout;

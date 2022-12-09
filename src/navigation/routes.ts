@@ -40,9 +40,20 @@ export const routes = builder.define<Routes>((root) => {
 // routes.__is.profile.general(window.location.pathname)
 
 export const PUBLIC_ROUTES = [routes.signin()._, routes.signup()._];
+export const AUTH_ROUTES = [routes.signin()._, routes.signup()._];
 
 export const isRoutePublic = (): boolean => {
-  return PUBLIC_ROUTES.some((route) => window.location.pathname.includes(route));
+  return PUBLIC_ROUTES.some((route) => window.location.pathname.includes(route)) || isRoutePublicBusinessCard();
+};
+
+export const isRoutePublicBusinessCard = (): boolean => {
+  const regex = new RegExp(routes.businessCards()._ + '/([a-z0-9]|-)+$');
+
+  return regex.test(window.location.pathname);
+};
+
+export const isRouteAuth = (): boolean => {
+  return AUTH_ROUTES.some((route) => window.location.pathname.includes(route));
 };
 
 const isProfile = () => window.location.pathname.includes(routes.profile()._);
