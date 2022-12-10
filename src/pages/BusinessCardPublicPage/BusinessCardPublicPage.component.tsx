@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import {
   DeleteOutlined,
   EnvironmentOutlined,
+  InboxOutlined,
   MailOutlined,
   MoreOutlined,
   PhoneOutlined,
@@ -20,7 +21,7 @@ import { FlexProps } from '../../components/Flex/Flex';
 import React from 'react';
 import { useRemoveBusinessCardConfirmationModal } from '../../components/BusinessCardForm/BusinessCardForm.component';
 import { useMutationError } from '../../hooks/useMutationError';
-import { useBusinessCard } from '../../api/businessCards';
+import { IUseBusinessCard, useBusinessCard } from '../../api/businessCards';
 import { QRCodeSVG } from 'qrcode.react';
 import { BusinessCardAttrs, mask } from '../../components/BusinessCard';
 import CopyableContactList from '../../components/CopyableContactList';
@@ -118,6 +119,51 @@ const ImageGrid = () => {
   );
 };
 
+interface NoDataProps {
+  text: string;
+}
+const NoData = ({ text }: NoDataProps) => {
+  return (
+    <div className={css(styles.noData)}>
+      <InboxOutlined />
+
+      <span>{text}</span>
+    </div>
+  );
+};
+
+interface ContactsProps {
+  businessCard?: IUseBusinessCard['businessCard'];
+}
+const Contacts = ({ businessCard }: ContactsProps) => {
+  const [t] = useTranslation('common');
+
+  return (
+    <>
+      <Typography.Title level={5}>{t('businessCards.contacts')}</Typography.Title>
+
+      <CopyableContactList
+        items={(businessCard?.phones || []).map((p) => mask.resolve(p.number.toString()))}
+        icon={<PhoneOutlined />}
+      />
+
+      <Spacing size={8} />
+
+      <CopyableContactList items={(businessCard?.emails || []).map((e) => e.email)} icon={<MailOutlined />} />
+
+      <Spacing size={8} />
+
+      <CopyableContactList
+        items={businessCard?.address ? [businessCard.address] : []}
+        icon={<EnvironmentOutlined />}
+        classNames={{
+          item: styles.contantListItem,
+        }}
+      />
+    </>
+  );
+};
+
 interface IUseBusinessCardDropdownOptionsHookParams {
   businessCardId?: UUID;
   canAddToPersonalList: boolean;
@@ -170,7 +216,7 @@ export const useBusinessCardDropdownOptions = ({
     }
 
     return items;
-  }, [canRemove, businessCardId, removeBusinessCardConfirmationModal, t]);
+  }, [canAddToPersonalList, canRemove, t, removeBusinessCardConfirmationModal, businessCardId]);
 };
 
 export const buildBusinessCardPermissions = (businessCard?: BusinessCardAttrs | null, userId?: UUID) => {
@@ -207,6 +253,14 @@ export default function BusinessCardPublicPage() {
     canAddToPersonalList: permissions.canAddToPersonalList,
     canRemove: permissions.canRemove,
     removeBusinessCardConfirmationModal,
+  });
+
+  const hasAnyContactInfo =
+    (businessCard?.phones || []).length > 0 || (businessCard?.emails || []).length > 0 || !!businessCard?.address;
+
+  console.log('hasAnyContactInfo>>', {
+    hasAnyContactInfo,
+    businessCard,
   });
 
   return (
@@ -277,34 +331,23 @@ export default function BusinessCardPublicPage() {
           {/* <Spacing /> */}
 
           <Block>
-            <Typography.Title level={5}>{t('businessCards.description')}</Typography.Title>
+            {businessCard?.description && (
+              <>
+                <Typography.Title level={5}>{t('businessCards.description')}</Typography.Title>
 
-            <div>{businessCard?.description}</div>
+                <div>{businessCard?.description}</div>
+              </>
+            )}
+
+            {!businessCard?.description && <NoData text={t('businessCards.noDescription')} />}
           </Block>
         </Col>
 
         <Col xs={24} lg={8}>
           <Block className={styles.contacts}>
-            <Typography.Title level={5}>{t('businessCards.contacts')}</Typography.Title>
+            {hasAnyContactInfo && <Contacts businessCard={businessCard} />}
 
-            <CopyableContactList
-              items={(businessCard?.phones || []).map((p) => mask.resolve(p.number.toString()))}
-              icon={<PhoneOutlined />}
-            />
-
-            <Spacing size={8} />
-
-            <CopyableContactList items={(businessCard?.emails || []).map((e) => e.email)} icon={<MailOutlined />} />
-
-            <Spacing size={8} />
-
-            <CopyableContactList
-              items={businessCard?.address ? [businessCard.address] : []}
-              icon={<EnvironmentOutlined />}
-              classNames={{
-                item: styles.contantListItem,
-              }}
-            />
+            {!hasAnyContactInfo && <NoData text={t('businessCards.noContacts')} />}
           </Block>
         </Col>
       </Row>

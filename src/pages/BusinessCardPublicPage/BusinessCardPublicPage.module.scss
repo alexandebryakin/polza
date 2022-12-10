@@ -119,3 +119,12 @@ $corner-radius: 8px;
 .imageBottomRightBorderRadius {
   border-bottom-right-radius: $corner-radius;
 }
+
+.noData {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $text-color--secondary;
+  gap: 8px;
+  font-size: 24px;
+}

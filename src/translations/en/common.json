@@ -93,7 +93,9 @@
   "businessCards": {
     "businessCards": "Business Cards",
     "description": "Description",
+    "noDescription": "No Description",
     "contacts": "Contacts",
+    "noContacts": "No Contacts",
     "addToPersonalList": "Add to Personal List",
     "copyLink": "Copy Link",
     "openProfile": "Open Profile",

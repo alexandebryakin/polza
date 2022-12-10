@@ -119,9 +119,11 @@ $status-height: 24px;
   background: #fff;
   padding: 8px;
   border-radius: 50%;
+  transition: transform ease-in-out 100ms;
 
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+    transform: scale(1.1);
   }
 }
 
