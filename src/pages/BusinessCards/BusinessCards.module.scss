@@ -21,9 +21,7 @@
   }
 }
 
-.businessCardSkeleton {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+.noConnectionsYet {
+  min-height: 300px;
+  font-size: 32px;
 }

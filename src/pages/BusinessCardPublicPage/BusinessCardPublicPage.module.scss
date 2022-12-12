@@ -6,6 +6,7 @@ $border-radius: 12px;
   border-radius: $border-radius;
   padding: 16px;
   border: 1px solid $border-color;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 4px 12px;
 }
 
 // [Spacing]:
@@ -120,11 +121,13 @@ $corner-radius: 8px;
   border-bottom-right-radius: $corner-radius;
 }
 
-.noData {
+.noDescription {
+  // height: 100%;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  color: $text-color--secondary;
-  gap: 8px;
-  font-size: 24px;
+}
+.h100 {
+  height: 100%;
 }

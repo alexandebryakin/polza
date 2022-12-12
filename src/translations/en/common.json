@@ -96,7 +96,10 @@
     "noDescription": "No Description",
     "contacts": "Contacts",
     "noContacts": "No Contacts",
-    "addToPersonalList": "Add to Personal List",
+    "noConnectionsYet": "No connections yet",
+    "addToConnections": "Add to Connections",
+    "removeFromConnections": "Remove From Connections",
+    "anErrorOccurredWhileAddingBusinessCardToConnections": "And error occured while adding the Business Card to the Connections",
     "copyLink": "Copy Link",
     "openProfile": "Open Profile",
     "createBusinessCard": "Create Business Card",
@@ -108,6 +111,10 @@
     "succededToDeleteBusinessCard": "Your Business Card was successfully removed",
     "doYouReallyWantToRemoveBusinessCard": " Do you really want to remove this Business Card?",
     "thisOperationWillPermanentlyRemoveYourBusinessCard": "This operation will permanently remove your Business Card",
+    "tabs": {
+      "personal": "Personal",
+      "connections": "Connections"
+    },
     "form": {
       "fields": {
         "title": "Title",
