@@ -59,6 +59,15 @@ function App() {
             />
 
             <Route
+              path={routes.businessCards('connections')._}
+              element={
+                <Layout>
+                  <BusinessCards />
+                </Layout>
+              }
+            />
+
+            <Route
               path={routes.businessCards(':id')._}
               element={
                 <Layout>

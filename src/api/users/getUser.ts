@@ -14,6 +14,9 @@ export const GET_USER = gql`
       passport {
         ...PassportFields
       }
+      collections {
+        ...CollectionFields
+      }
     }
   }
 `;

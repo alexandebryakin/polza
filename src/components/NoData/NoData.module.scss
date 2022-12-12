@@ -1,0 +1,10 @@
+@import 'src/styles/_variables.scss';
+
+.noData {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $text-color--secondary;
+  gap: 8px;
+  font-size: 24px;
+}

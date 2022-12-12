@@ -11,6 +11,7 @@ import {
   EnvironmentOutlined,
   InboxOutlined,
   MailOutlined,
+  MinusOutlined,
   MoreOutlined,
   PhoneOutlined,
   PlusOutlined,
@@ -27,7 +28,14 @@ import { BusinessCardAttrs, mask } from '../../components/BusinessCard';
 import CopyableContactList from '../../components/CopyableContactList';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
 import { buildBusinessCardPublicLink } from '../../utils/buildBusinessCardPublicLink';
-import { BusinessCard } from '../../api/graphql.types';
+import {
+  BusinessCard,
+  CollectionKindEnum,
+  useAddToCollectionMutation,
+  useGetBusinessCardsQuery,
+  useGetCollectionsQuery,
+} from '../../api/graphql.types';
+import NoData from '../../components/NoData';
 
 export interface BlockProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
 
@@ -119,19 +127,6 @@ const ImageGrid = () => {
   );
 };
 
-interface NoDataProps {
-  text: string;
-}
-const NoData = ({ text }: NoDataProps) => {
-  return (
-    <div className={css(styles.noData)}>
-      <InboxOutlined />
-
-      <span>{text}</span>
-    </div>
-  );
-};
-
 interface ContactsProps {
   businessCard?: IUseBusinessCard['businessCard'];
 }
@@ -166,33 +161,73 @@ const Contacts = ({ businessCard }: ContactsProps) => {
 
 interface IUseBusinessCardDropdownOptionsHookParams {
   businessCardId?: UUID;
-  canAddToPersonalList: boolean;
+  canModifyConnections: boolean;
   canRemove: boolean;
   removeBusinessCardConfirmationModal: ReturnType<typeof useRemoveBusinessCardConfirmationModal>;
 }
 
 export const useBusinessCardDropdownOptions = ({
   businessCardId,
-  canAddToPersonalList,
+  canModifyConnections,
   canRemove,
   removeBusinessCardConfirmationModal,
 }: IUseBusinessCardDropdownOptionsHookParams): MenuProps['items'] => {
   const [t] = useTranslation('common');
 
+  const { user, refetchUser } = useUserInfoContext();
+
+  const { data } = useGetCollectionsQuery({
+    variables: {
+      userId: user?.id || '',
+      kind: CollectionKindEnum.Personal,
+    },
+  });
+
+  const personalCollection = data?.collections[0];
+  const { data: personalBusinessCardsData } = useGetBusinessCardsQuery({
+    variables: {
+      userId: user?.id || '',
+      collectionIds: personalCollection?.id && [personalCollection.id],
+    },
+  });
+
+  const [addToCollectionMutation, { loading, error }] = useAddToCollectionMutation();
+  useMutationError(error, t('businessCards.anErrorOccurredWhileAddingBusinessCardToConnections'));
+
+  const alreadyConnected = (personalBusinessCardsData?.businessCards || []).some((bc) => bc.id === businessCardId);
+  console.log({ personalCollection });
+
+  const addToConnections = React.useCallback(async () => {
+    if (alreadyConnected) return;
+
+    await addToCollectionMutation({
+      variables: {
+        collectionId: personalCollection?.id || '',
+        businessCardIds: businessCardId ? [businessCardId] : [],
+      },
+    });
+
+    refetchUser();
+  }, [addToCollectionMutation, alreadyConnected, businessCardId, personalCollection?.id, refetchUser]);
+
+  const removeFromConnections = () => {
+    alert('TODO: Remove from Connections');
+  };
+
   return React.useMemo(() => {
     const items: MenuProps['items'] = [];
 
-    if (canAddToPersonalList) {
+    if (canModifyConnections && personalCollection) {
       items.push({
-        key: 'add-to-personal-list',
+        key: 'modify-connections',
         label: (
           <DropdownOption
-            icon={<PlusOutlined />}
-            onClick={() => {
-              alert('TODO: Add to Personal List');
-            }}
+            icon={alreadyConnected ? <MinusOutlined /> : <PlusOutlined />}
+            onClick={alreadyConnected ? removeFromConnections : addToConnections}
           >
-            TODO: {t('businessCards.addToPersonalList')}
+            {alreadyConnected
+              ? 'TODO:' + t('businessCards.removeFromConnections')
+              : t('businessCards.addToConnections')}
           </DropdownOption>
         ),
       });
@@ -216,14 +251,24 @@ export const useBusinessCardDropdownOptions = ({
     }
 
     return items;
-  }, [canAddToPersonalList, canRemove, t, removeBusinessCardConfirmationModal, businessCardId]);
+  }, [
+    canModifyConnections,
+    personalCollection,
+    canRemove,
+    alreadyConnected,
+    addToConnections,
+    t,
+    removeBusinessCardConfirmationModal,
+    businessCardId,
+  ]);
 };
 
 export const buildBusinessCardPermissions = (businessCard?: BusinessCardAttrs | null, userId?: UUID) => {
+  const comparable = !!businessCard?.userId && !!userId;
   return {
-    canRemove: businessCard?.userId === userId,
-    canEdit: businessCard?.userId === userId,
-    canAddToPersonalList: !!userId && businessCard?.userId !== userId,
+    canRemove: comparable && businessCard?.userId === userId,
+    canEdit: comparable && businessCard?.userId === userId,
+    canModifyConnections: comparable && businessCard?.userId !== userId,
   };
 };
 
@@ -250,18 +295,13 @@ export default function BusinessCardPublicPage() {
 
   const dropdownOptions = useBusinessCardDropdownOptions({
     businessCardId: id,
-    canAddToPersonalList: permissions.canAddToPersonalList,
+    canModifyConnections: permissions.canModifyConnections,
     canRemove: permissions.canRemove,
     removeBusinessCardConfirmationModal,
   });
 
   const hasAnyContactInfo =
     (businessCard?.phones || []).length > 0 || (businessCard?.emails || []).length > 0 || !!businessCard?.address;
-
-  console.log('hasAnyContactInfo>>', {
-    hasAnyContactInfo,
-    businessCard,
-  });
 
   return (
     <Container className={styles.container}>
@@ -330,17 +370,19 @@ export default function BusinessCardPublicPage() {
           </Block> */}
           {/* <Spacing /> */}
 
-          <Block>
-            {businessCard?.description && (
-              <>
-                <Typography.Title level={5}>{t('businessCards.description')}</Typography.Title>
+          {businessCard?.description && (
+            <Block className={styles.h100}>
+              <Typography.Title level={5}>{t('businessCards.description')}</Typography.Title>
 
-                <div>{businessCard?.description}</div>
-              </>
-            )}
+              <div>{businessCard?.description}</div>
+            </Block>
+          )}
 
-            {!businessCard?.description && <NoData text={t('businessCards.noDescription')} />}
-          </Block>
+          {!businessCard?.description && (
+            <Block className={css(styles.h100, styles.noDescription)}>
+              <NoData text={t('businessCards.noDescription')} />
+            </Block>
+          )}
         </Col>
 
         <Col xs={24} lg={8}>

@@ -52,7 +52,7 @@ function PassportTab() {
 }
 
 interface TabLabelProps extends LinkProps {}
-const TabLabel = ({ className, ...rest }: TabLabelProps) => {
+export const TabLabel = ({ className, ...rest }: TabLabelProps) => {
   return <Link {...rest} className={css(styles.tabLabel, className)} />;
 };
 

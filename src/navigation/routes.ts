@@ -15,6 +15,7 @@ type Routes = {
   }>;
   businessCards: Subroute<{
     edit: Route;
+    connections: Route;
   }>;
 
   settings: Route;
@@ -32,6 +33,7 @@ export const routes = builder.define<Routes>((root) => {
 
   root.define('businessCards').subroutes((businessCards) => {
     businessCards.define('edit');
+    businessCards.define('connections');
   });
   root.define('settings');
 }, config);

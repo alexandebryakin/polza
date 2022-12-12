@@ -138,7 +138,7 @@ export default function BusinessCard({ businessCard }: BusinessCardProps) {
                           alert('TODO: Add to Personal List');
                         }}
                       >
-                        TODO: {t('businessCards.addToPersonalList')}
+                        TODO: {t('businessCards.addToConnections')}
                       </DropdownOption>
                     ),
                   },
