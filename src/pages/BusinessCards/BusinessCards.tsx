@@ -28,36 +28,6 @@ const AddBusinessCard = () => {
   );
 };
 
-function BusinessCards() {
-  const [t] = useTranslation('common');
-
-  return (
-    <Page>
-      <Typography.Title level={2}>{t('businessCards.businessCards')}</Typography.Title>
-
-      <Tabs
-        defaultActiveKey={window.location.pathname}
-        items={[
-          {
-            label: <TabLabel to={routes.businessCards()._}>{t('businessCards.tabs.personal')}</TabLabel>,
-            key: routes.businessCards()._,
-            children: <PersonalBusinessCards />,
-          },
-          {
-            label: (
-              <TabLabel to={routes.businessCards('connections')._}>{t('businessCards.tabs.connections')}</TabLabel>
-            ),
-            key: routes.businessCards('connections')._,
-            children: <Connections />,
-          },
-        ]}
-      />
-    </Page>
-  );
-}
-
-export default BusinessCards;
-
 const COMMON_COL_PROPS: ColProps = {
   xs: 24,
   md: 24,
@@ -146,3 +116,33 @@ const PersonalBusinessCards = () => {
     </Row>
   );
 };
+
+function BusinessCards() {
+  const [t] = useTranslation('common');
+
+  return (
+    <Page>
+      <Typography.Title level={2}>{t('businessCards.businessCards')}</Typography.Title>
+
+      <Tabs
+        defaultActiveKey={window.location.pathname}
+        items={[
+          {
+            label: <TabLabel to={routes.businessCards()._}>{t('businessCards.tabs.personal')}</TabLabel>,
+            key: routes.businessCards()._,
+            children: <PersonalBusinessCards />,
+          },
+          {
+            label: (
+              <TabLabel to={routes.businessCards('connections')._}>{t('businessCards.tabs.connections')}</TabLabel>
+            ),
+            key: routes.businessCards('connections')._,
+            children: <Connections />,
+          },
+        ]}
+      />
+    </Page>
+  );
+}
+
+export default BusinessCards;
