@@ -66,7 +66,7 @@ export const useRemoveBusinessCardConfirmationModal = () => {
   const navigate = useNavigate();
   const goBack = () => navigate(-1);
 
-  const remove = (id: UUID | undefined) => {
+  const remove = (id: UUID | undefined | null) => {
     if (!id) return;
 
     Modal.confirm({

@@ -100,6 +100,7 @@
     "addToConnections": "Add to Connections",
     "removeFromConnections": "Remove From Connections",
     "anErrorOccurredWhileAddingBusinessCardToConnections": "And error occured while adding the Business Card to the Connections",
+    "anErrorOccurredWhileRemovingBusinessCardFromConnections": "And error occured while removing the Business Card from the Connections",
     "copyLink": "Copy Link",
     "openProfile": "Open Profile",
     "createBusinessCard": "Create Business Card",

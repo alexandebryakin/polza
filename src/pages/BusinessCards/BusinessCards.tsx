@@ -1,6 +1,6 @@
 import React from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Col, ColProps, Row, Skeleton, Space, Typography } from 'antd';
+import { Col, ColProps, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import styles from './BusinessCards.module.scss';
 import BusinessCard, { BusinessCardWrapper } from '../../components/BusinessCard';
@@ -9,12 +9,11 @@ import { Link } from 'react-router-dom';
 import { routes } from '../../navigation/routes';
 import Page from '../../components/Page';
 
-import { CollectionKindEnum, useGetBusinessCardsLazyQuery, useGetBusinessCardsQuery } from '../../api/graphql.types';
-import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
 import { Tabs } from '../../antd';
 import { TabLabel } from '../Profile/Profile';
 import NoData from '../../components/NoData';
 import BusinessCardSkeleton from '../../components/BusinessCardSkeleton';
+import { BusinessCardsContextProvider, useBusinessCards } from '../../contexts/businessCards/businessCardsContext';
 
 const AddBusinessCard = () => {
   const modal = useToggler();
@@ -33,36 +32,6 @@ const COMMON_COL_PROPS: ColProps = {
   md: 24,
   lg: 12,
   xxl: 8,
-};
-
-const Connections = () => {
-  const [t] = useTranslation('common');
-
-  const { user } = useUserInfoContext();
-
-  const personalCollection = user?.collections.find((c) => c.kind === CollectionKindEnum.Personal);
-
-  const { data: personalBusinessCardsData, loading } = useGetBusinessCardsQuery({
-    variables: {
-      collectionIds: personalCollection && [personalCollection.id],
-    },
-  });
-
-  if (!loading && !personalBusinessCardsData?.businessCards.length)
-    return <NoData text={t('businessCards.noConnectionsYet')} className={styles.noConnectionsYet} />;
-  return (
-    <Row gutter={[20, 20]}>
-      <BusinessCardSkeletons loading={loading} />
-
-      {(personalBusinessCardsData?.businessCards || []).map((businessCard) => {
-        return (
-          <Col key={businessCard.id} {...COMMON_COL_PROPS}>
-            <BusinessCard businessCard={businessCard} />
-          </Col>
-        );
-      })}
-    </Row>
-  );
 };
 
 interface BusinessCardSkeletonsProps {
@@ -85,18 +54,33 @@ const BusinessCardSkeletons = ({ amount = 4, loading }: BusinessCardSkeletonsPro
   );
 };
 
-const PersonalBusinessCards = () => {
-  const { user } = useUserInfoContext();
+const Connections = () => {
+  const [t] = useTranslation('common');
 
-  const [getBusinessCards, { data, loading }] = useGetBusinessCardsLazyQuery({
-    fetchPolicy: 'cache-and-network',
-  });
+  const { personalCollectionBusinessCards } = useBusinessCards();
 
-  React.useEffect(() => {
-    if (!user?.id) return;
+  if (!personalCollectionBusinessCards.loading && !personalCollectionBusinessCards.businessCards.length)
+    return <NoData text={t('businessCards.noConnectionsYet')} className={styles.noConnectionsYet} />;
+  return (
+    <Row gutter={[20, 20]}>
+      <BusinessCardSkeletons loading={personalCollectionBusinessCards.loading} />
 
-    getBusinessCards({ variables: { userId: user.id } });
-  }, [getBusinessCards, user?.id]);
+      {personalCollectionBusinessCards.businessCards.map((businessCard) => {
+        return (
+          <Col key={businessCard.id} {...COMMON_COL_PROPS}>
+            <BusinessCard
+              businessCard={businessCard}
+              onBusinessCardRemovedFromCollection={personalCollectionBusinessCards.refetch}
+            />
+          </Col>
+        );
+      })}
+    </Row>
+  );
+};
+
+const OwnBusinessCards = () => {
+  const { ownBusinessCards } = useBusinessCards();
 
   return (
     <Row gutter={[20, 20]}>
@@ -104,9 +88,9 @@ const PersonalBusinessCards = () => {
         <AddBusinessCard />
       </Col>
 
-      <BusinessCardSkeletons loading={loading} />
+      <BusinessCardSkeletons loading={ownBusinessCards.loading} />
 
-      {(data?.businessCards || []).map((businessCard) => {
+      {ownBusinessCards.businessCards.map((businessCard) => {
         return (
           <Col key={businessCard.id} {...COMMON_COL_PROPS}>
             <BusinessCard businessCard={businessCard} />
@@ -121,27 +105,29 @@ function BusinessCards() {
   const [t] = useTranslation('common');
 
   return (
-    <Page>
-      <Typography.Title level={2}>{t('businessCards.businessCards')}</Typography.Title>
+    <BusinessCardsContextProvider>
+      <Page>
+        <Typography.Title level={2}>{t('businessCards.businessCards')}</Typography.Title>
 
-      <Tabs
-        defaultActiveKey={window.location.pathname}
-        items={[
-          {
-            label: <TabLabel to={routes.businessCards()._}>{t('businessCards.tabs.personal')}</TabLabel>,
-            key: routes.businessCards()._,
-            children: <PersonalBusinessCards />,
-          },
-          {
-            label: (
-              <TabLabel to={routes.businessCards('connections')._}>{t('businessCards.tabs.connections')}</TabLabel>
-            ),
-            key: routes.businessCards('connections')._,
-            children: <Connections />,
-          },
-        ]}
-      />
-    </Page>
+        <Tabs
+          defaultActiveKey={window.location.pathname}
+          items={[
+            {
+              label: <TabLabel to={routes.businessCards()._}>{t('businessCards.tabs.personal')}</TabLabel>,
+              key: routes.businessCards()._,
+              children: <OwnBusinessCards />,
+            },
+            {
+              label: (
+                <TabLabel to={routes.businessCards('connections')._}>{t('businessCards.tabs.connections')}</TabLabel>
+              ),
+              key: routes.businessCards('connections')._,
+              children: <Connections />,
+            },
+          ]}
+        />
+      </Page>
+    </BusinessCardsContextProvider>
   );
 }
 

@@ -34,8 +34,15 @@ import {
   useAddToCollectionMutation,
   useGetBusinessCardsQuery,
   useGetCollectionsQuery,
+  useRemoveFromCollectionMutation,
 } from '../../api/graphql.types';
 import NoData from '../../components/NoData';
+import { usePersonalBusinessCardsController } from '../../hooks/usePersonalBusinessCardsController';
+import { usePersonalCollection } from '../../hooks/usePersonalCollection';
+import {
+  CollectionModificationEvents,
+  useBusinessCardDropdownOptions,
+} from '../../hooks/useBusinessCardDropdownOptions';
 
 export interface BlockProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
 
@@ -53,23 +60,6 @@ const Spacing = (props: BlockProps & { size?: number }) => {
       }}
       className={css(styles.spacing, props.className)}
     />
-  );
-};
-
-interface DropdownOptionProps extends FlexProps {
-  icon?: React.ReactNode;
-}
-export const DropdownOption = ({ icon, children, ...props }: DropdownOptionProps) => {
-  const prefixIcon = icon;
-
-  return (
-    <Flex align="center" {...props}>
-      <Space>
-        {prefixIcon}
-
-        <span>{children}</span>
-      </Space>
-    </Flex>
   );
 };
 
@@ -159,110 +149,6 @@ const Contacts = ({ businessCard }: ContactsProps) => {
   );
 };
 
-interface IUseBusinessCardDropdownOptionsHookParams {
-  businessCardId?: UUID;
-  canModifyConnections: boolean;
-  canRemove: boolean;
-  removeBusinessCardConfirmationModal: ReturnType<typeof useRemoveBusinessCardConfirmationModal>;
-}
-
-export const useBusinessCardDropdownOptions = ({
-  businessCardId,
-  canModifyConnections,
-  canRemove,
-  removeBusinessCardConfirmationModal,
-}: IUseBusinessCardDropdownOptionsHookParams): MenuProps['items'] => {
-  const [t] = useTranslation('common');
-
-  const { user, refetchUser } = useUserInfoContext();
-
-  const { data } = useGetCollectionsQuery({
-    variables: {
-      userId: user?.id || '',
-      kind: CollectionKindEnum.Personal,
-    },
-  });
-
-  const personalCollection = data?.collections[0];
-  const { data: personalBusinessCardsData } = useGetBusinessCardsQuery({
-    variables: {
-      userId: user?.id || '',
-      collectionIds: personalCollection?.id && [personalCollection.id],
-    },
-  });
-
-  const [addToCollectionMutation, { loading, error }] = useAddToCollectionMutation();
-  useMutationError(error, t('businessCards.anErrorOccurredWhileAddingBusinessCardToConnections'));
-
-  const alreadyConnected = (personalBusinessCardsData?.businessCards || []).some((bc) => bc.id === businessCardId);
-  console.log({ personalCollection });
-
-  const addToConnections = React.useCallback(async () => {
-    if (alreadyConnected) return;
-
-    await addToCollectionMutation({
-      variables: {
-        collectionId: personalCollection?.id || '',
-        businessCardIds: businessCardId ? [businessCardId] : [],
-      },
-    });
-
-    refetchUser();
-  }, [addToCollectionMutation, alreadyConnected, businessCardId, personalCollection?.id, refetchUser]);
-
-  const removeFromConnections = () => {
-    alert('TODO: Remove from Connections');
-  };
-
-  return React.useMemo(() => {
-    const items: MenuProps['items'] = [];
-
-    if (canModifyConnections && personalCollection) {
-      items.push({
-        key: 'modify-connections',
-        label: (
-          <DropdownOption
-            icon={alreadyConnected ? <MinusOutlined /> : <PlusOutlined />}
-            onClick={alreadyConnected ? removeFromConnections : addToConnections}
-          >
-            {alreadyConnected
-              ? 'TODO:' + t('businessCards.removeFromConnections')
-              : t('businessCards.addToConnections')}
-          </DropdownOption>
-        ),
-      });
-    }
-
-    if (canRemove) {
-      items.push({
-        key: 'remove',
-        label: (
-          <DropdownOption
-            icon={<DeleteOutlined />}
-            className={styles.dropdownOptionRemove}
-            onClick={() => {
-              removeBusinessCardConfirmationModal.remove(businessCardId);
-            }}
-          >
-            {t('generic.actions.remove')}
-          </DropdownOption>
-        ),
-      });
-    }
-
-    return items;
-  }, [
-    canModifyConnections,
-    personalCollection,
-    canRemove,
-    alreadyConnected,
-    addToConnections,
-    t,
-    removeBusinessCardConfirmationModal,
-    businessCardId,
-  ]);
-};
-
 export const buildBusinessCardPermissions = (businessCard?: BusinessCardAttrs | null, userId?: UUID) => {
   const comparable = !!businessCard?.userId && !!userId;
   return {
@@ -284,20 +170,12 @@ export default function BusinessCardPublicPage() {
 
   const { user } = useUserInfoContext();
 
-  // const canRemove = businessCard?.userId === user?.id;
-  // const canEdit = businessCard?.userId === user?.id;
-  // const canAddToPersonalList = businessCard?.userId !== user?.id;
-
   const permissions = buildBusinessCardPermissions(businessCard, user?.id);
-
-  const removeBusinessCardConfirmationModal = useRemoveBusinessCardConfirmationModal();
-  useMutationError(removeBusinessCardConfirmationModal.error);
 
   const dropdownOptions = useBusinessCardDropdownOptions({
     businessCardId: id,
     canModifyConnections: permissions.canModifyConnections,
     canRemove: permissions.canRemove,
-    removeBusinessCardConfirmationModal,
   });
 
   const hasAnyContactInfo =
