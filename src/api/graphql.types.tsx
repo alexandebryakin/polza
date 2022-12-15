@@ -93,6 +93,7 @@ export type Mutation = {
   createEmail: Maybe<CreateEmailPayload>;
   createPhone: Maybe<CreatePhonePayload>;
   deleteBusinessCard: Maybe<DeleteBusinessCardPayload>;
+  removeBusinessCardsFromCollection: Maybe<Scalars['Boolean']>;
   signinUser: Maybe<SigninUserPayload>;
   signupUser: Maybe<SignupUserPayload>;
   upsertBusinessCard: Maybe<UpsertBusinessCardPayload>;
@@ -114,6 +115,11 @@ export type MutationCreatePhoneArgs = {
 
 export type MutationDeleteBusinessCardArgs = {
   id: Scalars['ID'];
+};
+
+export type MutationRemoveBusinessCardsFromCollectionArgs = {
+  businessCardIds: Array<Scalars['ID']>;
+  collectionId: Scalars['ID'];
 };
 
 export type MutationSigninUserArgs = {
@@ -368,6 +374,16 @@ export type GetBusinessCardsQuery = {
       verificationStatus: VerificationStatusEnum;
     }>;
   }>;
+};
+
+export type RemoveFromCollectionMutationVariables = Exact<{
+  collectionId: Scalars['ID'];
+  businessCardIds: Array<Scalars['ID']> | Scalars['ID'];
+}>;
+
+export type RemoveFromCollectionMutation = {
+  __typename?: 'Mutation';
+  removeBusinessCardsFromCollection: boolean | null;
 };
 
 export type ShowBusinessCardQueryVariables = Exact<{
@@ -800,7 +816,7 @@ export type SignupUserMutationHookResult = ReturnType<typeof useSignupUserMutati
 export type SignupUserMutationResult = Apollo.MutationResult<SignupUserMutation>;
 export type SignupUserMutationOptions = Apollo.BaseMutationOptions<SignupUserMutation, SignupUserMutationVariables>;
 export const AddToCollectionDocument = gql`
-  mutation addToCollection($collectionId: ID!, $businessCardIds: [ID!]!) {
+  mutation AddToCollection($collectionId: ID!, $businessCardIds: [ID!]!) {
     addBusinessCardsToCollection(collectionId: $collectionId, businessCardIds: $businessCardIds)
   }
 `;
@@ -932,6 +948,49 @@ export function useGetBusinessCardsLazyQuery(
 export type GetBusinessCardsQueryHookResult = ReturnType<typeof useGetBusinessCardsQuery>;
 export type GetBusinessCardsLazyQueryHookResult = ReturnType<typeof useGetBusinessCardsLazyQuery>;
 export type GetBusinessCardsQueryResult = Apollo.QueryResult<GetBusinessCardsQuery, GetBusinessCardsQueryVariables>;
+export const RemoveFromCollectionDocument = gql`
+  mutation RemoveFromCollection($collectionId: ID!, $businessCardIds: [ID!]!) {
+    removeBusinessCardsFromCollection(collectionId: $collectionId, businessCardIds: $businessCardIds)
+  }
+`;
+export type RemoveFromCollectionMutationFn = Apollo.MutationFunction<
+  RemoveFromCollectionMutation,
+  RemoveFromCollectionMutationVariables
+>;
+
+/**
+ * __useRemoveFromCollectionMutation__
+ *
+ * To run a mutation, you first call `useRemoveFromCollectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveFromCollectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeFromCollectionMutation, { data, loading, error }] = useRemoveFromCollectionMutation({
+ *   variables: {
+ *      collectionId: // value for 'collectionId'
+ *      businessCardIds: // value for 'businessCardIds'
+ *   },
+ * });
+ */
+export function useRemoveFromCollectionMutation(
+  baseOptions?: Apollo.MutationHookOptions<RemoveFromCollectionMutation, RemoveFromCollectionMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RemoveFromCollectionMutation, RemoveFromCollectionMutationVariables>(
+    RemoveFromCollectionDocument,
+    options
+  );
+}
+export type RemoveFromCollectionMutationHookResult = ReturnType<typeof useRemoveFromCollectionMutation>;
+export type RemoveFromCollectionMutationResult = Apollo.MutationResult<RemoveFromCollectionMutation>;
+export type RemoveFromCollectionMutationOptions = Apollo.BaseMutationOptions<
+  RemoveFromCollectionMutation,
+  RemoveFromCollectionMutationVariables
+>;
 export const ShowBusinessCardDocument = gql`
   query ShowBusinessCard($id: ID!) {
     businessCard(id: $id) {

@@ -28,13 +28,14 @@ import { Link } from 'react-router-dom';
 import { routes } from '../../navigation/routes';
 import CopyableContactList from '../CopyableContactList';
 import { buildBusinessCardPublicLink } from '../../utils/buildBusinessCardPublicLink';
-import {
-  buildBusinessCardPermissions,
-  DropdownOption,
-} from '../../pages/BusinessCardPublicPage/BusinessCardPublicPage.component';
+import { buildBusinessCardPermissions } from '../../pages/BusinessCardPublicPage/BusinessCardPublicPage.component';
 import { useRemoveBusinessCardConfirmationModal } from '../BusinessCardForm/BusinessCardForm.component';
 import { useMutationError } from '../../hooks/useMutationError';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
+import {
+  CollectionModificationEvents,
+  useBusinessCardDropdownOptions,
+} from '../../hooks/useBusinessCardDropdownOptions';
 
 export const mask = IMask.createMask({
   mask: MASKS.PHONE,
@@ -83,10 +84,10 @@ const StatusLabel = ({ status, ...props }: StatusLabelProps) => {
   );
 };
 
-interface BusinessCardProps {
+interface BusinessCardProps extends CollectionModificationEvents {
   businessCard: BusinessCardAttrs;
 }
-export default function BusinessCard({ businessCard }: BusinessCardProps) {
+export default function BusinessCard({ businessCard, onBusinessCardRemovedFromCollection }: BusinessCardProps) {
   const [t] = useTranslation('common');
 
   const businessCardPublicLink = buildBusinessCardPublicLink(businessCard.id);
@@ -96,6 +97,13 @@ export default function BusinessCard({ businessCard }: BusinessCardProps) {
   const { user } = useUserInfoContext();
 
   const permissions = buildBusinessCardPermissions(businessCard, user?.id);
+
+  const dropdownOptions = useBusinessCardDropdownOptions({
+    businessCardId: businessCard.id,
+    canModifyConnections: permissions.canModifyConnections,
+    canRemove: permissions.canRemove,
+    onBusinessCardRemovedFromCollection,
+  });
 
   const removeBusinessCardConfirmationModal = useRemoveBusinessCardConfirmationModal();
   useMutationError(removeBusinessCardConfirmationModal.error);
@@ -125,32 +133,17 @@ export default function BusinessCard({ businessCard }: BusinessCardProps) {
               <CopyOutlined className={css(styles.actionIcon)} />
             </CopyToClipboard>
 
-            <Dropdown
-              menu={{
-                items: [
-                  {
-                    // TODO: change
-                    key: 'add-to-personal-list',
-                    label: (
-                      <DropdownOption
-                        icon={<PlusOutlined />}
-                        onClick={() => {
-                          alert('TODO: Add to Personal List');
-                        }}
-                      >
-                        TODO: {t('businessCards.addToConnections')}
-                      </DropdownOption>
-                    ),
-                  },
-                ],
-              }}
-              placement="bottomRight"
-            >
-              <MoreOutlined className={styles.actionIcon} />
-            </Dropdown>
+            {!!dropdownOptions?.length && (
+              <Dropdown
+                menu={{
+                  items: dropdownOptions,
+                }}
+                placement="bottomRight"
+              >
+                <MoreOutlined className={styles.actionIcon} />
+              </Dropdown>
+            )}
           </div>
-
-          {/* <StatusLabel status={businessCard.status || PublicationStatusEnum.Draft} /> */}
         </div>
 
         <StatusLabel status={businessCard.status || PublicationStatusEnum.Draft} className={styles.statusLabel} />
