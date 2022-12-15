@@ -11,6 +11,7 @@ import { routes } from '../../navigation/routes';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
 import { VerificationStatusEnum } from '../../api/graphql.types';
 import Page from '../../components/Page';
+import ChangePassordForm from '../../components/ChangePassordForm';
 
 const VerificationAlert = () => {
   const [t] = useTranslation('common');
@@ -78,6 +79,20 @@ const WarningVerificationIcon = () => {
   );
 };
 
+const SecurityTab = () => {
+  const [t] = useTranslation('common');
+
+  return (
+    <div>
+      <Typography.Title level={4}>{t('profile.security.changePassword')}</Typography.Title>
+
+      <FormCard className={styles.maxWidth624}>
+        <ChangePassordForm />
+      </FormCard>
+    </div>
+  );
+};
+
 function Profile() {
   const [t] = useTranslation('common');
 
@@ -118,7 +133,7 @@ function Profile() {
           {
             label: <TabLabel to={routes.profile().security()._}>{t('profile.tabs.security')}</TabLabel>,
             key: routes.profile().security()._,
-            children: 'TODO: Password',
+            children: <SecurityTab />,
           },
         ]}
       />

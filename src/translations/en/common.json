@@ -12,6 +12,7 @@
       "more": "More",
       "back": "Back",
       "cancel": "Cancel",
+      "update": "Update",
       "remove": "Remove"
     },
     "form": {
@@ -88,6 +89,19 @@
         "succeeded": "Passport verification succeeded"
       },
       "clickOrDragFile": "Click or drag file to this area to upload"
+    },
+    "security": {
+      "passwordWasChangedSuccessfully": "Password was changed successfully",
+      "fields": {
+        "oldPassword": "Old Password",
+        "newPassword": "New Password",
+        "confirmNewPassword": "Confirm New Password"
+      },
+      "errors": {
+        "oldPassportMismatch": "Old Password doesn't match with the new one",
+        "newPasswordConfirmationMismatch": "New Password doesn't match with the Confirmation Password"
+      },
+      "changePassword": "Change Password"
     }
   },
   "businessCards": {
