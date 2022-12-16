@@ -1,5 +1,14 @@
 @import 'src/styles/_variables.scss';
 
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+}
+
 .noData {
   display: flex;
   justify-content: center;

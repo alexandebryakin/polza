@@ -4,8 +4,14 @@ import { DivProps } from '../BusinessCard';
 
 import styles from './NoData.module.scss';
 
+interface WrapperProps extends DivProps {}
+const Wrapper = (props: DivProps) => {
+  return <div {...props} className={css(styles.wrapper, props.className)} />;
+};
+
 interface NoDataProps extends DivProps {
-  text: string;
+  text: React.ReactNode;
+  // content?: React.ReactNode;
 }
 
 const NoData = ({ text, ...rest }: NoDataProps) => {
@@ -17,5 +23,7 @@ const NoData = ({ text, ...rest }: NoDataProps) => {
     </div>
   );
 };
+
+NoData.Wrapper = Wrapper;
 
 export default NoData;

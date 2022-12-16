@@ -73,6 +73,7 @@ const AddPhoneModal = ({ toggler }: AddPhoneModalProps) => {
       open={toggler.isOn}
       title={t('businessCards.form.actions.addPhone')}
       onCancel={toggler.off}
+      centered
       footer={[
         <Button key="back" onClick={toggler.off}>
           {t('generic.actions.cancel')}
