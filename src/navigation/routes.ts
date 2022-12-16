@@ -10,15 +10,16 @@ type Routes = {
 
   profile: Subroute<{
     general: Route;
-    passport: Route;
-    security: Route;
   }>;
   businessCards: Subroute<{
     edit: Route;
     connections: Route;
   }>;
 
-  settings: Route;
+  settings: Subroute<{
+    passport: Route;
+    security: Route;
+  }>;
 };
 
 export const routes = builder.define<Routes>((root) => {
@@ -27,15 +28,16 @@ export const routes = builder.define<Routes>((root) => {
 
   root.define('profile').subroutes((profile) => {
     profile.define('general');
-    profile.define('passport');
-    profile.define('security');
   });
 
   root.define('businessCards').subroutes((businessCards) => {
     businessCards.define('edit');
     businessCards.define('connections');
   });
-  root.define('settings');
+  root.define('settings').subroutes((settings) => {
+    settings.define('passport');
+    settings.define('security');
+  });
 }, config);
 
 // routes.__is.profile.general

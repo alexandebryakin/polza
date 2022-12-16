@@ -1,28 +1,67 @@
 @import 'src/styles/_variables.scss';
 
-.tabIcon {
+$padding: 12px;
+.cover {
+  border: 1px solid $border-color;
+  border-radius: $padding;
+
+  min-height: 150px;
+  background-image: linear-gradient(60deg, #abecd6 0%, #fbed96 100%);
+}
+.userProfileHeaderPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $padding;
+  border-radius: $padding;
+
+  width: 100%;
+  background: #fff;
+  border-radius: $padding;
+  border: 1px solid $border-color;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 4px 12px;
+
+  margin-top: -25px;
+}
+
+.avatar {
+  margin-top: -60px;
+  border: 4px solid #fff;
+}
+
+.h100 {
+  height: 100%;
+}
+
+.fontSize16 {
+  font-size: 16px;
+}
+
+.noDataWrapper {
+  padding: $padding;
+  min-height: 100px;
+}
+
+.userProfileSectionTitle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+.userProfileSectionTitleText {
   margin-left: 8px;
-  margin-right: 0 !important;
+  flex-grow: 1;
 }
 
-.warning {
-  color: $warning;
-}
-.info {
-  color: $info;
-}
-.error {
-  color: $error;
+.userProfileList {
+  // margin-left: 24px;
 }
 
-.maxWidth624 {
-  max-width: 624px;
+.noDataWrapperForFIO {
+  margin-bottom: $padding;
 }
 
-.alert {
-  margin-bottom: 16px;
-}
-
-.tabLabel {
-  color: $text-color--primary;
+.container {
+  max-width: 912px !important;
 }

@@ -1,26 +1,13 @@
 import Container from '../../lib/Container';
 import styles from './BusinessCardPublicPage.module.scss';
 import css from 'classnames';
-import { Avatar, Col, MenuProps, Row, Slider, Space, Typography } from 'antd';
+import { Col, Row, Typography } from 'antd';
 import { routes } from '../../navigation/routes';
 import { Link, matchPath, useLocation } from 'react-router-dom';
 import { Button, Dropdown } from '../../antd';
 import { useTranslation } from 'react-i18next';
-import {
-  DeleteOutlined,
-  EnvironmentOutlined,
-  InboxOutlined,
-  MailOutlined,
-  MinusOutlined,
-  MoreOutlined,
-  PhoneOutlined,
-  PlusOutlined,
-  RollbackOutlined,
-} from '@ant-design/icons';
-import Flex from '../../components/Flex';
-import { FlexProps } from '../../components/Flex/Flex';
+import { EnvironmentOutlined, MailOutlined, MoreOutlined, PhoneOutlined } from '@ant-design/icons';
 import React from 'react';
-import { useRemoveBusinessCardConfirmationModal } from '../../components/BusinessCardForm/BusinessCardForm.component';
 import { useMutationError } from '../../hooks/useMutationError';
 import { IUseBusinessCard, useBusinessCard } from '../../api/businessCards';
 import { QRCodeSVG } from 'qrcode.react';
@@ -28,29 +15,28 @@ import { BusinessCardAttrs, mask } from '../../components/BusinessCard';
 import CopyableContactList from '../../components/CopyableContactList';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
 import { buildBusinessCardPublicLink } from '../../utils/buildBusinessCardPublicLink';
-import {
-  BusinessCard,
-  CollectionKindEnum,
-  useAddToCollectionMutation,
-  useGetBusinessCardsQuery,
-  useGetCollectionsQuery,
-  useRemoveFromCollectionMutation,
-} from '../../api/graphql.types';
+
 import NoData from '../../components/NoData';
-import { usePersonalBusinessCardsController } from '../../hooks/usePersonalBusinessCardsController';
-import { usePersonalCollection } from '../../hooks/usePersonalCollection';
-import {
-  CollectionModificationEvents,
-  useBusinessCardDropdownOptions,
-} from '../../hooks/useBusinessCardDropdownOptions';
+import { useBusinessCardDropdownOptions } from '../../hooks/useBusinessCardDropdownOptions';
 
-export interface BlockProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
+export interface DivElem extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
 
-const Block = (props: BlockProps) => {
-  return <div {...props} className={css(styles.block, props.className)} />;
+const Separator = () => {
+  return <div className={styles.separator} />;
 };
 
-const Spacing = (props: BlockProps & { size?: number }) => {
+const Section = (props: DivElem) => {
+  return <div {...props} className={css(styles.section, props.className)} />;
+};
+
+export const Block = (props: DivElem & { padded?: boolean }) => {
+  return <div {...props} className={css(styles.block, props.className, props.padded && styles.blockPadded)} />;
+};
+
+Block.Separator = Separator;
+Block.Section = Section;
+
+export const Spacing = (props: DivElem & { size?: number }) => {
   return (
     <div
       {...props}
@@ -185,7 +171,7 @@ export default function BusinessCardPublicPage() {
     <Container className={styles.container}>
       <Spacing />
 
-      <Block className={styles.main}>
+      <Block padded className={styles.main}>
         <div className={styles.cover}></div>
 
         <div className={styles.profileWrapper}>
@@ -249,7 +235,7 @@ export default function BusinessCardPublicPage() {
           {/* <Spacing /> */}
 
           {businessCard?.description && (
-            <Block className={styles.h100}>
+            <Block padded className={styles.h100}>
               <Typography.Title level={5}>{t('businessCards.description')}</Typography.Title>
 
               <div>{businessCard?.description}</div>
@@ -257,14 +243,14 @@ export default function BusinessCardPublicPage() {
           )}
 
           {!businessCard?.description && (
-            <Block className={css(styles.h100, styles.noDescription)}>
+            <Block padded className={css(styles.h100, styles.noDescription)}>
               <NoData text={t('businessCards.noDescription')} />
             </Block>
           )}
         </Col>
 
         <Col xs={24} lg={8}>
-          <Block className={styles.contacts}>
+          <Block padded className={styles.contacts}>
             {hasAnyContactInfo && <Contacts businessCard={businessCard} />}
 
             {!hasAnyContactInfo && <NoData text={t('businessCards.noContacts')} />}

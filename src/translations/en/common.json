@@ -13,7 +13,9 @@
       "back": "Back",
       "cancel": "Cancel",
       "update": "Update",
-      "remove": "Remove"
+      "remove": "Remove",
+      "specify": "Specify",
+      "verify": "Verify"
     },
     "form": {
       "rules": {
@@ -66,6 +68,13 @@
       "passport": "Passport",
       "security": "Security"
     },
+    "general": {
+      "emails": "Emails",
+      "phoneNumbers": "Phone Numbers",
+      "noEmailsYet": "No Emails Yet",
+      "noPhoneNumbersYet": "No Phone Numbers Yet",
+      "noFirstOrLastNameDetails": "No First or Last name details"
+    },
     "passport": {
       "fields": {
         "firstName": "First Name",
@@ -103,6 +112,9 @@
       },
       "changePassword": "Change Password"
     }
+  },
+  "settings": {
+    "settings": "Settings"
   },
   "businessCards": {
     "businessCards": "Business Cards",

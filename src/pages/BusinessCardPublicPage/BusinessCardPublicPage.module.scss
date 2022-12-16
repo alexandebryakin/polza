@@ -2,11 +2,23 @@
 
 $border-radius: 12px;
 // [Block]:
+$block-padding: 16px;
 .block {
   border-radius: $border-radius;
-  padding: 16px;
   border: 1px solid $border-color;
   box-shadow: rgba(0, 0, 0, 0.02) 0px 4px 12px;
+}
+.blockPadded {
+  padding: $block-padding;
+}
+.section {
+  padding: $block-padding;
+}
+
+.separator {
+  height: 1px;
+  background: $border-color;
+  width: 100%;
 }
 
 // [Spacing]:

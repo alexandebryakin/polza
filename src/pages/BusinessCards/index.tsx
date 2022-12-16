@@ -1,1 +1,1 @@
-export { default } from './BusinessCards';
+export { default } from './BusinessCards.page';

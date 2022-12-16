@@ -63,6 +63,7 @@ const AddEmailModal = ({ toggler }: AddEmailModalProps) => {
       open={toggler.isOn}
       title={t('businessCards.form.actions.addEmail')}
       onCancel={toggler.off}
+      centered
       footer={[
         <Button key="back" onClick={toggler.off}>
           {t('generic.actions.cancel')}

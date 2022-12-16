@@ -9,6 +9,9 @@ import { routes } from '../../navigation/routes';
 
 import styles from './AccountDropdown.module.scss';
 
+// TAKEN FROM: https://boringavatars.com/
+export const RANDOM_AVATAR_URL = 'https://source.boringavatars.com/beam/222';
+
 const Toggler = () => {
   const { user } = useUserInfoContext();
 
@@ -19,7 +22,7 @@ const Toggler = () => {
       <span className={styles.email}>{email}</span>
 
       <Avatar
-        src="https://joeschmoe.io/api/v1/random" // TODO: replace with actual image
+        src={RANDOM_AVATAR_URL} // TODO: replace with actual image
         size={30}
         className={styles.avatar}
       />

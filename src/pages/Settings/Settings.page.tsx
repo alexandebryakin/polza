@@ -3,7 +3,7 @@ import { AlertProps, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { Tabs, Tooltip, Alert } from '../../antd';
 import css from 'classnames';
-import styles from './Profile.module.scss';
+import styles from './Settings.module.scss';
 import FormCard from '../../lib/FormCard';
 import PassportForm from '../../components/PassportForm';
 import { Link, LinkProps } from 'react-router-dom';
@@ -13,7 +13,12 @@ import { VerificationStatusEnum } from '../../api/graphql.types';
 import Page from '../../components/Page';
 import ChangePassordForm from '../../components/ChangePassordForm';
 
-const VerificationAlert = () => {
+interface VerificationAlertProps {
+  className?: string;
+  action?: AlertProps['action'];
+}
+
+export const VerificationAlert = ({ className, action }: VerificationAlertProps) => {
   const [t] = useTranslation('common');
   const { passport } = useUserInfoContext();
 
@@ -33,9 +38,12 @@ const VerificationAlert = () => {
     <Alert
       message={passport ? messages[passport.verificationStatus] : t('profile.passport.verification.notVerified')}
       type={passport ? types[passport.verificationStatus] : 'warning'}
+      // message={passport ? messages[VerificationStatusEnum.Failed] : t('profile.passport.verification.notVerified')}
+      // type={passport ? types[VerificationStatusEnum.Failed] : 'warning'}
       showIcon
       closable
-      className={css(styles.maxWidth624, styles.alert)}
+      action={action}
+      className={css(className, styles.alert)}
     />
   );
 };
@@ -43,7 +51,7 @@ const VerificationAlert = () => {
 function PassportTab() {
   return (
     <div>
-      <VerificationAlert />
+      <VerificationAlert className={styles.maxWidth624} />
 
       <FormCard className={styles.maxWidth624}>
         <PassportForm />
@@ -93,32 +101,19 @@ const SecurityTab = () => {
   );
 };
 
-function Profile() {
+function Settings() {
   const [t] = useTranslation('common');
 
   return (
     <Page>
-      <Typography.Title level={2}>{t('profile.profile')}</Typography.Title>
+      <Typography.Title level={2}>{t('settings.settings')}</Typography.Title>
 
       <Tabs
         defaultActiveKey={window.location.pathname}
         items={[
           {
-            label: <TabLabel to={routes.profile().general()._}>{t('profile.tabs.generalInfo')}</TabLabel>,
-            key: routes.profile().general()._,
-            children: (
-              <ul>
-                <li>email</li>
-                <li>First Name</li>
-                <li>Last Name</li>
-                <li>Profile Image</li>
-              </ul>
-            ),
-          },
-
-          {
             label: (
-              <TabLabel to={routes.profile().passport()._}>
+              <TabLabel to={routes.settings().passport()._}>
                 <span>
                   {t('profile.tabs.passport')}
 
@@ -126,13 +121,13 @@ function Profile() {
                 </span>
               </TabLabel>
             ),
-            key: routes.profile().passport()._,
+            key: routes.settings().passport()._,
             children: <PassportTab />,
           },
 
           {
-            label: <TabLabel to={routes.profile().security()._}>{t('profile.tabs.security')}</TabLabel>,
-            key: routes.profile().security()._,
+            label: <TabLabel to={routes.settings().security()._}>{t('profile.tabs.security')}</TabLabel>,
+            key: routes.settings().security()._,
             children: <SecurityTab />,
           },
         ]}
@@ -141,4 +136,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default Settings;
