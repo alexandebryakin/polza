@@ -18,6 +18,7 @@ import { UserInfoContextProvider } from './contexts/userInfo/userInfoContext';
 import BusinessCards from './pages/BusinessCards';
 import ModifyBusinessCard from './pages/ModifyBusinessCard';
 import BusinessCardPublicPage from './pages/BusinessCardPublicPage';
+import Settings from './pages/Settings';
 
 function App() {
   if (jwt.isExpired() && !isRoutePublic()) {
@@ -46,7 +47,7 @@ function App() {
                 </Layout>
               }
             >
-              <Route path={routes.profile(':tab')._} element={null} />
+              {/* <Route path={routes.profile(':tab')._} element={null} /> */}
             </Route>
 
             <Route
@@ -89,10 +90,12 @@ function App() {
               path={routes.settings()._}
               element={
                 <Layout>
-                  <div>TODO: Settings</div>
+                  <Settings />
                 </Layout>
               }
-            />
+            >
+              <Route path={routes.settings(':tab')._} element={null} />
+            </Route>
 
             <Route
               path="*"

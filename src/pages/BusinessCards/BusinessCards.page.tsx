@@ -10,10 +10,10 @@ import { routes } from '../../navigation/routes';
 import Page from '../../components/Page';
 
 import { Tabs } from '../../antd';
-import { TabLabel } from '../Profile/Profile';
 import NoData from '../../components/NoData';
 import BusinessCardSkeleton from '../../components/BusinessCardSkeleton';
 import { BusinessCardsContextProvider, useBusinessCards } from '../../contexts/businessCards/businessCardsContext';
+import { TabLabel } from '../Settings/Settings.page';
 
 const AddBusinessCard = () => {
   const modal = useToggler();

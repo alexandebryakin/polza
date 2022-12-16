@@ -14,7 +14,8 @@
       "cancel": "Cancel",
       "update": "Update",
       "remove": "Remove",
-      "specify": "Specify"
+      "specify": "Specify",
+      "verify": "Verify"
     },
     "form": {
       "rules": {
@@ -111,6 +112,9 @@
       },
       "changePassword": "Change Password"
     }
+  },
+  "settings": {
+    "settings": "Settings"
   },
   "businessCards": {
     "businessCards": "Business Cards",

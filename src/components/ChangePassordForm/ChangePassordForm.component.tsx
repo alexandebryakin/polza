@@ -63,7 +63,7 @@ const ChangePassordForm = () => {
   };
 
   return (
-    <Form name="passport" form={form} layout="vertical" onFinish={onFinish} autoComplete="off">
+    <Form name="passwords" form={form} layout="vertical" onFinish={onFinish} autoComplete="off">
       {/* <Col lg={8} md={18} xs={24}> */}
       <Form.Item
         label={t('profile.security.fields.oldPassword')}

@@ -1,32 +1,5 @@
 @import 'src/styles/_variables.scss';
 
-.tabIcon {
-  margin-left: 8px;
-  margin-right: 0 !important;
-}
-
-.warning {
-  color: $warning;
-}
-.info {
-  color: $info;
-}
-.error {
-  color: $error;
-}
-
-.maxWidth624 {
-  max-width: 624px;
-}
-
-.alert {
-  margin-bottom: 16px;
-}
-
-.tabLabel {
-  color: $text-color--primary;
-}
-
 $padding: 12px;
 .cover {
   border: 1px solid $border-color;

@@ -1,17 +1,11 @@
-import { MailOutlined, PhoneOutlined, PlusOutlined, WarningOutlined } from '@ant-design/icons';
-import { AlertProps, Avatar, Col, Row, Typography } from 'antd';
+import { MailOutlined, PhoneOutlined, PlusOutlined } from '@ant-design/icons';
+import { Avatar, Col, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Tabs, Tooltip, Alert, Button } from '../../antd';
-import css from 'classnames';
+import { Button } from '../../antd';
 import styles from './Profile.module.scss';
-import FormCard from '../../lib/FormCard';
-import PassportForm from '../../components/PassportForm';
-import { Link, LinkProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { routes } from '../../navigation/routes';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
-import { VerificationStatusEnum } from '../../api/graphql.types';
-import Page from '../../components/Page';
-import ChangePassordForm from '../../components/ChangePassordForm';
 import { RANDOM_AVATAR_URL } from '../../components/AccountDropdown/AccountDropdown';
 import Container from '../../lib/Container';
 import { Block, Spacing } from '../BusinessCardPublicPage/BusinessCardPublicPage.component';
@@ -21,88 +15,10 @@ import AddPhoneModal from '../../components/modals/AddPhoneModal';
 import { mask } from '../../components/BusinessCard';
 import NoData from '../../components/NoData';
 import React from 'react';
+import { VerificationAlert } from '../Settings/Settings.page';
+import { VerificationStatusEnum } from '../../api/graphql.types';
 
-const VerificationAlert = () => {
-  const [t] = useTranslation('common');
-  const { passport } = useUserInfoContext();
-
-  const messages: Record<VerificationStatusEnum, string> = {
-    [VerificationStatusEnum.Failed]: t('profile.passport.verification.failed'),
-    [VerificationStatusEnum.InProgress]: t('profile.passport.verification.inProgress'),
-    [VerificationStatusEnum.Succeeded]: t('profile.passport.verification.succeeded'),
-  };
-
-  const types: Record<VerificationStatusEnum, AlertProps['type']> = {
-    [VerificationStatusEnum.Failed]: 'error',
-    [VerificationStatusEnum.InProgress]: 'info',
-    [VerificationStatusEnum.Succeeded]: 'success',
-  };
-
-  return (
-    <Alert
-      message={passport ? messages[passport.verificationStatus] : t('profile.passport.verification.notVerified')}
-      type={passport ? types[passport.verificationStatus] : 'warning'}
-      showIcon
-      closable
-      className={css(styles.maxWidth624, styles.alert)}
-    />
-  );
-};
-
-function PassportTab() {
-  return (
-    <div>
-      <VerificationAlert />
-
-      <FormCard className={styles.maxWidth624}>
-        <PassportForm />
-      </FormCard>
-    </div>
-  );
-}
-
-interface TabLabelProps extends LinkProps {}
-export const TabLabel = ({ className, ...rest }: TabLabelProps) => {
-  return <Link {...rest} className={css(styles.tabLabel, className)} />;
-};
-
-const WarningVerificationIcon = () => {
-  const [t] = useTranslation('common');
-
-  const { passport } = useUserInfoContext();
-
-  if (passport?.verificationStatus === VerificationStatusEnum.Succeeded) return null;
-
-  const colors: Record<VerificationStatusEnum, string> = {
-    [VerificationStatusEnum.InProgress]: styles.info,
-    [VerificationStatusEnum.Failed]: styles.error,
-    [VerificationStatusEnum.Succeeded]: '',
-  };
-
-  return (
-    <Tooltip title={t('profile.passport.verification.notVerified')}>
-      <WarningOutlined
-        className={css(styles.tabIcon, passport ? colors[passport.verificationStatus] : styles.warning)}
-      />
-    </Tooltip>
-  );
-};
-
-const SecurityTab = () => {
-  const [t] = useTranslation('common');
-
-  return (
-    <div>
-      <Typography.Title level={4}>{t('profile.security.changePassword')}</Typography.Title>
-
-      <FormCard className={styles.maxWidth624}>
-        <ChangePassordForm />
-      </FormCard>
-    </div>
-  );
-};
-
-const GeneralInfoTab = () => {
+const Profile = () => {
   const [t] = useTranslation('common');
   const { user, passport } = useUserInfoContext();
 
@@ -143,6 +59,8 @@ const GeneralInfoTab = () => {
 
   const hasPhones = (user?.emails || []).length > 0;
   const hasEmails = (user?.emails || []).length > 0;
+  console.log(passport);
+  const showPassportVerificationAction = passport && passport.verificationStatus !== VerificationStatusEnum.Succeeded;
 
   return (
     <Container className={styles.container}>
@@ -160,7 +78,7 @@ const GeneralInfoTab = () => {
                 <NoData.Wrapper className={styles.noDataWrapperForFIO}>
                   <NoData text={t('profile.general.noFirstOrLastNameDetails')} />
 
-                  <Link to={routes.profile().passport()._}>
+                  <Link to={routes.settings().passport()._}>
                     <Button icon={<PlusOutlined />} type="link" size="small" className={styles.fontSize16}>
                       {t('generic.actions.specify')}
                     </Button>
@@ -173,6 +91,23 @@ const GeneralInfoTab = () => {
       </div>
 
       <Spacing />
+
+      {showPassportVerificationAction && (
+        <VerificationAlert
+          action={
+            <Link to={routes.settings().passport()._}>
+              <Button
+                // icon={<PlusOutlined />}
+                type="link"
+                size="small"
+                className={styles.fontSize16}
+              >
+                {t('generic.actions.verify')}
+              </Button>
+            </Link>
+          }
+        />
+      )}
 
       <Row gutter={16}>
         <Col xs={24} md={12}>
@@ -266,46 +201,5 @@ const GeneralInfoTab = () => {
     </Container>
   );
 };
-
-function Profile() {
-  const [t] = useTranslation('common');
-
-  return (
-    <Page>
-      <Typography.Title level={2}>{t('profile.profile')}</Typography.Title>
-
-      <Tabs
-        defaultActiveKey={window.location.pathname}
-        items={[
-          {
-            label: <TabLabel to={routes.profile().general()._}>{t('profile.tabs.generalInfo')}</TabLabel>,
-            key: routes.profile().general()._,
-            children: <GeneralInfoTab />,
-          },
-
-          {
-            label: (
-              <TabLabel to={routes.profile().passport()._}>
-                <span>
-                  {t('profile.tabs.passport')}
-
-                  <WarningVerificationIcon />
-                </span>
-              </TabLabel>
-            ),
-            key: routes.profile().passport()._,
-            children: <PassportTab />,
-          },
-
-          {
-            label: <TabLabel to={routes.profile().security()._}>{t('profile.tabs.security')}</TabLabel>,
-            key: routes.profile().security()._,
-            children: <SecurityTab />,
-          },
-        ]}
-      />
-    </Page>
-  );
-}
 
 export default Profile;
