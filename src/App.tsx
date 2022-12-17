@@ -19,6 +19,7 @@ import BusinessCards from './pages/BusinessCards';
 import ModifyBusinessCard from './pages/ModifyBusinessCard';
 import BusinessCardPublicPage from './pages/BusinessCardPublicPage';
 import Settings from './pages/Settings';
+import client from './api/apollo/client';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -29,14 +30,39 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   return isRouteAccessible ? <>{children}</> : <Navigate to={routes.signin()._} replace />;
 };
 
+interface ResetApolloStoreProps {
+  children: React.ReactNode;
+}
+const ResetApolloStore = ({ children }: ResetApolloStoreProps) => {
+  React.useEffect(() => {
+    client.resetStore();
+  }, []);
+
+  return <>{children}</>;
+};
+
 function App() {
   return (
     <BrowserRouter>
       <UserInfoContextProvider>
         <LayoutProvider>
           <Routes>
-            <Route path={routes.signin()._} element={<Signin />} />
-            <Route path={routes.signup()._} element={<Signup />} />
+            <Route
+              path={routes.signin()._}
+              element={
+                <ResetApolloStore>
+                  <Signin />
+                </ResetApolloStore>
+              }
+            />
+            <Route
+              path={routes.signup()._}
+              element={
+                <ResetApolloStore>
+                  <Signup />
+                </ResetApolloStore>
+              }
+            />
 
             <Route
               path={routes.profile()._}

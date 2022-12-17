@@ -3,6 +3,7 @@
 .toggler {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 
   .email {
     color: $text-color--primary;
