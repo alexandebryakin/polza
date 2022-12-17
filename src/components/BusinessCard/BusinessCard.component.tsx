@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Dropdown } from '../../antd';
+import { Button, Dropdown } from 'antd';
 import CopyToClipboard from '../CopyToClipboard';
 
 import css from 'classnames';

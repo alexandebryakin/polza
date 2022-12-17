@@ -5,7 +5,7 @@ import styles from './Signin.module.scss';
 import { TFunction, useTranslation } from 'react-i18next';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Input } from '../../../antd';
+import { Button, Input } from 'antd';
 
 import isEmpty from 'lodash/isEmpty';
 import { jwt } from '../../../api/jwt';

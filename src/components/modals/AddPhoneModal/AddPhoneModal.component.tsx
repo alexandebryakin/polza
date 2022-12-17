@@ -2,12 +2,13 @@ import { PhoneOutlined } from '@ant-design/icons';
 import { Form, FormProps, Modal, notification } from 'antd';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input } from '../../../antd';
+import { Button, Input } from 'antd';
 import { CreatePhoneMutationVariables, Phone, Status, useCreatePhoneMutation } from '../../../api/graphql.types';
 import { useUserInfoContext } from '../../../contexts/userInfo/userInfoContext';
 import { useMutationError } from '../../../hooks/useMutationError';
 import { Toggler } from '../../../hooks/useToggler';
 import { onFailure } from '../../../utils/onFailure';
+import { MaskedInput } from 'antd-mask-input';
 
 interface AddPhoneModalProps {
   toggler: Toggler;
@@ -106,7 +107,7 @@ const AddPhoneModal = ({ toggler }: AddPhoneModalProps) => {
             },
           ]}
         >
-          <Input.Masked mask={MASKS.PHONE} prefix={<PhoneOutlined />} placeholder={MASKS.PHONE} />
+          <MaskedInput mask={MASKS.PHONE} prefix={<PhoneOutlined />} placeholder={MASKS.PHONE} />
         </Form.Item>
       </Form>
     </Modal>

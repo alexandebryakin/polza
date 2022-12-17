@@ -4,7 +4,7 @@ import css from 'classnames';
 import { Col, Row } from 'antd';
 import { routes } from '../../navigation/routes';
 import { Link, matchPath, useLocation } from 'react-router-dom';
-import { Button, Dropdown } from '../../antd';
+import { Button, Dropdown } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { EnvironmentOutlined, MailOutlined, MoreOutlined, PhoneOutlined } from '@ant-design/icons';
 import React from 'react';
@@ -140,7 +140,7 @@ export default function BusinessCardPublicPage() {
   return (
     <Page>
       <Container className={styles.container}>
-        <Spacing />
+        {/* <Spacing /> */}
 
         <Block padded className={styles.main}>
           <div className={styles.cover}></div>
