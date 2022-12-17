@@ -1,7 +1,7 @@
 import { WarningOutlined } from '@ant-design/icons';
 import { AlertProps, Tabs } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Tooltip, Alert } from '../../antd';
+import { Tooltip, Alert } from 'antd';
 import css from 'classnames';
 import styles from './Settings.module.scss';
 import FormCard from '../../lib/FormCard';

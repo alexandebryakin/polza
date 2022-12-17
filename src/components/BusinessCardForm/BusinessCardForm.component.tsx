@@ -9,7 +9,7 @@ import {
 import { Form, FormProps, Col, Divider, Row, Space, notification, Modal } from 'antd';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, Select } from '../../antd';
+import { Button, Input, Select } from 'antd';
 import { buildFields } from '../../utils/buildFields';
 
 import IMask from 'imask';

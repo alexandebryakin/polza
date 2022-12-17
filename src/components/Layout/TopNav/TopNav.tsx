@@ -6,7 +6,7 @@ import { jwt } from '../../../api/jwt';
 import { Link } from 'react-router-dom';
 import { routes } from '../../../navigation/routes';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../../../antd';
+import { Button } from 'antd';
 import { Space } from 'antd';
 import Layout from '../../../pages/Auth/Layout/Layout.component';
 
