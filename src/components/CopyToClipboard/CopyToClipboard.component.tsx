@@ -17,7 +17,7 @@ const Copied = () => {
   );
 };
 
-interface CopyToClipboardProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+interface CopyToClipboardProps extends DivProps {
   text: string;
   duration?: number;
   CopiedComponent?: React.ReactNode;

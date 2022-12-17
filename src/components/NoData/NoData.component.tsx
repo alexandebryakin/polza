@@ -1,11 +1,10 @@
 import { InboxOutlined } from '@ant-design/icons';
 import css from 'classnames';
-import { DivProps } from '../BusinessCard';
 
 import styles from './NoData.module.scss';
 
 interface WrapperProps extends DivProps {}
-const Wrapper = (props: DivProps) => {
+const Wrapper = (props: WrapperProps) => {
   return <div {...props} className={css(styles.wrapper, props.className)} />;
 };
 

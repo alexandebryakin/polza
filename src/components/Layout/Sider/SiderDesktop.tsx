@@ -47,7 +47,7 @@ function SiderDesktop() {
         </Flex>
       </Flex>
 
-      <Flex direction="column">
+      <Flex direction="column" className={styles.sectionBottom}>
         <SiderDesktopItem
           to={routes.settings()._}
           active={routesHelpers.isSettings()}

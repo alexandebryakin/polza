@@ -2,6 +2,7 @@ import React from 'react';
 import { Space } from 'antd';
 
 import styles from './Layout.module.scss';
+import Logo from '../../../components/Logo';
 
 const appHeight = () => {
   // https://stackoverflow.com/a/50683190
@@ -17,7 +18,7 @@ const Header = ({ children }: HeaderProps) => {
   return (
     <header className={styles.header}>
       <nav className={styles.headerContainer}>
-        <b>Polza Logo</b>
+        <Logo />
 
         {children}
       </nav>

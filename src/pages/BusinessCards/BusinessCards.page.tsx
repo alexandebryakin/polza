@@ -1,6 +1,6 @@
 import React from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Col, ColProps, Row, Typography } from 'antd';
+import { Col, ColProps, Row, Tabs } from 'antd';
 import { useTranslation } from 'react-i18next';
 import styles from './BusinessCards.module.scss';
 import BusinessCard, { BusinessCardWrapper } from '../../components/BusinessCard';
@@ -9,11 +9,11 @@ import { Link } from 'react-router-dom';
 import { routes } from '../../navigation/routes';
 import Page from '../../components/Page';
 
-import { Tabs } from '../../antd';
 import NoData from '../../components/NoData';
 import BusinessCardSkeleton from '../../components/BusinessCardSkeleton';
 import { BusinessCardsContextProvider, useBusinessCards } from '../../contexts/businessCards/businessCardsContext';
 import { TabLabel } from '../Settings/Settings.page';
+import Typography from '../../lib/Typography';
 
 const AddBusinessCard = () => {
   const modal = useToggler();
@@ -107,7 +107,9 @@ function BusinessCards() {
   return (
     <BusinessCardsContextProvider>
       <Page>
-        <Typography.Title level={2}>{t('businessCards.businessCards')}</Typography.Title>
+        <Typography.Title level={2} marginedBottom>
+          {t('businessCards.businessCards')}
+        </Typography.Title>
 
         <Tabs
           defaultActiveKey={window.location.pathname}

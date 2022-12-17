@@ -5,6 +5,7 @@
     "copied": "Copied",
     "clickToCopy": "Click to Copy",
     "error": "Error",
+    "accessDenied": "Access Denied",
     "actions": {
       "add": "Add",
       "save": "Save",

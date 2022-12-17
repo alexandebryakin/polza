@@ -53,7 +53,7 @@ export const isRoutePublic = (): boolean => {
 export const isRoutePublicBusinessCard = (): boolean => {
   const regex = new RegExp(routes.businessCards()._ + '/([a-z0-9]|-)+$');
 
-  return regex.test(window.location.pathname);
+  return regex.test(window.location.pathname) && window.location.pathname !== routes.businessCards().connections()._;
 };
 
 export const isRouteAuth = (): boolean => {

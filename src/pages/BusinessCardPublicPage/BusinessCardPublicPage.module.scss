@@ -94,6 +94,11 @@ $block-padding: 16px;
   position: sticky;
   top: 66px;
 }
+.contactsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
 .contantListItem {
   max-width: 180px;
@@ -138,4 +143,7 @@ $corner-radius: 8px;
 }
 .h100 {
   height: 100%;
+}
+.mh100px {
+  min-height: 100px;
 }

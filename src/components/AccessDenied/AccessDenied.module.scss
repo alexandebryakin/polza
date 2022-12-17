@@ -1,0 +1,24 @@
+@import 'src/styles/_variables.scss';
+
+$font-size: 42px;
+
+.accessDenied {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+}
+
+.message {
+  color: $text-color--secondary;
+  font-size: $font-size;
+}
+
+.icon {
+  color: $text-color--secondary;
+  font-size: $font-size;
+}

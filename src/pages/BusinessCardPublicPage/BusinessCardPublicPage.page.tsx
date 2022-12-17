@@ -1,7 +1,7 @@
 import Container from '../../lib/Container';
 import styles from './BusinessCardPublicPage.module.scss';
 import css from 'classnames';
-import { Col, Row, Typography } from 'antd';
+import { Col, Row } from 'antd';
 import { routes } from '../../navigation/routes';
 import { Link, matchPath, useLocation } from 'react-router-dom';
 import { Button, Dropdown } from '../../antd';
@@ -18,25 +18,25 @@ import { buildBusinessCardPublicLink } from '../../utils/buildBusinessCardPublic
 
 import NoData from '../../components/NoData';
 import { useBusinessCardDropdownOptions } from '../../hooks/useBusinessCardDropdownOptions';
-
-export interface DivElem extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
+import Typography from '../../lib/Typography';
+import Page from '../../components/Page';
 
 const Separator = () => {
   return <div className={styles.separator} />;
 };
 
-const Section = (props: DivElem) => {
+const Section = (props: DivProps) => {
   return <div {...props} className={css(styles.section, props.className)} />;
 };
 
-export const Block = (props: DivElem & { padded?: boolean }) => {
-  return <div {...props} className={css(styles.block, props.className, props.padded && styles.blockPadded)} />;
+export const Block = ({ padded, ...props }: DivProps & { padded?: boolean }) => {
+  return <div {...props} className={css(styles.block, props.className, padded && styles.blockPadded)} />;
 };
 
 Block.Separator = Separator;
 Block.Section = Section;
 
-export const Spacing = (props: DivElem & { size?: number }) => {
+export const Spacing = (props: DivProps & { size?: number }) => {
   return (
     <div
       {...props}
@@ -103,38 +103,6 @@ const ImageGrid = () => {
   );
 };
 
-interface ContactsProps {
-  businessCard?: IUseBusinessCard['businessCard'];
-}
-const Contacts = ({ businessCard }: ContactsProps) => {
-  const [t] = useTranslation('common');
-
-  return (
-    <>
-      <Typography.Title level={5}>{t('businessCards.contacts')}</Typography.Title>
-
-      <CopyableContactList
-        items={(businessCard?.phones || []).map((p) => mask.resolve(p.number.toString()))}
-        icon={<PhoneOutlined />}
-      />
-
-      <Spacing size={8} />
-
-      <CopyableContactList items={(businessCard?.emails || []).map((e) => e.email)} icon={<MailOutlined />} />
-
-      <Spacing size={8} />
-
-      <CopyableContactList
-        items={businessCard?.address ? [businessCard.address] : []}
-        icon={<EnvironmentOutlined />}
-        classNames={{
-          item: styles.contantListItem,
-        }}
-      />
-    </>
-  );
-};
-
 export const buildBusinessCardPermissions = (businessCard?: BusinessCardAttrs | null, userId?: UUID) => {
   const comparable = !!businessCard?.userId && !!userId;
   return {
@@ -164,101 +132,137 @@ export default function BusinessCardPublicPage() {
     canRemove: permissions.canRemove,
   });
 
-  const hasAnyContactInfo =
-    (businessCard?.phones || []).length > 0 || (businessCard?.emails || []).length > 0 || !!businessCard?.address;
+  const phones = (businessCard?.phones || []).map((p) => mask.resolve(p.number.toString()));
+  const emails = (businessCard?.emails || []).map((e) => e.email);
+  const hasAnyContactInfo = phones.length > 0 || emails.length > 0 || !!businessCard?.address;
 
+  if (loading) return null;
   return (
-    <Container className={styles.container}>
-      <Spacing />
+    <Page>
+      <Container className={styles.container}>
+        <Spacing />
 
-      <Block padded className={styles.main}>
-        <div className={styles.cover}></div>
+        <Block padded className={styles.main}>
+          <div className={styles.cover}></div>
 
-        <div className={styles.profileWrapper}>
-          <div className={styles.profileInfoWrapper}>
-            <div className={styles.qrCodePanel}>
-              <QRCodeSVG
-                value={buildBusinessCardPublicLink(id)}
-                size={150}
-                imageSettings={{
-                  src: 'https://cdn-icons-png.flaticon.com/24/717/717392.png',
-                  height: 18,
-                  width: 18,
-                  excavate: true,
-                }}
-              />
-            </div>
-
-            <div>
-              <div className={styles.title}>{businessCard?.title}</div>
-
-              <div className={styles.subtitle}>{businessCard?.subtitle}</div>
-            </div>
-
-            <div className={styles.profileInfoActions}>
-              {permissions.canEdit && (
-                <Link to={routes.businessCards().edit(id)._}>
-                  <Button>{t('generic.actions.edit')}</Button>
-                </Link>
-              )}
-
-              {!!dropdownOptions?.length && (
-                <Dropdown
-                  menu={{
-                    items: dropdownOptions,
+          <div className={styles.profileWrapper}>
+            <div className={styles.profileInfoWrapper}>
+              <div className={styles.qrCodePanel}>
+                <QRCodeSVG
+                  value={buildBusinessCardPublicLink(id)}
+                  size={150}
+                  imageSettings={{
+                    src: 'https://cdn-icons-png.flaticon.com/24/717/717392.png',
+                    height: 18,
+                    width: 18,
+                    excavate: true,
                   }}
-                  // trigger={['click']}
-                  placement="bottomRight"
-                  className={styles.moreDropdown}
-                >
-                  <Button>
-                    {t('generic.actions.more')}
+                />
+              </div>
 
-                    <MoreOutlined className={styles.moreDropdownIcon} />
-                  </Button>
-                </Dropdown>
-              )}
+              <div>
+                <div className={styles.title}>{businessCard?.title}</div>
+
+                <div className={styles.subtitle}>{businessCard?.subtitle}</div>
+              </div>
+
+              <div className={styles.profileInfoActions}>
+                {permissions.canEdit && (
+                  <Link to={routes.businessCards().edit(id)._}>
+                    <Button>{t('generic.actions.edit')}</Button>
+                  </Link>
+                )}
+
+                {!!dropdownOptions?.length && (
+                  <Dropdown
+                    menu={{
+                      items: dropdownOptions,
+                    }}
+                    // trigger={['click']}
+                    placement="bottomRight"
+                    className={styles.moreDropdown}
+                  >
+                    <Button>
+                      {t('generic.actions.more')}
+
+                      <MoreOutlined className={styles.moreDropdownIcon} />
+                    </Button>
+                  </Dropdown>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </Block>
+        </Block>
 
-      <Spacing />
+        <Spacing />
 
-      <Row gutter={[12, 12]}>
-        <Col xs={24} lg={16}>
-          {/* <Block>
+        <Row gutter={[12, 12]}>
+          <Col xs={24} lg={16}>
+            {/* <Block>
             <div>TODO: Images</div>
 
             <ImageGrid />
           </Block> */}
-          {/* <Spacing /> */}
+            {/* <Spacing /> */}
 
-          {businessCard?.description && (
-            <Block padded className={styles.h100}>
-              <Typography.Title level={5}>{t('businessCards.description')}</Typography.Title>
+            {businessCard?.description && (
+              <Block className={styles.h100}>
+                <Block.Section>
+                  <Typography.Title level={5}>{t('businessCards.description')}</Typography.Title>
+                </Block.Section>
 
-              <div>{businessCard?.description}</div>
-            </Block>
-          )}
+                <Block.Separator />
 
-          {!businessCard?.description && (
-            <Block padded className={css(styles.h100, styles.noDescription)}>
-              <NoData text={t('businessCards.noDescription')} />
-            </Block>
-          )}
-        </Col>
+                <Block.Section>
+                  <div>{businessCard?.description}</div>
+                </Block.Section>
+              </Block>
+            )}
 
-        <Col xs={24} lg={8}>
-          <Block padded className={styles.contacts}>
-            {hasAnyContactInfo && <Contacts businessCard={businessCard} />}
+            {!businessCard?.description && (
+              <Block className={css(styles.h100, styles.mh100px)}>
+                <NoData.Wrapper>
+                  <NoData text={t('businessCards.noDescription')} />
+                </NoData.Wrapper>
+              </Block>
+            )}
+          </Col>
 
-            {!hasAnyContactInfo && <NoData text={t('businessCards.noContacts')} />}
-          </Block>
-        </Col>
-      </Row>
+          <Col xs={24} lg={8}>
+            {hasAnyContactInfo && (
+              <Block className={styles.contacts}>
+                <Block.Section>
+                  <Typography.Title level={5}>{t('businessCards.contacts')}</Typography.Title>
+                </Block.Section>
 
-      <Spacing />
-    </Container>
+                <Block.Separator />
+
+                <Block.Section className={styles.contactsList}>
+                  <CopyableContactList items={phones} icon={<PhoneOutlined />} />
+                  <CopyableContactList items={emails} icon={<MailOutlined />} />
+                  <CopyableContactList
+                    items={businessCard?.address ? [businessCard.address] : []}
+                    icon={<EnvironmentOutlined />}
+                    classNames={{
+                      item: styles.contantListItem,
+                    }}
+                  />
+                </Block.Section>
+              </Block>
+            )}
+
+            {!hasAnyContactInfo && (
+              <Block className={styles.h100}>
+                <NoData.Wrapper>
+                  <NoData text={t('businessCards.noContacts')} />
+                </NoData.Wrapper>
+              </Block>
+            )}
+          </Col>
+        </Row>
+
+        <Spacing size={36} />
+      </Container>
+    </Page>
   );
 }

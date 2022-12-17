@@ -34,19 +34,19 @@ $border-radius-8px: 8px;
 }
 
 .tabs {
-  :global(.ant-tabs-ink-bar) {
-    background: $primary-color;
-  }
+  // :global(.ant-tabs-ink-bar) {
+  //   background: $primary-color;
+  // }
 
-  :global(.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn) {
-    color: $primary-color !important;
-  }
+  // :global(.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn) {
+  //   color: $primary-color !important;
+  // }
 
-  :global(.ant-tabs-tab) {
-    &:hover {
-      color: $primary-color !important;
-    }
-  }
+  // :global(.ant-tabs-tab) {
+  //   &:hover {
+  //     color: $primary-color !important;
+  //   }
+  // }
 }
 
 .tooltipOverlay {

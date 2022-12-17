@@ -1,7 +1,7 @@
 import { WarningOutlined } from '@ant-design/icons';
-import { AlertProps, Typography } from 'antd';
+import { AlertProps, Tabs } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Tabs, Tooltip, Alert } from '../../antd';
+import { Tooltip, Alert } from '../../antd';
 import css from 'classnames';
 import styles from './Settings.module.scss';
 import FormCard from '../../lib/FormCard';
@@ -12,6 +12,7 @@ import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
 import { VerificationStatusEnum } from '../../api/graphql.types';
 import Page from '../../components/Page';
 import ChangePassordForm from '../../components/ChangePassordForm';
+import Typography from '../../lib/Typography';
 
 interface VerificationAlertProps {
   className?: string;
@@ -38,8 +39,6 @@ export const VerificationAlert = ({ className, action }: VerificationAlertProps)
     <Alert
       message={passport ? messages[passport.verificationStatus] : t('profile.passport.verification.notVerified')}
       type={passport ? types[passport.verificationStatus] : 'warning'}
-      // message={passport ? messages[VerificationStatusEnum.Failed] : t('profile.passport.verification.notVerified')}
-      // type={passport ? types[VerificationStatusEnum.Failed] : 'warning'}
       showIcon
       closable
       action={action}
@@ -110,6 +109,7 @@ function Settings() {
 
       <Tabs
         defaultActiveKey={window.location.pathname}
+        activeKey={routes.settings().passport()._}
         items={[
           {
             label: (

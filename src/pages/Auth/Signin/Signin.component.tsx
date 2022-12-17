@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Space, Typography } from 'antd';
+import { Form, Space } from 'antd';
 
 import styles from './Signin.module.scss';
 import { TFunction, useTranslation } from 'react-i18next';
@@ -15,6 +15,7 @@ import { SigninUserMutation, SigninUserMutationVariables, useSigninUserMutation 
 import { FetchResult } from '@apollo/client';
 import { useMutationError } from '../../../hooks/useMutationError';
 import { useUserInfoContext } from '../../../contexts/userInfo/userInfoContext';
+import Typography from '../../../lib/Typography';
 
 const FIELDS = {
   email: 'email',
@@ -119,7 +120,12 @@ function Signin() {
             <Input.Password
               className={styles.input}
               prefix={<LockOutlined className={styles.inputIcon} />}
-              iconRender={() => <Link to="forgot">{t('auth.forgot')}</Link>}
+              iconRender={() => (
+                // TODO: Change! This is the visibility Icon for the password
+                <Link to={'#'} onClick={() => alert('TODO: add forgot')}>
+                  {t('auth.forgot')}
+                </Link>
+              )}
             />
           </Form.Item>
 

@@ -1,1 +1,1 @@
-export { default } from './BusinessCardPublicPage.component';
+export { default } from './BusinessCardPublicPage.page';

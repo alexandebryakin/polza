@@ -1,14 +1,13 @@
 import { MailOutlined, PhoneOutlined, PlusOutlined } from '@ant-design/icons';
-import { Avatar, Col, Row, Typography } from 'antd';
+import { Col, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../antd';
 import styles from './Profile.module.scss';
 import { Link } from 'react-router-dom';
 import { routes } from '../../navigation/routes';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
-import { RANDOM_AVATAR_URL } from '../../components/AccountDropdown/AccountDropdown';
 import Container from '../../lib/Container';
-import { Block, Spacing } from '../BusinessCardPublicPage/BusinessCardPublicPage.component';
+import { Block, Spacing } from '../BusinessCardPublicPage/BusinessCardPublicPage.page';
 import AddEmailModal from '../../components/modals/AddEmailModal';
 import useToggler from '../../hooks/useToggler';
 import AddPhoneModal from '../../components/modals/AddPhoneModal';
@@ -17,51 +16,53 @@ import NoData from '../../components/NoData';
 import React from 'react';
 import { VerificationAlert } from '../Settings/Settings.page';
 import { VerificationStatusEnum } from '../../api/graphql.types';
+import Typography from '../../lib/Typography';
+import UserAvatar from '../../components/UserAvatar';
+
+interface SectionTitleProps {
+  icon: React.ReactNode;
+  text: React.ReactNode;
+  postfix?: React.ReactNode;
+}
+const SectionTitle = ({ icon, text, postfix }: SectionTitleProps) => {
+  return (
+    <div className={styles.userProfileSectionTitle}>
+      {icon}
+
+      <span className={styles.userProfileSectionTitleText}>{text}</span>
+
+      <span>{postfix}</span>
+    </div>
+  );
+};
+
+interface ListProps {
+  items: React.ReactNode[];
+}
+const List = ({ items }: ListProps) => {
+  return (
+    <div className={styles.userProfileList}>
+      {items.map((item, index) => {
+        return <div key={index}>{item}</div>;
+      })}
+    </div>
+  );
+};
 
 const Profile = () => {
   const [t] = useTranslation('common');
-  const { user, passport } = useUserInfoContext();
+  const { user, loading, passport } = useUserInfoContext();
 
   const hasFirstAndLastName = passport?.firstName && passport?.lastName;
-
-  interface SectionTitleProps {
-    icon: React.ReactNode;
-    text: React.ReactNode;
-    postfix?: React.ReactNode;
-  }
-  const SectionTitle = ({ icon, text, postfix }: SectionTitleProps) => {
-    return (
-      <h5 className={styles.userProfileSectionTitle}>
-        {icon}
-
-        <span className={styles.userProfileSectionTitleText}>{text}</span>
-
-        <span>{postfix}</span>
-      </h5>
-    );
-  };
-
-  interface ListProps {
-    items: React.ReactNode[];
-  }
-  const List = ({ items }: ListProps) => {
-    return (
-      <div className={styles.userProfileList}>
-        {items.map((item, index) => {
-          return <div key={index}>{item}</div>;
-        })}
-      </div>
-    );
-  };
 
   const phoneModal = useToggler();
   const emailModal = useToggler();
 
   const hasPhones = (user?.emails || []).length > 0;
   const hasEmails = (user?.emails || []).length > 0;
-  console.log(passport);
-  const showPassportVerificationAction = passport && passport.verificationStatus !== VerificationStatusEnum.Succeeded;
+  const showPassportVerificationAlert = passport?.verificationStatus !== VerificationStatusEnum.Succeeded;
 
+  if (loading) return null;
   return (
     <Container className={styles.container}>
       <Spacing />
@@ -69,9 +70,10 @@ const Profile = () => {
       <div>
         <div className={styles.cover}></div>
         <div className={styles.userProfileHeaderPanel}>
-          <Avatar src={RANDOM_AVATAR_URL} size={120} className={styles.avatar} />
+          <UserAvatar size={120} className={styles.avatar} />
+
           <span>
-            <Typography.Title level={4}>
+            <Typography.Title level={4} className={styles.fio}>
               {hasFirstAndLastName ? (
                 `${passport?.lastName} ${passport?.firstName}`
               ) : (
@@ -92,7 +94,7 @@ const Profile = () => {
 
       <Spacing />
 
-      {showPassportVerificationAction && (
+      {showPassportVerificationAlert && (
         <VerificationAlert
           action={
             <Link to={routes.settings().passport()._}>
@@ -109,7 +111,7 @@ const Profile = () => {
         />
       )}
 
-      <Row gutter={16}>
+      <Row gutter={[16, 16]}>
         <Col xs={24} md={12}>
           <AddEmailModal toggler={emailModal} />
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, Form, Space, Typography } from 'antd';
+import { Checkbox, Form, Space } from 'antd';
 
 import styles from './Signup.module.scss';
 import { TFunction, useTranslation } from 'react-i18next';
@@ -17,6 +17,7 @@ import Format from '../../../lib/Format';
 import { useMutationError } from '../../../hooks/useMutationError';
 import { FetchResult } from '@apollo/client';
 import { useUserInfoContext } from '../../../contexts/userInfo/userInfoContext';
+import Typography from '../../../lib/Typography';
 
 const FIELDS = {
   email: 'email',

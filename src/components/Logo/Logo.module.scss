@@ -1,0 +1,24 @@
+@import 'src/styles/_variables.scss';
+
+.logo {
+  color: $text-color--secondary;
+
+  &:hover {
+    color: $primary-color;
+  }
+}
+
+.rotateY180 {
+  transform: rotateY(180deg);
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.logoUncollapsed {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}

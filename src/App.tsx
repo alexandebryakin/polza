@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.css';
 import './App.scss';
 
 import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-route
 import Signin from './pages/Auth/Signin/Signin.component';
 import Signup from './pages/Auth/Signup/Signup.component';
 
-import { isRouteAuth, isRoutePublic, routes } from './navigation/routes';
+import { isRoutePublic, routes } from './navigation/routes';
 import { jwt } from './api/jwt';
 
 import Layout from './components/Layout';
@@ -20,17 +20,16 @@ import ModifyBusinessCard from './pages/ModifyBusinessCard';
 import BusinessCardPublicPage from './pages/BusinessCardPublicPage';
 import Settings from './pages/Settings';
 
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
+const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+  const isRouteAccessible = !jwt.isExpired() || isRoutePublic();
+
+  return isRouteAccessible ? <>{children}</> : <Navigate to={routes.signin()._} replace />;
+};
+
 function App() {
-  if (jwt.isExpired() && !isRoutePublic()) {
-    window.location.pathname = routes.signin()._;
-    return null;
-  }
-
-  if (isRouteAuth() && !jwt.isExpired()) {
-    window.location.pathname = routes.businessCards()._;
-    return null;
-  }
-
   return (
     <BrowserRouter>
       <UserInfoContextProvider>
@@ -43,7 +42,9 @@ function App() {
               path={routes.profile()._}
               element={
                 <Layout>
-                  <Profile />
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
                 </Layout>
               }
             >
@@ -54,7 +55,9 @@ function App() {
               path={routes.businessCards()._}
               element={
                 <Layout>
-                  <BusinessCards />
+                  <ProtectedRoute>
+                    <BusinessCards />
+                  </ProtectedRoute>
                 </Layout>
               }
             />
@@ -63,7 +66,9 @@ function App() {
               path={routes.businessCards('connections')._}
               element={
                 <Layout>
-                  <BusinessCards />
+                  <ProtectedRoute>
+                    <BusinessCards />
+                  </ProtectedRoute>
                 </Layout>
               }
             />
@@ -81,7 +86,9 @@ function App() {
               path={routes.businessCards().edit(':id')._}
               element={
                 <Layout>
-                  <ModifyBusinessCard />
+                  <ProtectedRoute>
+                    <ModifyBusinessCard />
+                  </ProtectedRoute>
                 </Layout>
               }
             />
@@ -90,7 +97,9 @@ function App() {
               path={routes.settings()._}
               element={
                 <Layout>
-                  <Settings />
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
                 </Layout>
               }
             >

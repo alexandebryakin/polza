@@ -1,13 +1,10 @@
-import { Typography } from 'antd';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Dropdown } from '../../antd';
 import CopyToClipboard from '../CopyToClipboard';
-import FlipCard from '../FlipCard';
 
 import css from 'classnames';
 import styles from './BusinessCard.module.scss';
-import Flex from '../Flex';
 import {
   CheckOutlined,
   CopyOutlined,
@@ -17,7 +14,6 @@ import {
   MailOutlined,
   MoreOutlined,
   PhoneOutlined,
-  PlusOutlined,
 } from '@ant-design/icons';
 import { QRCodeSVG } from 'qrcode.react';
 
@@ -28,7 +24,7 @@ import { Link } from 'react-router-dom';
 import { routes } from '../../navigation/routes';
 import CopyableContactList from '../CopyableContactList';
 import { buildBusinessCardPublicLink } from '../../utils/buildBusinessCardPublicLink';
-import { buildBusinessCardPermissions } from '../../pages/BusinessCardPublicPage/BusinessCardPublicPage.component';
+import { buildBusinessCardPermissions } from '../../pages/BusinessCardPublicPage/BusinessCardPublicPage.page';
 import { useRemoveBusinessCardConfirmationModal } from '../BusinessCardForm/BusinessCardForm.component';
 import { useMutationError } from '../../hooks/useMutationError';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
@@ -36,15 +32,13 @@ import {
   CollectionModificationEvents,
   useBusinessCardDropdownOptions,
 } from '../../hooks/useBusinessCardDropdownOptions';
+import Typography from '../../lib/Typography';
 
 export const mask = IMask.createMask({
   mask: MASKS.PHONE,
 });
 
-export const BusinessCardWrapper = ({
-  className,
-  ...rest
-}: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>) => {
+export const BusinessCardWrapper = ({ className, ...rest }: DivProps) => {
   return <div {...rest} className={css(styles.businessCardWrapper, className)} />;
 };
 
@@ -52,8 +46,6 @@ export type BusinessCardAttrs = Partial<Omit<TBusinessCard, 'phones' | 'emails'>
   emails: Pick<TBusinessCard['emails'][0], 'email'>[];
   phones: Pick<TBusinessCard['phones'][0], 'number'>[];
 };
-
-export interface DivProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
 
 const Divider = () => <div className={styles.divider} />;
 

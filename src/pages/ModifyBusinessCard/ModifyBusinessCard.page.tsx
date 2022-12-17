@@ -1,4 +1,4 @@
-import { Col, Spin, Typography } from 'antd';
+import { Col, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { matchPath, useLocation } from 'react-router-dom';
 
@@ -11,13 +11,11 @@ import styles from './ModifyBusinessCard.module.scss';
 import BusinessCard, { BusinessCardAttrs } from '../../components/BusinessCard';
 import React from 'react';
 
-import {
-  BusinessCard as TBusinessCard,
-  MutationUpsertBusinessCardArgs,
-  PublicationStatusEnum,
-  VerificationStatusEnum,
-} from '../../api/graphql.types';
+import { MutationUpsertBusinessCardArgs, PublicationStatusEnum } from '../../api/graphql.types';
 import { useBusinessCard } from '../../api/businessCards';
+import Typography from '../../lib/Typography';
+import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
+import AccessDenied from '../../components/AccessDenied';
 
 export const NEW_BUSINESS_CARD = 'new';
 
@@ -29,7 +27,10 @@ const BusinessCardPreview = ({ businessCard }: BusinessCardPreviewProps) => {
 
   return (
     <div className={styles.businessCardPreview}>
-      <Typography.Title level={3}>{t('businessCards.preview')}</Typography.Title>
+      <Typography.Title level={3} className={styles.previewTitle}>
+        {t('businessCards.preview')}
+      </Typography.Title>
+
       <Col xs={24} lg={18} xl={12}>
         <BusinessCard businessCard={businessCard} />
       </Col>
@@ -49,9 +50,15 @@ export default function ModifyBusinessCard() {
 
   const { businessCard, loading } = useBusinessCard({ id: data?.params.id || '' });
 
+  const { user } = useUserInfoContext();
+
+  const canEdit = !!businessCard?.userId && businessCard?.userId === user?.id;
+
+  if (!loading && !canEdit && !isNew) return <AccessDenied />;
+
   return (
     <Page withBackButton>
-      <Typography.Title>
+      <Typography.Title marginedBottom>
         {t(isNew ? 'businessCards.createBusinessCard' : 'businessCards.editBusinessCard')}
       </Typography.Title>
 

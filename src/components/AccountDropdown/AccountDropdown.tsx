@@ -1,16 +1,15 @@
 import { PoweroffOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar } from 'antd';
+import { Avatar, AvatarProps } from 'antd';
 import { DropdownProps } from 'antd/lib/dropdown';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { jwt } from '../../api/jwt';
 import { useUserInfoContext } from '../../contexts/userInfo/userInfoContext';
 import Dropdown from '../../lib/Dropdown';
 import { routes } from '../../navigation/routes';
+import UserAvatar from '../UserAvatar';
 
 import styles from './AccountDropdown.module.scss';
-
-// TAKEN FROM: https://boringavatars.com/
-export const RANDOM_AVATAR_URL = 'https://source.boringavatars.com/beam/222';
 
 const Toggler = () => {
   const { user } = useUserInfoContext();
@@ -21,11 +20,7 @@ const Toggler = () => {
     <div className={styles.toggler}>
       <span className={styles.email}>{email}</span>
 
-      <Avatar
-        src={RANDOM_AVATAR_URL} // TODO: replace with actual image
-        size={30}
-        className={styles.avatar}
-      />
+      <UserAvatar size={30} className={styles.avatar} />
     </div>
   );
 };
