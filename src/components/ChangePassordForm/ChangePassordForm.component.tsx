@@ -1,7 +1,7 @@
 import { Form, Col, notification } from 'antd';
 
 import { useTranslation } from 'react-i18next';
-import { Button, Input } from '../../antd';
+import { Button, Input } from 'antd';
 import {
   MutationChangeCurrentUserPasswordArgs,
   Status,

@@ -20,6 +20,8 @@ import ModifyBusinessCard from './pages/ModifyBusinessCard';
 import BusinessCardPublicPage from './pages/BusinessCardPublicPage';
 import Settings from './pages/Settings';
 import client from './api/apollo/client';
+import { ConfigProvider } from 'antd';
+import { ConfigProviderProps } from 'antd/es/config-provider';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -56,105 +58,114 @@ const useMobileScreenFix = () => {
   }, []);
 };
 
+const THEME: ConfigProviderProps['theme'] = {
+  token: {
+    colorPrimary: '#1890ff',
+    margin: 8,
+  },
+};
+
 function App() {
   useMobileScreenFix();
 
   return (
     <BrowserRouter>
       <UserInfoContextProvider>
-        <LayoutProvider>
-          <Routes>
-            <Route
-              path={routes.signin()._}
-              element={
-                <ResetApolloStore>
-                  <Signin />
-                </ResetApolloStore>
-              }
-            />
-            <Route
-              path={routes.signup()._}
-              element={
-                <ResetApolloStore>
-                  <Signup />
-                </ResetApolloStore>
-              }
-            />
+        <ConfigProvider theme={THEME}>
+          <LayoutProvider>
+            <Routes>
+              <Route
+                path={routes.signin()._}
+                element={
+                  <ResetApolloStore>
+                    <Signin />
+                  </ResetApolloStore>
+                }
+              />
+              <Route
+                path={routes.signup()._}
+                element={
+                  <ResetApolloStore>
+                    <Signup />
+                  </ResetApolloStore>
+                }
+              />
 
-            <Route
-              path={routes.profile()._}
-              element={
-                <Layout>
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                </Layout>
-              }
-            >
-              {/* <Route path={routes.profile(':tab')._} element={null} /> */}
-            </Route>
+              <Route
+                path={routes.profile()._}
+                element={
+                  <Layout>
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  </Layout>
+                }
+              >
+                {/* <Route path={routes.profile(':tab')._} element={null} /> */}
+              </Route>
 
-            <Route
-              path={routes.businessCards()._}
-              element={
-                <Layout>
-                  <ProtectedRoute>
-                    <BusinessCards />
-                  </ProtectedRoute>
-                </Layout>
-              }
-            />
+              <Route
+                path={routes.businessCards()._}
+                element={
+                  <Layout>
+                    <ProtectedRoute>
+                      <BusinessCards />
+                    </ProtectedRoute>
+                  </Layout>
+                }
+              />
 
-            <Route
-              path={routes.businessCards('connections')._}
-              element={
-                <Layout>
-                  <ProtectedRoute>
-                    <BusinessCards />
-                  </ProtectedRoute>
-                </Layout>
-              }
-            />
+              <Route
+                path={routes.businessCards('connections')._}
+                element={
+                  <Layout>
+                    <ProtectedRoute>
+                      <BusinessCards />
+                    </ProtectedRoute>
+                  </Layout>
+                }
+              />
 
-            <Route
-              path={routes.businessCards(':id')._}
-              element={
-                <Layout>
-                  <BusinessCardPublicPage />
-                </Layout>
-              }
-            />
+              <Route
+                path={routes.businessCards(':id')._}
+                element={
+                  <Layout>
+                    <BusinessCardPublicPage />
+                  </Layout>
+                }
+              />
 
-            <Route
-              path={routes.businessCards().edit(':id')._}
-              element={
-                <Layout>
-                  <ProtectedRoute>
-                    <ModifyBusinessCard />
-                  </ProtectedRoute>
-                </Layout>
-              }
-            />
+              <Route
+                path={routes.businessCards().edit(':id')._}
+                element={
+                  <Layout>
+                    <ProtectedRoute>
+                      <ModifyBusinessCard />
+                    </ProtectedRoute>
+                  </Layout>
+                }
+              />
 
-            <Route
-              path={routes.settings()._}
-              element={
-                <Layout>
-                  <ProtectedRoute>
-                    <Settings />
-                  </ProtectedRoute>
-                </Layout>
-              }
-            >
-              <Route path={routes.settings(':tab')._} element={null} />
-            </Route>
+              <Route
+                path={routes.settings()._}
+                element={
+                  <Layout>
+                    <ProtectedRoute>
+                      <Settings />
+                    </ProtectedRoute>
+                  </Layout>
+                }
+              >
+                <Route path={routes.settings(':tab')._} element={null} />
+              </Route>
 
-            <Route
-              path="*"
-              element={<Navigate to={jwt.isExpired() ? routes.signin()._ : routes.businessCards()._} replace />}
-            />
-          </Routes>
-        </LayoutProvider>
+              <Route
+                path="*"
+                element={<Navigate to={jwt.isExpired() ? routes.signin()._ : routes.businessCards()._} replace />}
+              />
+            </Routes>
+          </LayoutProvider>
+        </ConfigProvider>
       </UserInfoContextProvider>
     </BrowserRouter>
   );

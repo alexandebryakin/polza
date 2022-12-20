@@ -1,7 +1,7 @@
 import { MailOutlined, PhoneOutlined, PlusOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../../antd';
+import { Button } from 'antd';
 import styles from './Profile.module.scss';
 import { Link } from 'react-router-dom';
 import { routes } from '../../navigation/routes';
@@ -67,7 +67,7 @@ const Profile = () => {
   return (
     <Page>
       <Container className={styles.container}>
-        <Spacing />
+        {/* <Spacing /> */}
 
         <div>
           <div className={styles.cover}></div>

@@ -4,7 +4,7 @@ import Dragger from 'antd/lib/upload/Dragger';
 import { RcFile } from 'antd/lib/upload';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input } from '../../antd';
+import { Button, Input } from 'antd';
 import {
   MutationUpsertPassportArgs,
   Status,
