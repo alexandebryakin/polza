@@ -41,7 +41,24 @@ const ResetApolloStore = ({ children }: ResetApolloStoreProps) => {
   return <>{children}</>;
 };
 
+const appHeight = () => {
+  // https://stackoverflow.com/a/50683190
+  const doc = document.documentElement;
+  doc.style.setProperty('--app-width', `${window.innerWidth}px`);
+  doc.style.setProperty('--app-height', `${window.innerHeight}px`);
+};
+const useMobileScreenFix = () => {
+  React.useEffect(() => {
+    window.addEventListener('resize', appHeight);
+    appHeight();
+
+    return () => window.removeEventListener('resize', appHeight);
+  }, []);
+};
+
 function App() {
+  useMobileScreenFix();
+
   return (
     <BrowserRouter>
       <UserInfoContextProvider>

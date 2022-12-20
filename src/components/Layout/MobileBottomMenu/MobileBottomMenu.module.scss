@@ -1,0 +1,37 @@
+@import 'src/styles/_variables.scss';
+
+.mobileBottomMenu {
+  height: $top-nav__height;
+  height: 10vh;
+  background: $background-color;
+  border-top: 1px solid $border-color;
+
+  position: sticky;
+  position: absolute;
+  width: 100vw;
+  bottom: 0;
+  z-index: 1;
+}
+
+.accountDropdown {
+  min-width: 200px;
+  margin-right: 20px;
+}
+
+$padding: 20px;
+.menuItems {
+  padding: 8px $padding $padding $padding;
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon {
+  font-size: 30px;
+  color: $text-color--secondary;
+}
+.iconActive {
+  color: $text-color--primary;
+}

@@ -1,0 +1,9 @@
+@import 'src/styles/_variables.scss';
+
+.children {
+  height: 90vh;
+  width: 100vw;
+  overflow-y: scroll;
+  // box-sizing: border-box;
+  // box-sizing: content-box;
+}
