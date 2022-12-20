@@ -1,0 +1,40 @@
+@import 'src/styles/_variables.scss';
+
+.sliderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.slider {
+  border-radius: 4px;
+  height: 4px;
+  width: 50px;
+  background: $text-color--secondary;
+  margin-bottom: 12px;
+}
+
+.mobileMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  user-select: none;
+  color: $text-color--primary;
+
+  height: 40px;
+  border-bottom: 1px solid $border-color;
+}
+.mobileMenuLabel {
+  flex-grow: 1;
+}
+
+$border-radius: 20px;
+.checker {
+  position: absolute;
+  left: -1000vh;
+  visibility: hidden;
+}
+
+.drawer {
+  border-radius: $border-radius $border-radius 0px 0px;
+}
