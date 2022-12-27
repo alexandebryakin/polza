@@ -2,6 +2,8 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Page.module.scss';
+import css from 'classnames';
+import { screen } from '../../utils/screen';
 
 interface PageProps {
   withBackButton?: boolean;
@@ -21,7 +23,7 @@ const BackButton = () => {
 
 export default function Page({ children, withBackButton = false }: PageProps) {
   return (
-    <div className={styles.page}>
+    <div className={css(styles.page, screen.mobile() && styles.pageMobile)}>
       {withBackButton && <BackButton />}
 
       {children}

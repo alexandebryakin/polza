@@ -7,3 +7,5 @@ export const screen = {
   mobile,
   desktop,
 };
+
+export default screen;

@@ -109,7 +109,6 @@ function Settings() {
 
       <Tabs
         defaultActiveKey={window.location.pathname}
-        activeKey={routes.settings().passport()._}
         items={[
           {
             label: (

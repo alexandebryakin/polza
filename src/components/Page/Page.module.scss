@@ -1,3 +1,5 @@
+@import 'src/styles/_variables.scss';
+
 .backButton {
   font-size: 24px;
   cursor: pointer;
@@ -6,8 +8,11 @@
   // top: 64px;
 }
 
+$padding: 20px;
 .page {
-  padding: 20px;
-  // width: 100%;
+  padding: $padding;
   flex-grow: 1;
+}
+.pageMobile {
+  padding-bottom: $mobile-menu-height + $padding;
 }
