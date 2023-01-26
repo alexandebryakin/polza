@@ -45,6 +45,7 @@
     "build": "react-scripts build",
     "build:prod": "env-cmd -f .production.env react-scripts build",
     "deploy:prod": "yarn build:prod && yarn prod:push-build",
+    "prod:build": "env-cmd -f .production.env react-scripts build",
     "prod:push-build": "scp -r ./build/* root@45.130.42.14:/root/weuse_proxy_gateway/weuse-client/polza/build/",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
